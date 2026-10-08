@@ -1,39 +1,28 @@
-# Echo Music Releases
+# 🚀 Tuneify Release Notes
 
-This document tracks all available releases for Echo Music. 
-
-## [v1.2.2] - 2026-08-28 (Latest)
-[Download on GitHub](https://github.com/EchoMusicApp/Echo-Music/releases/tag/v1.2.2)
-
-**Bug Fixes**
-- Fixed a crash that occurred when adding a song to a playlist, album, or artist before it was fully loaded.
-- Fixed a crash caused by outdated saved settings after an app update; the app now falls back to a safe default instead of crashing.
-- Fixed Spotify login issues where signing in with Google, Apple, or Facebook could show a black screen or fail to complete.
-- Fixed the "Update Available" dialog not matching the app's overall theme and styling.
-
-**Design Improvements**
-- Updated input fields and dialog buttons (including in Spotify Import) to use a more rounded, modern look consistent with Material You design.
-
-**Other Changes**
-- Updated select app components to their latest stable versions for improved reliability.
-
-## [v1.2.1] - 2026-08-28
-[Download on GitHub](https://github.com/EchoMusicApp/Echo-Music/releases/tag/v1.2.1)
-
-I am pleased to announce the initial release of the updated Echo Music repository.
-
-Recently, the project was subjected to a legal takedown notice. Since then, I have taken all necessary actions and made the required adjustments to the codebase and documentation to ensure full legal compliance. 
-
-With these changes complete, I am excited to restore access to the project. I would like to extend my deepest gratitude to all of you for your unwavering support and patience during this period. Thank you for standing by me.
+All official version releases and changelogs for **Tuneify**.
 
 ---
 
-## 📋 Pull Request & Release Note Guidelines
+## [v1.0.0] - Initial Official Release (Latest)
 
-**ATTENTION CONTRIBUTORS:** To maintain a clean and standardized changelog, all community contributions added to this file MUST strictly follow this format:
+Welcome to the debut release of **Tuneify** — the ultimate Obsidian-themed, Material Expressive 3 music experience for Android.
 
-`- \`<type>(<scope>): <summary>\` ([#PR_NUMBER](URL)) by @username`
+### 🌟 Highlights & Features
+- **Obsidian Purple Dark Aesthetics**: Deep black backgrounds paired with ambient corner feather lighting and smooth breathing luminescence.
+- **Atmospheric 3-Line Signature Greeting**: Personalized time-aware greeting, user typography, and dynamic musical quote.
+- **Spotlight Hero Carousel**: Curved 26dp hero cards with seamless multi-stop gradients and instant queue playback.
+- **Multi-Row YouTube Music 4-Track Column Carousels**: Dense, fluid 4-row vertical carousels for Quick Picks, Top Charts & Hits, Trending Stations, and Late Night Chill.
+- **Geometric 7-Lobed Cookie Artist Profiles**: Authentic artist channel avatars with direct artist discography exploration.
+- **Real-Time Synchronized Lyrics**: Word-by-word synchronizer with GPU-accelerated lyrics animations and multi-language AI translation.
+- **Offline Download Manager**: High-bitrate Opus & AAC audio downloads with album art and metadata caching.
+- **Spotify Fast Sync**: Seamlessly import your Spotify playlists and library into Tuneify.
+- **Zero Ads & Instant Playback**: High-performance streaming client with background playback and lockscreen media session controls.
 
-- **PR Titles** must follow [Conventional Commits](https://www.conventionalcommits.org/).
-- **Descriptions** must be clear, concise, and professional.
-- PRs that do not follow this strict formatting will **not** be merged.
+### 📦 Release Assets
+- `Tuneify-v1.0.0-arm64.apk` (Recommended for modern 64-bit Android devices)
+- `Tuneify-v1.0.0-universal.apk` (Compatible with all Android devices)
+
+---
+
+**Lead Developer**: Vivek ([@Vivek](https://github.com/Vivek))

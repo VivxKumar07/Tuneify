@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 class AlbumViewModel
 @Inject
 constructor(
-  database: MusicDatabase,
+  private val database: MusicDatabase,
   savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
   val albumId = savedStateHandle.get<String>("albumId")!!
@@ -35,6 +35,14 @@ constructor(
   var descriptionRuns = MutableStateFlow<List<com.music.innertube.models.Run>?>(null)
 
   init {
+    loadAlbum()
+  }
+
+  fun refresh() {
+    loadAlbum()
+  }
+
+  private fun loadAlbum() {
     viewModelScope.launch {
       val album = database.album(albumId).first()
       if (album?.description != null) {

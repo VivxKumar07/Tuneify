@@ -1,5 +1,8 @@
 package echo.music.iad1tya.ui.screens.settings
 
+import echo.music.iad1tya.constants.AppFont
+import echo.music.iad1tya.constants.SelectedFontKey
+
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -136,6 +139,7 @@ fun AppearanceSettings(
 ) {
   val scrollState = androidx.compose.foundation.rememberScrollState()
 
+  val (selectedFontValue) = rememberPreference(SelectedFontKey, defaultValue = AppFont.MONTSERRAT.value)
   val (dynamicTheme, onDynamicThemeChange) =
     rememberPreference(DynamicThemeKey, defaultValue = true)
   val (enableLegacyIcon, onEnableLegacyIconChange) =
@@ -156,6 +160,8 @@ fun AppearanceSettings(
     rememberPreference(echo.music.iad1tya.constants.LiveBlurDensityKey, defaultValue = 50f)
   val (selectedThemeColorInt) =
     rememberPreference(SelectedThemeColorKey, defaultValue = DefaultThemeColor.toArgb())
+  val (liquidGlassGlobalEnabled, onLiquidGlassGlobalEnabledChange) =
+    rememberPreference(echo.music.iad1tya.constants.LiquidGlassGlobalEnabledKey, defaultValue = false)
 
   val isUsingCustomColor = selectedThemeColorInt != DefaultThemeColor.toArgb()
   val coroutineScope = rememberCoroutineScope()
@@ -195,7 +201,7 @@ fun AppearanceSettings(
   val (miniPlayerBackground, onMiniPlayerBackgroundChange) =
     rememberEnumPreference(
       MiniPlayerBackgroundStyleKey,
-      defaultValue = PlayerBackgroundStyle.DEFAULT
+      defaultValue = PlayerBackgroundStyle.GLOW_ANIMATED
     )
 
   val (defaultOpenTab, onDefaultOpenTabChange) =
@@ -916,12 +922,34 @@ PlayerBackgroundStyle.LIQUID_GLASS -> stringResource(R.string.player_background_
           add(
             Material3SettingsItem(
               isHighlighted = (highlightKey == stringResource(R.string.legacy_icon)),
-              icon = painterResource(R.drawable.ic_app_settings),
+              icon = painterResource(R.drawable.grid_view),
               title = { Text("App Icon") },
               description = { Text("Choose your launcher icon") },
               onClick = { navController.navigate("settings/appearance/app_icon") }
             )
           )
+          add(
+            Material3SettingsItem(
+              icon = painterResource(echo.music.iad1tya.R.drawable.alphabet_cyrillic),
+              title = { Text(stringResource(echo.music.iad1tya.R.string.app_font)) },
+              trailingContent = {
+                  val fontLabel = when (AppFont.fromValue(selectedFontValue)) {
+                      AppFont.CHARGER_PRO -> "Charger Pro (Default)"
+                      AppFont.MONUMENT_EXTENDED -> "Monument Extended"
+                      AppFont.MONTSERRAT -> "Montserrat"
+                      AppFont.SYSTEM -> stringResource(echo.music.iad1tya.R.string.font_system)
+                      AppFont.GOOGLE_SANS -> stringResource(echo.music.iad1tya.R.string.font_google_sans)
+                      AppFont.SANS_FLEX -> stringResource(echo.music.iad1tya.R.string.font_sans_flex)
+                      AppFont.OUTFIT -> stringResource(echo.music.iad1tya.R.string.font_outfit)
+                      AppFont.PLUS_JAKARTA_SANS -> stringResource(echo.music.iad1tya.R.string.font_plus_jakarta_sans)
+                      AppFont.CUSTOM -> stringResource(echo.music.iad1tya.R.string.font_custom)
+                  }
+                  Text(fontLabel)
+              },
+              onClick = { navController.navigate("settings/appearance/font") }
+            )
+          )
+
           add(
             Material3SettingsItem(
               isHighlighted = (highlightKey == stringResource(R.string.theme)),
@@ -936,7 +964,23 @@ PlayerBackgroundStyle.LIQUID_GLASS -> stringResource(R.string.player_background_
             Material3SettingsItem(
               icon = painterResource(R.drawable.water_drop),
               title = { Text(stringResource(R.string.liquid_glass)) },
-              description = { Text(stringResource(R.string.liquid_glass_settings)) },
+              description = { Text(if (liquidGlassGlobalEnabled) "Enabled • Tap to customize" else "Disabled • Tap to customize") },
+              trailingContent = {
+                Switch(
+                  checked = liquidGlassGlobalEnabled,
+                  onCheckedChange = onLiquidGlassGlobalEnabledChange,
+                  thumbContent = {
+                    Icon(
+                      painter =
+                        painterResource(
+                          id = if (liquidGlassGlobalEnabled) R.drawable.check else R.drawable.close
+                        ),
+                      contentDescription = null,
+                      modifier = Modifier.size(SwitchDefaults.IconSize)
+                    )
+                  }
+                )
+              },
               onClick = { navController.navigate("settings/appearance/liquidglass") }
             )
           )
@@ -966,33 +1010,7 @@ PlayerBackgroundStyle.LIQUID_GLASS -> stringResource(R.string.player_background_
             )
           )
 
-          if (!isUsingCustomColor) {
-            add(
-              Material3SettingsItem(
-                isHighlighted = (highlightKey == stringResource(R.string.enable_dynamic_theme)),
-                icon = painterResource(R.drawable.palette),
-                title = { Text(stringResource(R.string.enable_dynamic_theme)) },
-                description = { Text(stringResource(R.string.enable_dynamic_theme_desc)) },
-                trailingContent = {
-                  Switch(
-                    checked = dynamicTheme,
-                    onCheckedChange = onDynamicThemeChange,
-                    thumbContent = {
-                      Icon(
-                        painter =
-                          painterResource(
-                            id = if (dynamicTheme) R.drawable.check else R.drawable.close
-                          ),
-                        contentDescription = null,
-                        modifier = Modifier.size(SwitchDefaults.IconSize)
-                      )
-                    }
-                  )
-                },
-                onClick = { onDynamicThemeChange(!dynamicTheme) }
-              )
-            )
-          }
+
         }
     )
 
@@ -1642,6 +1660,22 @@ PlayerBackgroundStyle.LIQUID_GLASS -> stringResource(R.string.player_background_
             onClick = { onHideStatusBarOnFullscreenChange(!hideStatusBarOnFullscreen) }
           )
         )
+    )
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    Material3SettingsGroup(
+      scrollState = scrollState,
+      title = "Ambient Mode",
+      items = listOf(
+        Material3SettingsItem(
+          isHighlighted = false,
+          icon = painterResource(R.drawable.image),
+          title = { Text("Ambient Mode Options") },
+          description = { Text("Customize the appearance of the ambient player") },
+          onClick = { navController.navigate("ambient_settings") }
+        )
+      )
     )
 
     Spacer(modifier = Modifier.height(16.dp))

@@ -339,19 +339,7 @@ class App : Application(), SingletonImageLoader.Factory {
   @Volatile private var cachedCoilCacheSize: Int? = null
 
   override fun newImageLoader(context: PlatformContext): ImageLoader {
-    val cacheSize =
-      cachedCoilCacheSize
-        ?: runBlocking {
-          dataStore.data
-            .map {
-              (try {
-                it[MaxImageCacheSizeKey]
-              } catch (e: Exception) {
-                null
-              }) ?: 512
-            }
-            .first()
-        }
+    val cacheSize = cachedCoilCacheSize ?: 512
     return ImageLoader.Builder(this)
       .apply {
         crossfade(true)

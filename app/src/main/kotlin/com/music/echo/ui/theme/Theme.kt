@@ -22,7 +22,14 @@ import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.rememberDynamicColorScheme
 import com.materialkolor.score.Score
 
-val DefaultThemeColor = Color(0xFFED5564)
+val TuneifyObsidian = Color(0xFF7B2CBF)
+val DefaultThemeColor = TuneifyObsidian
+
+val ObsidianPurpleBackgroundColor = Color(0xFF09070F)
+val ObsidianPurpleSurfaceColor = Color(0xFF100D1A)
+val ObsidianPurpleSurfaceContainer = Color(0xFF171324)
+val ObsidianPurpleSurfaceVariant = Color(0xFF1F1A30)
+val ObsidianPurpleSurfaceHighest = Color(0xFF2B2342)
 
 @Composable
 fun echomusicTheme(
@@ -32,36 +39,66 @@ fun echomusicTheme(
   content: @Composable () -> Unit,
 ) {
   val context = LocalContext.current
+  val (selectedFontValue) =
+    echo.music.iad1tya.utils.rememberPreference(
+      echo.music.iad1tya.constants.SelectedFontKey,
+      defaultValue = "monument_extended"
+    )
+  val (customFontPath) =
+    echo.music.iad1tya.utils.rememberPreference(
+      echo.music.iad1tya.constants.CustomFontPathKey,
+      defaultValue = ""
+    )
 
-  val useSystemDynamicColor =
-    (themeColor == DefaultThemeColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+  val activeFontFamily = remember(selectedFontValue, customFontPath) {
+    getAppFontFamily(selectedFontValue, customFontPath)
+  }
+
+  val typography = remember(activeFontFamily) {
+    createAppTypography(displayFontFamily = activeFontFamily, bodyFontFamily = GoogleSansFontFamily)
+  }
+
+  val effectiveSeedColor = if (themeColor == Color(0xFF1B1B2F) || themeColor == Color(0xFF00E5FF) || themeColor == Color(0xFF141722)) TuneifyObsidian else themeColor
 
   val baseColorScheme =
-    if (useSystemDynamicColor) {
-
-      if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-    } else {
-
-      rememberDynamicColorScheme(
-        seedColor = themeColor,
-        isDark = darkTheme,
-        specVersion = ColorSpec.SpecVersion.SPEC_2025,
-        style = PaletteStyle.TonalSpot
-      )
-    }
+    rememberDynamicColorScheme(
+      seedColor = effectiveSeedColor,
+      isDark = darkTheme,
+      specVersion = ColorSpec.SpecVersion.SPEC_2025,
+      style = PaletteStyle.Fidelity
+    )
 
   val colorScheme =
     remember(baseColorScheme, pureBlack, darkTheme) {
-      if (darkTheme && pureBlack) {
-        baseColorScheme.pureBlack(true)
+      if (darkTheme) {
+        val darkBase = if (pureBlack) baseColorScheme.pureBlack(true) else baseColorScheme
+        darkBase.copy(
+          primary = Color(0xFFE0AAFF),
+          onPrimary = Color(0xFF0F0620),
+          primaryContainer = Color(0xFF381F66),
+          onPrimaryContainer = Color(0xFFF3EEFA),
+          background = if (pureBlack) Color.Black else ObsidianPurpleBackgroundColor,
+          surface = if (pureBlack) Color.Black else ObsidianPurpleSurfaceColor,
+          surfaceVariant = ObsidianPurpleSurfaceVariant,
+          surfaceContainer = ObsidianPurpleSurfaceContainer,
+          surfaceContainerHigh = ObsidianPurpleSurfaceVariant,
+          surfaceContainerHighest = ObsidianPurpleSurfaceHighest,
+          onSurface = Color(0xFFF3EEFA),
+          onSurfaceVariant = Color(0xFFAFA5C2),
+          outline = Color(0xFF453566),
+          outlineVariant = Color(0xFF281E3D)
+        )
       } else {
-        baseColorScheme
+        baseColorScheme.copy(
+          primary = Color(0xFF7B2CBF),
+          onPrimary = Color.White
+        )
       }
     }
 
   MaterialTheme(
     colorScheme = colorScheme,
-    typography = AppTypography,
+    typography = typography,
     shapes =
       androidx.compose.material3.MaterialTheme.shapes.copy(
         extraSmall = androidx.compose.foundation.shape.RoundedCornerShape(24.dp)

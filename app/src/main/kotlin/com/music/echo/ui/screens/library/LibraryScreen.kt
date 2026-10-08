@@ -1,5 +1,9 @@
 package echo.music.iad1tya.ui.screens.library
 
+import androidx.compose.foundation.clickable
+import echo.music.iad1tya.ui.component.Material3SettingsGroup
+import echo.music.iad1tya.ui.component.Material3SettingsItem
+
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,7 +38,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import echo.music.iad1tya.LocalPlayerAwareWindowInsets
 import echo.music.iad1tya.R
@@ -47,7 +54,7 @@ import echo.music.iad1tya.utils.rememberEnumPreference
 
 @Composable
 fun LibraryScreen(navController: NavController) {
-  var filterType by rememberEnumPreference(ChipSortTypeKey, LibraryFilter.LIBRARY)
+  var filterType by rememberEnumPreference(ChipSortTypeKey, LibraryFilter.PLAYLISTS)
   var showFabMenu by remember { mutableStateOf(false) }
   var showImportMenu by remember { mutableStateOf(false) }
   var showYoutubeImportDialog by remember { mutableStateOf(false) }
@@ -56,30 +63,57 @@ fun LibraryScreen(navController: NavController) {
   var showAiPlaylistDialog by rememberSaveable { mutableStateOf(false) }
   val context = LocalContext.current
 
-  BackHandler(enabled = filterType != LibraryFilter.LIBRARY) { filterType = LibraryFilter.LIBRARY }
+  BackHandler(enabled = filterType != LibraryFilter.PLAYLISTS) { filterType = LibraryFilter.PLAYLISTS }
 
   val filterContent =
     @Composable {
-      Row {
+      Column(modifier = Modifier.fillMaxWidth().padding(top = 2.dp, bottom = 2.dp)) {
+        Row(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 8.dp, bottom = 4.dp),
+          horizontalArrangement = Arrangement.SpaceBetween,
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          Text(
+            text = "Your Library",
+            fontWeight = FontWeight.Bold,
+            fontSize = 24.sp,
+            color = Color.White
+          )
+          Row(verticalAlignment = Alignment.CenterVertically) {
+            androidx.compose.material3.IconButton(onClick = { showFabMenu = true }) {
+              Icon(
+                painter = painterResource(R.drawable.add),
+                contentDescription = "Add",
+                tint = Color.White,
+                modifier = Modifier.padding(2.dp)
+              )
+            }
+            androidx.compose.material3.IconButton(onClick = { navController.navigate("search") }) {
+              Icon(
+                painter = painterResource(R.drawable.search),
+                contentDescription = "Search",
+                tint = Color.White,
+                modifier = Modifier.padding(2.dp)
+              )
+            }
+          }
+        }
         ChipsRow(
           chips =
             listOf(
               LibraryFilter.PLAYLISTS to stringResource(R.string.filter_playlists),
-              LibraryFilter.SONGS to stringResource(R.string.filter_songs),
-              LibraryFilter.ALBUMS to stringResource(R.string.filter_albums),
               LibraryFilter.ARTISTS to stringResource(R.string.filter_artists),
+              LibraryFilter.ALBUMS to stringResource(R.string.filter_albums),
+              LibraryFilter.SONGS to stringResource(R.string.filter_songs),
               LibraryFilter.LOCAL to stringResource(R.string.filter_local),
             ),
           currentValue = filterType,
           onValueUpdate = {
-            filterType =
-              if (filterType == it) {
-                LibraryFilter.LIBRARY
-              } else {
-                it
-              }
+            filterType = it
           },
-          modifier = Modifier.weight(1f),
+          modifier = Modifier.fillMaxWidth(),
         )
       }
     }
@@ -122,57 +156,74 @@ fun LibraryScreen(navController: NavController) {
       }
 
       val bottomPadding = with(density) { currentInsets.getBottom(density).toDp() }
-      Box(modifier = Modifier.fillMaxSize().padding(end = 16.dp, bottom = bottomPadding + 20.dp)) {
+      Box(modifier = Modifier.fillMaxSize().padding(end = 16.dp, bottom = bottomPadding + 76.dp)) {
         Box(modifier = Modifier.align(Alignment.BottomEnd)) {
           androidx.compose.material3.FloatingActionButton(
             onClick = { showFabMenu = true },
-            shape = CircleShape,
-            containerColor = MaterialTheme.colorScheme.onSurface,
-            contentColor = MaterialTheme.colorScheme.surface
+            shape = RoundedCornerShape(20.dp),
+            containerColor = Color.White,
+            contentColor = Color.Black
           ) {
             Icon(painter = painterResource(R.drawable.add), contentDescription = "Add")
           }
+        }
+      }
+    }
+  }
 
-          DropdownMenu(expanded = showFabMenu, onDismissRequest = { showFabMenu = false }) {
-            DropdownMenuItem(
-              text = { Text(stringResource(R.string.create_playlist)) },
-              leadingIcon = {
-                Icon(painter = painterResource(R.drawable.add), contentDescription = null)
-              },
+  if (showFabMenu) {
+    @kotlin.OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class) androidx.compose.material3.ModalBottomSheet(
+      onDismissRequest = { showFabMenu = false },
+      sheetState = @kotlin.OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class) androidx.compose.material3.rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    ) {
+      Column(modifier = Modifier.padding(bottom = 24.dp, start = 16.dp, end = 16.dp)) {
+        Material3SettingsGroup(
+          compact = true,
+          items = listOf(
+            Material3SettingsItem(
+              title = { Text(stringResource(R.string.create_playlist)) },
+              icon = painterResource(R.drawable.add),
               onClick = {
                 showFabMenu = false
                 showCreatePlaylistOptionsDialog = true
               }
-            )
-            DropdownMenuItem(
-              text = { Text(stringResource(R.string.import_playlist)) },
-              leadingIcon = {
-                Icon(painter = painterResource(R.drawable.download), contentDescription = null)
-              },
+            ),
+            Material3SettingsItem(
+              title = { Text(stringResource(R.string.import_playlist)) },
+              icon = painterResource(R.drawable.download),
               onClick = {
                 showFabMenu = false
                 showImportMenu = true
               }
             )
-          }
+          )
+        )
+      }
+    }
+  }
 
-          DropdownMenu(expanded = showImportMenu, onDismissRequest = { showImportMenu = false }) {
-            DropdownMenuItem(
-              text = { Text(stringResource(R.string.import_from_spotify)) },
-              onClick = {
-                showImportMenu = false
-                navController.navigate("settings/spotify_import")
-              }
-            )
-            DropdownMenuItem(
-              text = { Text(stringResource(R.string.import_from_youtube_music)) },
-              onClick = {
-                showImportMenu = false
-                showYoutubeImportDialog = true
-              }
-            )
+  if (showImportMenu) {
+    @kotlin.OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class) androidx.compose.material3.ModalBottomSheet(
+      onDismissRequest = { showImportMenu = false },
+      sheetState = @kotlin.OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class) androidx.compose.material3.rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    ) {
+      Column(modifier = Modifier.padding(bottom = 24.dp)) {
+        androidx.compose.material3.ListItem(
+          headlineContent = { Text(stringResource(R.string.import_from_spotify)) },
+          
+          modifier = Modifier.clickable {
+            showImportMenu = false
+            navController.navigate("settings/spotify_import")
           }
-        }
+        )
+        androidx.compose.material3.ListItem(
+          headlineContent = { Text(stringResource(R.string.import_from_youtube_music)) },
+          
+          modifier = Modifier.clickable {
+            showImportMenu = false
+            showYoutubeImportDialog = true
+          }
+        )
       }
     }
   }

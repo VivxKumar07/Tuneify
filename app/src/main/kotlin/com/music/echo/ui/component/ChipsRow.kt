@@ -43,6 +43,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
@@ -72,50 +74,28 @@ fun <E> ChipsRow(
     chips.forEach { (value, label) ->
       val isSelected = currentValue == value
 
-      val cornerRadius by
-        animateDpAsState(
-          targetValue = 12.dp,
-          animationSpec =
-            spring(
-              dampingRatio = Spring.DampingRatioMediumBouncy,
-              stiffness = Spring.StiffnessMedium
-            ),
-          label = "corner_radius"
-        )
-
       FilterChip(
-        label = { Text(label) },
+        label = {
+          Text(
+            text = label,
+            fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
+            fontSize = 13.5.sp
+          )
+        },
         selected = isSelected,
         colors =
           FilterChipDefaults.filterChipColors(
-            containerColor = containerColor,
-            selectedContainerColor = MaterialTheme.colorScheme.onSurface,
-            selectedLabelColor = MaterialTheme.colorScheme.surface,
-            selectedLeadingIconColor = MaterialTheme.colorScheme.surface
+            containerColor = androidx.compose.ui.graphics.Color(0xFF1A1F2C),
+            labelColor = androidx.compose.ui.graphics.Color.White,
+            selectedContainerColor = androidx.compose.ui.graphics.Color.White,
+            selectedLabelColor = androidx.compose.ui.graphics.Color(0xFF080A0F)
           ),
         onClick = { onValueUpdate(value) },
-        leadingIcon =
-          if (isSelected) {
-            {
-              Icon(
-                imageVector = Icons.Filled.Done,
-                contentDescription = null,
-                modifier = Modifier.size(FilterChipDefaults.IconSize),
-              )
-            }
-          } else {
-            null
-          },
-        shape = RoundedCornerShape(cornerRadius),
-        border = null,
+        leadingIcon = null,
+        shape = RoundedCornerShape(100),
+        border = if (isSelected) null else androidx.compose.foundation.BorderStroke(0.5.dp, androidx.compose.ui.graphics.Color.White.copy(alpha = 0.12f)),
         modifier =
-          Modifier.animateContentSize(
-            animationSpec =
-              spring(
-                dampingRatio = Spring.DampingRatioMediumBouncy,
-                stiffness = Spring.StiffnessMedium
-              )
-          )
+          Modifier.padding(horizontal = 4.dp).height(34.dp)
       )
 
       Spacer(Modifier.width(8.dp))

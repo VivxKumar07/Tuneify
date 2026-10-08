@@ -142,13 +142,13 @@ fun SearchScreen(navController: NavController, pureBlack: Boolean) {
 
   val searchBarHorizontalPadding by
     animateDpAsState(
-      targetValue = if (searchActive) 0.dp else 16.dp,
+      targetValue = 16.dp,
       animationSpec = tween(durationMillis = 245, easing = FastOutSlowInEasing),
       label = "SearchBarHorizontalPadding"
     )
   val searchBarTopPadding by
     animateDpAsState(
-      targetValue = if (searchActive) 0.dp else 8.dp,
+      targetValue = 8.dp,
       animationSpec = tween(durationMillis = 245, easing = FastOutSlowInEasing),
       label = "SearchBarTopPadding"
     )
@@ -218,7 +218,19 @@ fun SearchScreen(navController: NavController, pureBlack: Boolean) {
           Modifier.background(if (pureBlack) Color.Black else MaterialTheme.colorScheme.surface)
             .windowInsetsPadding(WindowInsets.statusBars)
       ) {
+        if (!searchActive) {
+          Text(
+            text = "Search",
+            style = MaterialTheme.typography.headlineLarge.copy(
+              fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+              fontSize = 28.sp
+            ),
+            color = Color.White,
+            modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 4.dp)
+          )
+        }
         SearchBar(
+          shape = RoundedCornerShape(100),
           inputField = {
             BasicTextField(
               value = query,
@@ -267,17 +279,11 @@ fun SearchScreen(navController: NavController, pureBlack: Boolean) {
                   Box(modifier = Modifier.weight(1f).padding(horizontal = 4.dp)) {
                     if (query.text.isEmpty()) {
                       Text(
-                        text =
-                          stringResource(
-                            when (searchSource) {
-                              SearchSource.LOCAL -> R.string.search_library
-                              SearchSource.ONLINE -> R.string.search_yt_music
-                            }
-                          ),
+                        text = "Artists, songs, albums, playlists...",
                         style =
                           TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                            fontSize = 16.sp
+                            color = Color(0xFF8E95A5),
+                            fontSize = 15.sp
                           )
                       )
                     }
@@ -317,20 +323,30 @@ fun SearchScreen(navController: NavController, pureBlack: Boolean) {
               }
             )
           },
-          expanded = searchActive,
+          expanded = false,
           onExpandedChange = { searchActive = it },
           colors =
             SearchBarDefaults.colors(
-              containerColor =
-                if (pureBlack) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
-                else MaterialTheme.colorScheme.surfaceVariant
+              containerColor = Color(0xFF141722)
             ),
           modifier =
             Modifier.fillMaxWidth()
               .padding(horizontal = searchBarHorizontalPadding)
               .padding(top = searchBarTopPadding)
         ) {
-          if (showSearchContent) {
+
+        }
+        androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(16.dp))
+
+      }
+    },
+    containerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.background
+  ) { paddingValues ->
+    val bottomPadding =
+      LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateBottomPadding()
+
+    Box(modifier = Modifier.padding(top = paddingValues.calculateTopPadding()).fillMaxSize()) {
+      if (searchActive && showSearchContent) {
             when (searchSource) {
               SearchSource.LOCAL ->
                 LocalSearchScreen(
@@ -352,88 +368,9 @@ fun SearchScreen(navController: NavController, pureBlack: Boolean) {
                   pureBlack = pureBlack
                 )
             }
-          }
-        }
-
-        AnimatedVisibility(
-          visible = !searchActive,
-          enter =
-            expandVertically(
-              animationSpec = tween(durationMillis = 245, easing = FastOutSlowInEasing)
-            ) + fadeIn(),
-          exit =
-            shrinkVertically(
-              animationSpec = tween(durationMillis = 245, easing = FastOutSlowInEasing)
-            ) + fadeOut()
-        ) {
-          Column {
-            Spacer(modifier = Modifier.height(8.dp))
-            SecondaryTabRow(
-              selectedTabIndex = selectedTabIndex,
-              containerColor = Color.Transparent,
-              divider = {
-                androidx.compose.material3.HorizontalDivider(
-                  color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f),
-                  thickness = 1.5.dp
-                )
-              },
-              indicator = {
-                Box(
-                  modifier = Modifier.tabIndicatorOffset(selectedTabIndex).fillMaxWidth(),
-                  contentAlignment = Alignment.BottomCenter
-                ) {
-                  Box(
-                    modifier =
-                      Modifier.width(32.dp)
-                        .height(3.dp)
-                        .clip(RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp))
-                        .background(MaterialTheme.colorScheme.onSurface)
-                  )
-                }
-              }
-            ) {
-              Tab(
-                selected = selectedTabIndex == 0,
-                onClick = { selectedTabIndex = 0 },
-                modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
-                selectedContentColor = MaterialTheme.colorScheme.onSurface,
-                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                text = { Text(stringResource(R.string.tab_explore)) }
-              )
-              Tab(
-                selected = selectedTabIndex == 1,
-                onClick = { selectedTabIndex = 1 },
-                modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
-                selectedContentColor = MaterialTheme.colorScheme.onSurface,
-                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                text = { Text("Echo Chart") }
-              )
-              Tab(
-                selected = selectedTabIndex == 2,
-                onClick = { selectedTabIndex = 2 },
-                modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
-                selectedContentColor = MaterialTheme.colorScheme.onSurface,
-                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                text = { Text(stringResource(R.string.tab_album)) }
-              )
-            }
-          }
-        }
-      }
-    },
-    containerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.background
-  ) { paddingValues ->
-    val bottomPadding =
-      LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateBottomPadding()
-
-    Box(modifier = Modifier.padding(top = paddingValues.calculateTopPadding()).fillMaxSize()) {
-      if (!searchActive) {
+      } else if (!searchActive) {
         val tabPadding = PaddingValues(bottom = bottomPadding)
-        when (selectedTabIndex) {
-          0 -> ExploreTabContent(navController = navController, contentPadding = tabPadding)
-          1 -> SuggestionsTabContent(navController = navController, contentPadding = tabPadding)
-          2 -> AlbumsTabContent(navController = navController, contentPadding = tabPadding)
-        }
+        SuggestionsTabContent(navController = navController, contentPadding = tabPadding)
       }
     }
   }

@@ -58,6 +58,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import echo.music.iad1tya.ui.component.TuneifySplashLaunchOverlay
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
@@ -194,6 +195,7 @@ import echo.music.iad1tya.ui.component.*
 import echo.music.iad1tya.ui.component.AppFloatingNavBar
 import echo.music.iad1tya.ui.component.RingtoneProgressDialog
 import echo.music.iad1tya.ui.component.RingtoneTrimmerDialog
+import echo.music.iad1tya.ui.component.floatingtabbar.FloatingTabBarInlineBehavior
 import echo.music.iad1tya.ui.component.floatingtabbar.rememberFloatingTabBarScrollConnection
 import echo.music.iad1tya.ui.component.shimmer.getShimmerTheme
 import echo.music.iad1tya.ui.menu.YouTubeSongMenu
@@ -512,7 +514,8 @@ class MainActivity : ComponentActivity() {
     LaunchedEffect(Unit) {
       val prefs = context.dataStore.data.first()
 
-      if (getAutoUpdateCheckSetting(context)) {
+      // Disabled Echo updater - Tuneify updates will be fetched from our own repository
+      if (false) {
 
         delay(2000L)
         checkForUpdate(
@@ -728,8 +731,10 @@ class MainActivity : ComponentActivity() {
         val topLevelScreens = remember {
           listOf(
             Screens.Home.route,
+            Screens.Search.route,
             Screens.Library.route,
             Screens.ListenTogether.route,
+            Screens.Profile.route,
             "settings",
           )
         }
@@ -788,8 +793,12 @@ class MainActivity : ComponentActivity() {
             label = "navBarHeight",
           )
 
-        val (useFloatingNavBar) = rememberPreference(UseFloatingNavBarKey, defaultValue = false)
-        val floatingNavBarScrollConnection = rememberFloatingTabBarScrollConnection()
+        val (useFloatingNavBar) = rememberPreference(UseFloatingNavBarKey, defaultValue = true)
+        val floatingNavBarScrollConnection =
+          rememberFloatingTabBarScrollConnection(
+            initialIsInline = false,
+            inlineBehavior = FloatingTabBarInlineBehavior.Never
+          )
 
         val playerBottomSheetState =
           rememberBottomSheetState(
@@ -946,14 +955,13 @@ class MainActivity : ComponentActivity() {
         var sharedSong: SongItem? by remember { mutableStateOf(null) }
         val snackbarHostState = remember { SnackbarHostState() }
         var showSettingDialoge by remember { mutableStateOf(false) }
+        var showTuneifySplash by rememberSaveable { mutableStateOf(false) }
 
         val (lastOpenedVersionCode, setLastOpenedVersionCode) =
           rememberPreference(echo.music.iad1tya.constants.LastOpenedVersionCodeKey, -1)
-        var showWelcomeDialog by remember { mutableStateOf(false) }
-
         LaunchedEffect(lastOpenedVersionCode) {
           if (lastOpenedVersionCode < BuildConfig.VERSION_CODE) {
-            showWelcomeDialog = true
+            setLastOpenedVersionCode(BuildConfig.VERSION_CODE)
           }
         }
 
@@ -998,9 +1006,10 @@ class MainActivity : ComponentActivity() {
 
         val currentTitle =
           when (navBackStackEntry?.destination?.route) {
-            Screens.Home.route -> "Echo Music"
+            Screens.Home.route -> "Tuneify"
             Screens.Search.route -> stringResource(R.string.search)
             Screens.Library.route -> stringResource(R.string.filter_library)
+            Screens.Profile.route -> stringResource(R.string.account)
             Screens.ListenTogether.route -> stringResource(R.string.together)
             else -> ""
           }
@@ -1031,10 +1040,10 @@ class MainActivity : ComponentActivity() {
             liquidGlassLensHeight, liquidGlassLensAmount, liquidGlassChromaticAberration,
             liquidGlassDepthEffect, liquidGlassSurfaceTintColorInt,
             liquidGlassSurfaceOpacity, liquidGlassTextColorInt, liquidGlassPlayerEnabled,
-            liquidGlassMiniPlayerEnabled, liquidGlassNavBarEnabled,
+            liquidGlassMiniPlayerEnabled, liquidGlassNavBarEnabled
         ) {
             GlassEffectConfig(
-                globalEnabled = liquidGlassGlobalEnabled && useFloatingNavBar,
+                globalEnabled = liquidGlassGlobalEnabled,
                 vibrancy = liquidGlassVibrancy,
                 blurRadius = liquidGlassBlurRadius,
                 lensHeight = liquidGlassLensHeight,
@@ -1074,90 +1083,7 @@ class MainActivity : ComponentActivity() {
         ) {
           Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
-            topBar = {
-              AnimatedVisibility(
-                visible = shouldShowTopBar,
-                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                exit = fadeOut(animationSpec = tween(durationMillis = 200))
-              ) {
-                Row {
-                  TopAppBar(
-                    title = {
-                      Text(
-                        text = currentTitle,
-                        style =
-                          MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp
-                          ),
-                      )
-                    },
-                    actions = {
-                      if (showHistoryButton) {
-                        IconButton(onClick = { navController.navigate("history") }) {
-                          Icon(
-                            painter = painterResource(R.drawable.music_history),
-                            contentDescription = stringResource(R.string.history)
-                          )
-                        }
-                      }
-                      IconButton(onClick = { navController.navigate("stats") }) {
-                        Icon(
-                          painter = painterResource(R.drawable.stats),
-                          contentDescription = stringResource(R.string.stats)
-                        )
-                      }
-                      if (listenTogetherInTopBar) {
-                        IconButton(
-                          onClick = { navController.navigate("listen_together_from_topbar") }
-                        ) {
-                          Icon(
-                            painter = painterResource(R.drawable.group_outlined),
-                            contentDescription = stringResource(R.string.together)
-                          )
-                        }
-                      }
-                      IconButton(onClick = { showSettingDialoge = true }) {
-                        BadgedBox(badge = {}) {
-                          if (accountImageUrl != null) {
-                            AsyncImage(
-                              model = accountImageUrl,
-                              contentDescription = stringResource(R.string.account),
-                              modifier = Modifier.size(24.dp).clip(CircleShape)
-                            )
-                          } else {
-                            Icon(
-                              painter = painterResource(R.drawable.settings),
-                              contentDescription = stringResource(R.string.account),
-                              modifier = Modifier.size(24.dp)
-                            )
-                          }
-                        }
-                      }
-                    },
-                    scrollBehavior = topAppBarScrollBehavior,
-                    colors =
-                      TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                        actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                      ),
-                    windowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Top),
-                    modifier =
-                      Modifier.windowInsetsPadding(
-                        if (showRail) {
-                          WindowInsets(left = NavigationBarHeight)
-                            .add(cutoutInsets.only(WindowInsetsSides.Start))
-                        } else {
-                          cutoutInsets.only(WindowInsetsSides.Start + WindowInsetsSides.End)
-                        }
-                      )
-                  )
-                }
-              }
-            },
+            topBar = {},
             bottomBar = {
               val onNavItemClick: (Screens, Boolean) -> Unit =
                 remember(
@@ -1192,7 +1118,7 @@ class MainActivity : ComponentActivity() {
                   currentRoute != "listen_together/chat" &&
                   currentRoute != "ambient_mode" &&
                   currentRoute != "uptime" &&
-                  currentRoute?.startsWith("settings") != true
+                  currentRoute?.startsWith("settings/") != true
               ) {
                 Box {
                   BottomSheetPlayer(
@@ -1229,6 +1155,13 @@ class MainActivity : ComponentActivity() {
                       onAccessoryClick = { playerBottomSheetState.expandSoft() },
                       onMusicRecognitionClick = onMusicRecognitionClick,
                       musicRecognitionContentDescription = stringResource(R.string.recognition),
+                      onHistoryClick = { navController.navigate("history") },
+                      onStatsClick = { navController.navigate("stats") },
+                      onListenTogetherClick = { navController.navigate("listen_together_from_topbar") },
+                      onSettingsClick = { showSettingDialoge = true },
+                      showHistoryButton = showHistoryButton,
+                      showListenTogether = listenTogetherInTopBar,
+                      accountImageUrl = accountImageUrl,
                       modifier =
                         Modifier.align(Alignment.BottomCenter)
                           .padding(horizontal = 16.dp)
@@ -1339,11 +1272,7 @@ class MainActivity : ComponentActivity() {
               Modifier.fillMaxSize()
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
                 .then(
-                  if (useFloatingNavBar) {
-                    Modifier.nestedScroll(floatingNavBarScrollConnection)
-                  } else {
-                    Modifier
-                  }
+                  Modifier
                 )
           ) {
             Row(Modifier.fillMaxSize()) {
@@ -1414,14 +1343,16 @@ class MainActivity : ComponentActivity() {
                     val previousRouteIndex =
                       navigationItems.indexOfFirst { it.route == initialState.destination.route }
 
-                    if (currentRouteIndex == -1 || currentRouteIndex > previousRouteIndex)
-                      slideInHorizontally(animationSpec = tween(400, easing = EmphasizedEasing)) {
+                    if (currentRouteIndex != -1 && previousRouteIndex != -1) {
+                      fadeIn(tween(140))
+                    } else if (currentRouteIndex == -1 || currentRouteIndex > previousRouteIndex)
+                      slideInHorizontally(animationSpec = tween(280, easing = EmphasizedEasing)) {
                         it / 8
-                      } + fadeIn(tween(400, easing = EmphasizedEasing))
+                      } + fadeIn(tween(280, easing = EmphasizedEasing))
                     else
-                      slideInHorizontally(animationSpec = tween(400, easing = EmphasizedEasing)) {
+                      slideInHorizontally(animationSpec = tween(280, easing = EmphasizedEasing)) {
                         -it / 8
-                      } + fadeIn(tween(400, easing = EmphasizedEasing))
+                      } + fadeIn(tween(280, easing = EmphasizedEasing))
                   },
                   exitTransition = {
                     val currentRouteIndex =
@@ -1429,14 +1360,16 @@ class MainActivity : ComponentActivity() {
                     val targetRouteIndex =
                       navigationItems.indexOfFirst { it.route == targetState.destination.route }
 
-                    if (targetRouteIndex == -1 || targetRouteIndex > currentRouteIndex)
-                      slideOutHorizontally(animationSpec = tween(400, easing = EmphasizedEasing)) {
+                    if (currentRouteIndex != -1 && targetRouteIndex != -1) {
+                      fadeOut(tween(140))
+                    } else if (targetRouteIndex == -1 || targetRouteIndex > currentRouteIndex)
+                      slideOutHorizontally(animationSpec = tween(280, easing = EmphasizedEasing)) {
                         -it / 8
-                      } + fadeOut(tween(400, easing = EmphasizedEasing))
+                      } + fadeOut(tween(280, easing = EmphasizedEasing))
                     else
-                      slideOutHorizontally(animationSpec = tween(400, easing = EmphasizedEasing)) {
+                      slideOutHorizontally(animationSpec = tween(280, easing = EmphasizedEasing)) {
                         it / 8
-                      } + fadeOut(tween(400, easing = EmphasizedEasing))
+                      } + fadeOut(tween(280, easing = EmphasizedEasing))
                   },
                   popEnterTransition = {
                     val currentRouteIndex =
@@ -1444,14 +1377,16 @@ class MainActivity : ComponentActivity() {
                     val previousRouteIndex =
                       navigationItems.indexOfFirst { it.route == initialState.destination.route }
 
-                    if (previousRouteIndex != -1 && previousRouteIndex < currentRouteIndex)
-                      slideInHorizontally(animationSpec = tween(400, easing = EmphasizedEasing)) {
+                    if (currentRouteIndex != -1 && previousRouteIndex != -1) {
+                      fadeIn(tween(140))
+                    } else if (previousRouteIndex != -1 && previousRouteIndex < currentRouteIndex)
+                      slideInHorizontally(animationSpec = tween(280, easing = EmphasizedEasing)) {
                         it / 8
-                      } + fadeIn(tween(400, easing = EmphasizedEasing))
+                      } + fadeIn(tween(280, easing = EmphasizedEasing))
                     else
-                      slideInHorizontally(animationSpec = tween(400, easing = EmphasizedEasing)) {
+                      slideInHorizontally(animationSpec = tween(280, easing = EmphasizedEasing)) {
                         -it / 8
-                      } + fadeIn(tween(400, easing = EmphasizedEasing))
+                      } + fadeIn(tween(280, easing = EmphasizedEasing))
                   },
                   popExitTransition = {
                     val currentRouteIndex =
@@ -1459,14 +1394,16 @@ class MainActivity : ComponentActivity() {
                     val targetRouteIndex =
                       navigationItems.indexOfFirst { it.route == targetState.destination.route }
 
-                    if (currentRouteIndex != -1 && currentRouteIndex < targetRouteIndex)
-                      slideOutHorizontally(animationSpec = tween(400, easing = EmphasizedEasing)) {
+                    if (currentRouteIndex != -1 && targetRouteIndex != -1) {
+                      fadeOut(tween(140))
+                    } else if (currentRouteIndex != -1 && currentRouteIndex < targetRouteIndex)
+                      slideOutHorizontally(animationSpec = tween(280, easing = EmphasizedEasing)) {
                         -it / 8
-                      } + fadeOut(tween(400, easing = EmphasizedEasing))
+                      } + fadeOut(tween(280, easing = EmphasizedEasing))
                     else
-                      slideOutHorizontally(animationSpec = tween(400, easing = EmphasizedEasing)) {
+                      slideOutHorizontally(animationSpec = tween(280, easing = EmphasizedEasing)) {
                         it / 8
-                      } + fadeOut(tween(400, easing = EmphasizedEasing))
+                      } + fadeOut(tween(280, easing = EmphasizedEasing))
                   },
                   modifier = Modifier.layerBackdrop(appBackdrop).nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
                 ) {
@@ -1552,14 +1489,9 @@ class MainActivity : ComponentActivity() {
             )
           }
 
-          if (showWelcomeDialog) {
-            WelcomeDialog(
-              onDismissRequest = {
-                showWelcomeDialog = false
-                setLastOpenedVersionCode(BuildConfig.VERSION_CODE)
-              }
-            )
-          }
+
+
+
         }
       }
     }

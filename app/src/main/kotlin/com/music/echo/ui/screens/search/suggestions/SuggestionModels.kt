@@ -5,15 +5,23 @@ data class SuggestionTrack(
   val title: String,
   val artist: String,
   val thumbnailUrl: String?,
+  val id: String? = null,
   val appleMusicUrl: String? = null
 )
 
-data class SuggestionArtist(val rank: Int, val name: String, val thumbnailUrl: String?)
+data class SuggestionArtist(
+  val rank: Int,
+  val name: String,
+  val thumbnailUrl: String?,
+  val id: String? = null
+)
 
 data class SuggestionAlbum(
   val rank: Int,
   val title: String,
   val artist: String,
   val thumbnailUrl: String?,
+  val id: String? = null,
   val appleMusicUrl: String? = null
 )
+

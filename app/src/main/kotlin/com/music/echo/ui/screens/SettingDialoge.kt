@@ -60,7 +60,8 @@ fun SettingDialoge(
     onDismissRequest = onDismissRequest,
     sheetState = sheetState,
     dragHandle = { BottomSheetDefaults.DragHandle() },
-    containerColor = MaterialTheme.colorScheme.surfaceContainer
+    shape = androidx.compose.foundation.shape.RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+    containerColor = androidx.compose.ui.graphics.Color(0xFF0B101D)
   ) {
     val primaryColor = MaterialTheme.colorScheme.onSurface
     val onSecondaryColor = MaterialTheme.colorScheme.onSurfaceVariant

@@ -443,7 +443,7 @@
     <string name="listen_together_smart_resync">Smart Network Resync</string>
     <string name="listen_together_smart_resync_desc">Automatically catch up with the host after a connection drop</string>
     <string name="spotify_import_title">Import From Spotify</string>
-    <string name="spotify_import_desc">Connect Spotify, choose playlists, and mirror them into local Echo Music playlists.</string>
+    <string name="spotify_import_desc">Connect Spotify, choose playlists, and mirror them into local Tuneify playlists.</string>
     <string name="spotify_connect">Connect Spotify</string>
     <string name="spotify_refresh">Refresh Spotify library</string>
     <string name="spotify_select_sources">Select Spotify playlists</string>
@@ -488,17 +488,17 @@
     <string name="recognition_notification_processing">Identifying…</string>
     <string name="recognition_notification_no_match">No match found</string>
     <string name="recognition_notification_failed">Recognition failed</string>
-    <string name="listen_on_echo_music">Listen on Echo Music</string>
+    <string name="listen_on_echo_music">Listen on Tuneify</string>
     <string name="qs_tile_music_recognizer">Recognize music</string>
     <string name="listenbrainz_scrobbling">ListenBrainz scrobbling</string>
     <string name="listenbrainz_scrobbling_description">Automatically submit your listened tracks to ListenBrainz</string>
     <string name="export_directory_unavailable">Unable to access an export directory on this device. Please set one manually.</string>
     <string name="set_listenbrainz_token">Set ListenBrainz Token</string>
 
-    <!-- Echo Extractor Settings -->
-    <string name="youtube_decryption_settings">Echo Extractor</string>
+    <!-- Tuneify Extractor Settings -->
+    <string name="youtube_decryption_settings">Tuneify Extractor</string>
     <string name="youtube_decryption_desc">Configure extractor settings</string>
-    <string name="youtube_decryption_support">Echo Extractor</string>
+    <string name="youtube_decryption_support">Tuneify Extractor</string>
     <string name="youtube_decryption_support_desc">Automatically extracts YouTube playback configurations. Locked to Active.</string>
     <string name="force_update_cipher">Force Update Configurations</string>
     <string name="force_update_cipher_desc">Download the latest extractor override mappings. Limited to 3 updates per day.</string>
@@ -553,7 +553,7 @@
     <string name="liquid_glass_desc">Manage Liquid Glass (Beta) settings</string>
 
     <string name="nav_bar_style">Navigation Bar Style</string>
-    <string name="floating_nav_bar">Floating navigation bar</string>
+    <string name="floating_nav_bar">Apple style navigation bar</string>
     <string name="floating_nav_bar_desc">iOS style floating tab bar that shrinks while scrolling</string>
     <string name="color_picker_hex">Hex</string>
     <string name="color_white">White</string>
@@ -822,7 +822,7 @@
     <string name="scrobble_delay_minutes_desc">Manage Scrobble delay minutes settings</string>
     <string name="ai_recommendations_refresh_desc">Configure AI settings for Refresh Recommendations</string>
     <string name="last_updated_desc">Manage Last updated settings</string>
-    <string name="youtube_decryption_settings_desc">Manage Echo Extractor settings</string>
+    <string name="youtube_decryption_settings_desc">Manage Tuneify Extractor settings</string>
     <string name="refresh_desc">Manage refresh settings</string>
     <string name="activity_status_desc">Manage activity_status settings</string>
     <string name="platform_status_desc">Manage platform_status settings</string>
@@ -842,20 +842,20 @@
     <string name="listen_together_logs_desc">Manage Connection logs settings</string>
     <string name="listen_together_choose_server_desc">Manage Choose server settings</string>
 
-    <!-- Echo Brain -->
+    <!-- Tuneify Brain -->
     <string name="echo_brain_analyzed_artists">Analyzed Artists</string>
     <plurals name="echo_brain_artists_mapped">
         <item quantity="one">%1$d artist mapped</item>
         <item quantity="other">%1$d artists mapped</item>
     </plurals>
-    <string name="echo_brain_beta">Echo Brain (Beta)</string>
+    <string name="echo_brain_beta">Tuneify Brain (Beta)</string>
     <string name="echo_brain_data_management">Data Management</string>
     <string name="echo_brain_discovered_genres">Discovered Genres</string>
     <plurals name="echo_brain_distinct_genres_identified">
         <item quantity="one">%1$d distinct genre identified</item>
         <item quantity="other">%1$d distinct genres identified</item>
     </plurals>
-    <string name="echo_brain_enable">Enable Echo Brain</string>
+    <string name="echo_brain_enable">Enable Tuneify Brain</string>
     <string name="echo_brain_enable_desc">Automatically add AI recommendations based on your listening habits</string>
     <string name="echo_brain_export_failed">Export failed</string>
     <string name="echo_brain_export_profile">Export Profile</string>
@@ -917,4 +917,25 @@
     <string name="sync_failed">Sync failed</string>
     <string name="syncing_playlist">Syncing playlist</string>
     <string name="timed_lyrics_not_found">Timed lyrics not found</string>
+
+    <string name="app_font">App Font</string>
+    <string name="font_system">System Default</string>
+    <string name="font_google_sans">Google Sans</string>
+    <string name="font_sans_flex">Sans Flex</string>
+    <string name="font_outfit">Outfit</string>
+    <string name="font_plus_jakarta_sans">Plus Jakarta Sans</string>
+    <string name="font_custom">Custom</string>
+    <string name="listening_summary">Listening Summary</string>
+    <string name="listening_summary_desc">View your music listening stats</string>
+    <string name="font_selection">Font Selection</string>
+    <string name="font_system_desc">Use the default system font</string>
+    <string name="font_google_sans_desc">Use Google Sans font</string>
+    <string name="font_sans_flex_desc">Use Sans Flex font</string>
+    <string name="font_outfit_desc">Use Outfit font</string>
+    <string name="font_plus_jakarta_sans_desc">Use Plus Jakarta Sans font</string>
+    <string name="font_custom_desc">Use a custom font</string>
+    <string name="import_custom_font">Import Custom Font</string>
+    <string name="typography_preview">Typography Preview</string>
+    <string name="preview_text_quote">The quick brown fox jumps over the lazy dog</string>
 </resources>
+

@@ -604,18 +604,38 @@ constructor(
       launch(Dispatchers.IO) {
         YouTube.home()
           .onSuccess { page ->
-            homePage.value =
-              page.copy(
-                sections =
-                  page.sections.mapNotNull { section ->
-                    val filteredItems =
-                      section.items
-                        .filterExplicit(hideExplicit)
-                        .filterVideoSongs(hideVideoSongs)
-                        .filterYoutubeShorts(hideYoutubeShorts)
-                    if (filteredItems.isEmpty()) null else section.copy(items = filteredItems)
-                  }
-              )
+            var combinedSections = page.sections.mapNotNull { section ->
+              val filteredItems =
+                section.items
+                  .filterExplicit(hideExplicit)
+                  .filterVideoSongs(hideVideoSongs)
+                  .filterYoutubeShorts(hideYoutubeShorts)
+              if (filteredItems.isEmpty()) null else section.copy(items = filteredItems)
+            }
+            homePage.value = page.copy(sections = combinedSections, continuation = page.continuation)
+
+            var currentContinuation = page.continuation
+            var batches = 0
+            while (currentContinuation != null && combinedSections.size < 25 && batches < 4) {
+              batches++
+              val nextBatch = YouTube.home(currentContinuation).getOrNull() ?: break
+              currentContinuation = nextBatch.continuation
+              val newSections = nextBatch.sections.mapNotNull { section ->
+                val filteredItems =
+                  section.items
+                    .filterExplicit(hideExplicit)
+                    .filterVideoSongs(hideVideoSongs)
+                    .filterYoutubeShorts(hideYoutubeShorts)
+                if (filteredItems.isEmpty()) null else section.copy(items = filteredItems)
+              }
+              if (newSections.isNotEmpty()) {
+                combinedSections = combinedSections + newSections
+                homePage.value = page.copy(
+                  sections = combinedSections,
+                  continuation = currentContinuation
+                )
+              }
+            }
           }
           .onFailure { reportException(it) }
       }
@@ -648,6 +668,7 @@ constructor(
   }
 
   private val _isLoadingMore = MutableStateFlow(false)
+  val isLoadingMore: StateFlow<Boolean> = _isLoadingMore
 
   fun loadMoreYouTubeItems(continuation: String?) {
     if (continuation == null || _isLoadingMore.value) return

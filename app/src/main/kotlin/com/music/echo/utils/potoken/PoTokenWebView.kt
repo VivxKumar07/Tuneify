@@ -313,22 +313,28 @@ private constructor(
   }
 
   private fun onInitializationErrorCloseAndCancel(error: Throwable) {
-    close()
-    continuation.resumeWithException(error)
+    android.os.Handler(android.os.Looper.getMainLooper()).post {
+      close()
+    }
+    try {
+      continuation.resumeWithException(error)
+    } catch (_: Exception) {
+    }
   }
 
   @MainThread
   fun close() {
     scope.cancel()
-
-    webView.clearHistory()
-    webView.clearCache(true)
-
-    webView.loadUrl("about:blank")
-
-    webView.onPause()
-    webView.removeAllViews()
-    webView.destroy()
+    try {
+      webView.clearHistory()
+      webView.clearCache(true)
+      webView.loadUrl("about:blank")
+      webView.onPause()
+      webView.removeAllViews()
+      webView.destroy()
+    } catch (e: Exception) {
+      Timber.tag(TAG).e(e, "Error closing webView")
+    }
   }
   // endregion
 

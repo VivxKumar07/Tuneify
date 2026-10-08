@@ -747,12 +747,75 @@ fun AlbumScreen(
 
       item(key = "bottom_spacer") { Spacer(Modifier.height(50.dp)) }
     } else {
-      item(key = "loading") {
+      item(key = "loading_state") {
+        var isTimedOut by remember { mutableStateOf(false) }
+        LaunchedEffect(Unit) {
+          kotlinx.coroutines.delay(10000L) // 10s timeout
+          isTimedOut = true
+        }
+
         Box(
-          modifier = Modifier.fillMaxWidth().padding(32.dp),
+          modifier = Modifier.fillMaxWidth().fillParentMaxHeight(0.7f).padding(32.dp),
           contentAlignment = Alignment.Center
         ) {
-          ContainedLoadingIndicator()
+          if (!isTimedOut) {
+            Column(
+              horizontalAlignment = Alignment.CenterHorizontally,
+              verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+              androidx.compose.material3.CircularProgressIndicator(
+                modifier = Modifier.size(36.dp),
+                color = MaterialTheme.colorScheme.primary,
+                strokeWidth = 3.dp
+              )
+              Text(
+                text = "Loading album...",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+              )
+            }
+          } else {
+            Column(
+              horizontalAlignment = Alignment.CenterHorizontally,
+              verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+              Icon(
+                painter = painterResource(R.drawable.error),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error,
+                modifier = Modifier.size(48.dp)
+              )
+              Text(
+                text = "Unable to load album tracks",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+              )
+              Text(
+                text = "Please check your network connection or try again later.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+              )
+              Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                androidx.compose.material3.Button(
+                  onClick = {
+                    isTimedOut = false
+                    viewModel.refresh()
+                  },
+                  shape = CircleShape
+                ) {
+                  Text("Retry")
+                }
+                androidx.compose.material3.OutlinedButton(
+                  onClick = { navController.navigateUp() },
+                  shape = CircleShape
+                ) {
+                  Text("Go Back")
+                }
+              }
+            }
+          }
         }
       }
     }

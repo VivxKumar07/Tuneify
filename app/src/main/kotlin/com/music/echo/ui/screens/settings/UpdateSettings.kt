@@ -77,23 +77,26 @@ fun UpdateSettings(
   val isUpdateAvailable = getUpdateAvailableState(context) && autoUpdateEnabled
   var apkCount by remember { mutableStateOf(getDownloadedApkCount(context)) }
   var showInfoDialog by remember { mutableStateOf(false) }
-  var releaseNotes by remember { mutableStateOf<String?>(null) }
+  val tuneifyStandaloneChangelog = remember {
+    """
+### Tuneify v1.1.0 (Standalone Official Release)
+Welcome to Tuneify v1.1.0 — redesigned from the ground up as a premier standalone music experience!
+
+#### ✨ Highlights & New Features
+- **Spotlight Hero Carousel**: Movie-style wide spotlight posters with zero text distraction.
+- **YT Music Multi-Column Tracks**: Horizonally scrollable multi-column track groups for faster music discovery.
+- **Rich 20+ Row Home Feed**: Dynamic mix of Cascading Genres (2x8 grid), Expressive 7-sided cookie artist rows, Daily Mixes, and personalized continuations.
+- **Cinematic Capsule Mini Player**: Unified obsidian dark pill player with rotating vinyl art and cream action controls.
+- **Complete Visual Identity**: Montserrat bold typography, signature Tuneify Cyan (#00E5FF), and pure obsidian dark palettes.
+- **Real Database Integration**: Accurate Room database syncing for liked songs, playlists, downloads, and playback history.
+    """.trimIndent()
+  }
+
+  var releaseNotes by remember { mutableStateOf<String?>(tuneifyStandaloneChangelog) }
 
   LaunchedEffect(Unit) {
     autoClearOldApks(context)
     apkCount = getDownloadedApkCount(context)
-
-    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-      try {
-        val url =
-          java.net.URL("https://api.github.com/repos/EchoMusicApp/Echo-Music/releases/latest")
-        val json = url.openStream().bufferedReader().use { it.readText() }
-        val targetRelease = JSONObject(json)
-        releaseNotes = targetRelease.getString("body")
-      } catch (e: Exception) {
-        e.printStackTrace()
-      }
-    }
   }
 
   if (showInfoDialog) {
@@ -123,26 +126,17 @@ fun UpdateSettings(
             icon = painterResource(R.drawable.update),
             title = { Text(stringResource(R.string.system_update)) },
             description = {
-              if (isUpdateAvailable) {
-                Text(
-                  text = "New update is available",
-                  color = androidx.compose.ui.graphics.Color.Red
-                )
-              } else {
-                Text(stringResource(R.string.version, BuildConfig.VERSION_NAME))
-              }
+              Text(stringResource(R.string.version, BuildConfig.VERSION_NAME))
             },
             onClick = {
-              val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://echomusic.fun"))
-              context.startActivity(intent)
+              android.widget.Toast.makeText(context, "Tuneify is up to date (v${BuildConfig.VERSION_NAME})", android.widget.Toast.LENGTH_SHORT).show()
             }
           )
         )
     )
 
     Text(
-      text =
-        "To download updates, you will be redirected to our official site containing ads. This helps fund the app's development. Thank you for your support!",
+      text = "Tuneify is fully ad-free, open-source, and dedicated to pure audio performance.",
       style = MaterialTheme.typography.bodySmall,
       color = MaterialTheme.colorScheme.onSurfaceVariant,
       modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp)

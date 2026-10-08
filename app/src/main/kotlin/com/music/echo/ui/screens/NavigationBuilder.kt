@@ -42,6 +42,7 @@ import echo.music.iad1tya.ui.screens.recognition.RecognitionHistoryScreen
 import echo.music.iad1tya.ui.screens.recognition.RecognitionScreen
 import echo.music.iad1tya.ui.screens.search.OnlineSearchResult
 import echo.music.iad1tya.ui.screens.search.SearchScreen
+import echo.music.iad1tya.ui.screens.settings.BlockedArtistsScreen
 import echo.music.iad1tya.ui.screens.settings.AboutScreen
 import echo.music.iad1tya.ui.screens.settings.AccountSettingsScreen
 import echo.music.iad1tya.ui.screens.settings.AiSettings
@@ -280,7 +281,9 @@ fun NavGraphBuilder.navigationBuilder(
     YouTubeBrowseScreen(navController)
   }
 
+  composable(Screens.Profile.route) { SettingsScreen(navController, scrollBehavior) }
   composable("settings") { SettingsScreen(navController, scrollBehavior) }
+  composable("blocked_artists") { BlockedArtistsScreen(navController) }
 
   composable(
     route = "settings/update?highlightKey={highlightKey}",
@@ -316,6 +319,8 @@ fun NavGraphBuilder.navigationBuilder(
     )
   }
 
+  composable("ambient_settings") { echo.music.iad1tya.ui.screens.settings.AmbientSettingsScreen(navController) }
+
   composable(
     route = "settings/appearance?highlightKey={highlightKey}",
     arguments =
@@ -340,6 +345,29 @@ fun NavGraphBuilder.navigationBuilder(
   composable("settings/appearance/app_icon") {
     AppIconSettingsScreen(navController, activity, snackbarHostState)
   }
+
+  composable("settings/appearance/font") {
+    com.music.echo.ui.screens.settings.FontSelectionScreen(navController, scrollBehavior)
+  }
+
+  composable("settings/listening_summary") {
+    com.music.echo.ui.screens.ListeningSummaryScreen(navController)
+  }
+
+
+  composable(
+        route = "detailed_listening_history/{startTimestamp}",
+        arguments = listOf(
+            navArgument("startTimestamp") {
+                type = NavType.StringType
+            },
+        ),
+    ) {
+        echo.music.iad1tya.ui.screens.DetailedListeningHistoryScreen(navController)
+    }
+
+
+
   
   composable("settings/appearance/liquidglass") {
     GlassEffectSettings(navController, scrollBehavior)

@@ -1,14 +1,21 @@
 package echo.music.iad1tya.ui.screens.search.suggestions
 
+import com.valentinilk.shimmer.shimmer
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import echo.music.iad1tya.playback.queues.YouTubeQueue
+import echo.music.iad1tya.ui.component.TuneifyCascadingGenreCard
+import echo.music.iad1tya.ui.component.MaterialExpressiveShapes
+import echo.music.iad1tya.ui.component.TuneifyCookieShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -41,6 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
@@ -72,6 +80,12 @@ fun SuggestionsTabContent(
 
   androidx.compose.runtime.LaunchedEffect(regionCode) { viewModel.refresh(regionCode) }
 
+  val realThumbnails = remember(suggestionTracks, suggestionAlbums) {
+    val tThumbs = suggestionTracks?.mapNotNull { it.thumbnailUrl } ?: emptyList()
+    val aThumbs = suggestionAlbums?.mapNotNull { it.thumbnailUrl } ?: emptyList()
+    (tThumbs + aThumbs).filter { it.isNotBlank() }
+  }
+
   val pullToRefreshState = rememberPullToRefreshState()
   val scope = rememberCoroutineScope()
 
@@ -89,43 +103,84 @@ fun SuggestionsTabContent(
     modifier = Modifier.fillMaxSize()
   ) {
     LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = contentPadding) {
-      if (
-        isLoading &&
-          !isManualLoading &&
-          suggestionTracks == null &&
-          suggestionArtists == null &&
-          suggestionAlbums == null &&
-          suggestionVideos == null
-      ) {
-        item {
-          Box(
-            modifier = Modifier.fillMaxWidth().height(300.dp),
-            contentAlignment = Alignment.Center
-          ) {
-            CircularWavyProgressIndicator()
+      item {
+        SearchCategoriesSection(navController = navController, realThumbnails = realThumbnails)
+      }
+
+      // Regional music posters fetched directly according to user's device region
+      item {
+        val regionName = remember(regionCode) {
+          if (regionCode == "system") {
+            java.util.Locale.getDefault().displayCountry.ifBlank { "Your Region" }
+          } else {
+            java.util.Locale("", regionCode).displayCountry.ifBlank { regionCode.uppercase() }
           }
+        }
+        val regionalItems = remember(suggestionTracks, suggestionAlbums) {
+          val tracks = suggestionTracks?.map { track ->
+            RegionalMusicPoster(
+              id = track.id ?: "",
+              title = track.title,
+              subtitle = track.artist,
+              thumbnailUrl = track.thumbnailUrl
+            )
+          }.orEmpty()
+          val albums = suggestionAlbums?.map { album ->
+            RegionalMusicPoster(
+              id = album.id ?: "",
+              title = album.title,
+              subtitle = album.artist,
+              thumbnailUrl = album.thumbnailUrl
+            )
+          }.orEmpty()
+          (tracks.shuffled() + albums.shuffled()).filter { it.id.isNotBlank() }.distinctBy { it.id }.take(10)
+        }
+        if (regionalItems.isNotEmpty()) {
+          RegionalMusicSection(
+            regionName = regionName,
+            items = regionalItems,
+            onItemClick = { item ->
+              playerConnection?.playQueue(
+                YouTubeQueue(
+                  com.music.innertube.models.WatchEndpoint(videoId = item.id),
+                  echo.music.iad1tya.models.MediaMetadata(
+                    id = item.id,
+                    title = item.title,
+                    artists = listOf(echo.music.iad1tya.models.MediaMetadata.Artist(id = null, name = item.subtitle)),
+                    duration = 200,
+                    thumbnailUrl = item.thumbnailUrl
+                  )
+                )
+              )
+            }
+          )
+        }
+      }
+
+      suggestionAlbums?.takeIf { it.isNotEmpty() }?.let { albums ->
+        item {
+          TrendingAlbumsSection(
+            albums = albums,
+            onAlbumClick = { album ->
+              viewModel.navigateToAlbum(album, navController)
+            },
+            onMoreClick = {
+              navController.navigate("youtube_browse/FEmusic_new_releases_albums")
+            }
+          )
         }
       }
 
       suggestionTracks?.let { tracks ->
         item {
-          TrendingAppleMusicSection(
-            tracks = suggestionTracks!!,
+          TrendingMusicSection(
+            tracks = tracks,
             countryCode = regionCode,
             onTrackClick = { track ->
-              android.widget.Toast.makeText(
-                  context,
-                  "Loading ${track.title}...",
-                  android.widget.Toast.LENGTH_SHORT
-                )
-                .show()
               viewModel.playTrack(track, playerConnection)
             },
             onMoreClick = {
-              val code =
-                if (regionCode == "system") java.util.Locale.getDefault().country.lowercase()
-                else regionCode.lowercase()
-              uriHandler.openUri("https://music.apple.com/$code/charts")
+              navController.navigate("youtube_browse/FEmusic_charts")
             }
           )
         }
@@ -148,47 +203,15 @@ fun SuggestionsTabContent(
         }
       }
 
-      suggestionAlbums?.let { albums ->
-        item {
-          TrendingAlbumsSection(
-            albums = albums,
-            onAlbumClick = { album ->
-              android.widget.Toast.makeText(
-                  context,
-                  "Loading ${album.title}...",
-                  android.widget.Toast.LENGTH_SHORT
-                )
-                .show()
-              viewModel.navigateToAlbum(album, navController)
-            },
-            onMoreClick = {
-              val code =
-                if (regionCode == "system") java.util.Locale.getDefault().country.lowercase()
-                else regionCode.lowercase()
-              uriHandler.openUri("https://music.apple.com/$code/charts/albums")
-            }
-          )
-        }
-      }
-
       suggestionVideos?.let { videos ->
         item {
           TrendingVideosSection(
             videos = videos,
             onVideoClick = { video ->
-              android.widget.Toast.makeText(
-                  context,
-                  "Loading video ${video.title}...",
-                  android.widget.Toast.LENGTH_SHORT
-                )
-                .show()
               viewModel.playVideo(video, playerConnection)
             },
             onMoreClick = {
-              val code =
-                if (regionCode == "system") java.util.Locale.getDefault().country.lowercase()
-                else regionCode.lowercase()
-              uriHandler.openUri("https://music.apple.com/$code/charts/videos")
+              navController.navigate("youtube_browse/FEmusic_charts")
             }
           )
         }
@@ -233,12 +256,7 @@ fun SuggestionsTabContent(
             horizontalAlignment = Alignment.CenterHorizontally
           ) {
             Text(
-              text = "Data from Apple Music",
-              style = MaterialTheme.typography.labelSmall,
-              color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-            )
-            Text(
-              text = "echo-music",
+              text = "Tuneify Music Discovery",
               style = MaterialTheme.typography.labelSmall,
               color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
               fontWeight = FontWeight.Bold
@@ -252,7 +270,7 @@ fun SuggestionsTabContent(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun TrendingAppleMusicSection(
+fun TrendingMusicSection(
   tracks: List<SuggestionTrack>,
   countryCode: String,
   onTrackClick: (SuggestionTrack) -> Unit,
@@ -266,14 +284,17 @@ fun TrendingAppleMusicSection(
 
   Column(modifier = Modifier.fillMaxWidth()) {
     Text(
-      text = "Apple Music Top 100",
+      text = "Trending Music",
       style = MaterialTheme.typography.titleLarge,
-      modifier = Modifier.padding(horizontal = 16.dp).padding(top = 32.dp)
+      fontWeight = FontWeight.Bold,
+      color = Color.White,
+      modifier = Modifier.padding(horizontal = 16.dp).padding(top = 24.dp)
     )
     Text(
-      text = SuggestionRegionSlugToName[countryCode] ?: "Global Charts",
+      text = "Top trending hits • " + (SuggestionRegionSlugToName[countryCode] ?: "Global Charts"),
       style = MaterialTheme.typography.bodyMedium,
-      modifier = Modifier.padding(horizontal = 16.dp)
+      color = Color(0xFF94A3B8),
+      modifier = Modifier.padding(horizontal = 16.dp).padding(bottom = 8.dp)
     )
     HorizontalPager(
       state = pagerState,
@@ -298,17 +319,17 @@ fun TrendingAppleMusicSection(
                 RoundedCornerShape(
                   topStart = 24.dp,
                   topEnd = 24.dp,
-                  bottomStart = 4.dp,
-                  bottomEnd = 4.dp
+                  bottomStart = 2.dp,
+                  bottomEnd = 2.dp
                 )
               isBottom ->
                 RoundedCornerShape(
-                  topStart = 4.dp,
-                  topEnd = 4.dp,
+                  topStart = 2.dp,
+                  topEnd = 2.dp,
                   bottomStart = 24.dp,
                   bottomEnd = 24.dp
                 )
-              else -> RoundedCornerShape(4.dp)
+              else -> RoundedCornerShape(2.dp)
             }
           if (isMoreCard) {
             Row(
@@ -329,7 +350,7 @@ fun TrendingAppleMusicSection(
               )
               Spacer(Modifier.width(12.dp))
               Text(
-                "View more on Apple Music",
+                "Explore Top Charts",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold
@@ -339,7 +360,12 @@ fun TrendingAppleMusicSection(
             val track = displayTracks[i]
             Row(
               modifier =
-                Modifier.fillMaxWidth().clickable { onTrackClick(track) }.padding(vertical = 6.dp),
+                Modifier.fillMaxWidth()
+                  .padding(vertical = 1.dp)
+                  .clip(shape)
+                  .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                  .clickable { onTrackClick(track) }
+                  .padding(horizontal = 8.dp, vertical = 8.dp),
               verticalAlignment = Alignment.CenterVertically
             ) {
               Text(
@@ -396,6 +422,18 @@ fun TrendingAppleMusicSection(
                   )
                 }
               }
+
+              IconButton(
+                onClick = { onTrackClick(track) },
+                modifier = Modifier.size(36.dp)
+              ) {
+                Icon(
+                  painter = painterResource(R.drawable.more_vert),
+                  contentDescription = "Options",
+                  tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                  modifier = Modifier.size(18.dp)
+                )
+              }
             }
           }
         }
@@ -448,10 +486,11 @@ fun TopArtistsSection(artists: List<SuggestionArtist>, onArtistClick: (Suggestio
       horizontalArrangement = Arrangement.spacedBy(16.dp),
       modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
     ) {
-      items(artists) { artist ->
+      itemsIndexed(artists) { index, artist ->
+        val shape = TuneifyCookieShape
         Column(
           horizontalAlignment = Alignment.CenterHorizontally,
-          modifier = Modifier.width(100.dp).clickable { onArtistClick(artist) }
+          modifier = Modifier.width(108.dp).clickable { onArtistClick(artist) }
         ) {
           Box(contentAlignment = Alignment.BottomEnd) {
             SubcomposeAsyncImage(
@@ -459,17 +498,15 @@ fun TopArtistsSection(artists: List<SuggestionArtist>, onArtistClick: (Suggestio
               contentDescription = artist.name,
               contentScale = ContentScale.Crop,
               loading = {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                  LoadingIndicator()
-                }
+                Box(Modifier.fillMaxSize().shimmer().background(MaterialTheme.colorScheme.surfaceVariant))
               },
               modifier =
                 Modifier.size(100.dp)
-                  .clip(RoundedCornerShape(12.dp))
-                  .background(MaterialTheme.colorScheme.surfaceVariant)
+                  .clip(shape)
+                  .background(Color(0xFF0F172A))
             )
             Surface(
-              modifier = Modifier.size(28.dp).offset((-4).dp, (-4).dp),
+              modifier = Modifier.size(26.dp).offset((-2).dp, (-2).dp),
               shape = CircleShape,
               color = MaterialTheme.colorScheme.onSurface,
               tonalElevation = 4.dp
@@ -488,6 +525,8 @@ fun TopArtistsSection(artists: List<SuggestionArtist>, onArtistClick: (Suggestio
           Text(
             artist.name,
             style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = Color.White,
             textAlign = TextAlign.Center,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -519,11 +558,29 @@ fun TrendingAlbumsSection(
 ) {
   if (albums.isEmpty()) return
   Column(modifier = Modifier.fillMaxWidth()) {
-    Text(
-      text = "Trending Albums",
-      style = MaterialTheme.typography.titleLarge,
-      modifier = Modifier.padding(horizontal = 16.dp).padding(top = 16.dp)
-    )
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .clickable(onClick = onMoreClick)
+        .padding(horizontal = 16.dp, vertical = 8.dp),
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Text(
+        text = "New Releases",
+        style = MaterialTheme.typography.titleLarge.copy(
+          fontWeight = FontWeight.Bold,
+          fontSize = 20.sp
+        ),
+        color = Color.White
+      )
+      Icon(
+        painter = painterResource(R.drawable.navigate_next),
+        contentDescription = "More",
+        tint = Color.White.copy(alpha = 0.7f),
+        modifier = Modifier.size(20.dp)
+      )
+    }
     LazyRow(
       contentPadding = PaddingValues(horizontal = 16.dp),
       horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -540,9 +597,7 @@ fun TrendingAlbumsSection(
               contentDescription = album.title,
               contentScale = ContentScale.Crop,
               loading = {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                  LoadingIndicator()
-                }
+                Box(Modifier.fillMaxSize().shimmer().background(MaterialTheme.colorScheme.surfaceVariant))
               },
               modifier =
                 Modifier.size(120.dp)
@@ -715,3 +770,139 @@ fun TrendingVideosSection(
     }
   }
 }
+
+@Composable
+fun SearchCategoriesSection(
+  navController: NavController,
+  realThumbnails: List<String> = emptyList()
+) {
+  val categories = listOf(
+    Pair("Pop", listOf(Color(0xFF8B5CF6), Color(0xFF5B21B6))),
+    Pair("Hip Hop", listOf(Color(0xFFEA580C), Color(0xFF9A3412))),
+    Pair("Rock", listOf(Color(0xFF2563EB), Color(0xFF1E3A8A))),
+    Pair("Indie", listOf(Color(0xFF06B6D4), Color(0xFF0E7490))),
+    Pair("Mood", listOf(Color(0xFFFB923C), Color(0xFFBE123C))),
+    Pair("Chill", listOf(Color(0xFFA855F7), Color(0xFF6B21A8))),
+    Pair("Workout", listOf(Color(0xFF0284C7), Color(0xFF075985))),
+    Pair("Party", listOf(Color(0xFFD946EF), Color(0xFF86198F)))
+  )
+
+  Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp)) {
+    Text(
+      text = "Browse all",
+      style = MaterialTheme.typography.titleLarge.copy(
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp
+      ),
+      color = Color.White,
+      modifier = Modifier.padding(bottom = 12.dp)
+    )
+    for (i in categories.indices step 2) {
+      Row(
+        modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+      ) {
+        val cat1 = categories[i]
+        val thumb1 = realThumbnails.getOrNull(i % realThumbnails.size.coerceAtLeast(1))
+        TuneifyCascadingGenreCard(
+          title = cat1.first,
+          posterUrl = thumb1,
+          gradientColors = cat1.second,
+          onClick = { navController.navigate("search/${cat1.first}") },
+          modifier = Modifier.weight(1f)
+        )
+        if (i + 1 < categories.size) {
+          val cat2 = categories[i + 1]
+          val thumb2 = realThumbnails.getOrNull((i + 1) % realThumbnails.size.coerceAtLeast(1))
+          TuneifyCascadingGenreCard(
+            title = cat2.first,
+            posterUrl = thumb2,
+            gradientColors = cat2.second,
+            onClick = { navController.navigate("search/${cat2.first}") },
+            modifier = Modifier.weight(1f)
+          )
+        } else {
+          Spacer(modifier = Modifier.weight(1f))
+        }
+      }
+    }
+  }
+}
+
+data class RegionalMusicPoster(
+  val id: String,
+  val title: String,
+  val subtitle: String,
+  val thumbnailUrl: String?
+)
+
+@Composable
+fun RegionalMusicSection(
+  regionName: String,
+  items: List<RegionalMusicPoster>,
+  onItemClick: (RegionalMusicPoster) -> Unit
+) {
+  if (items.isEmpty()) return
+  Column(modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp)) {
+    Text(
+      text = "Popular in $regionName",
+      style = MaterialTheme.typography.titleLarge.copy(
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp
+      ),
+      color = Color.White,
+      modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+    )
+    LazyRow(
+      contentPadding = PaddingValues(horizontal = 16.dp),
+      horizontalArrangement = Arrangement.spacedBy(14.dp),
+      modifier = Modifier.fillMaxWidth().padding(top = 4.dp)
+    ) {
+      items(items, key = { it.id }) { item ->
+        Column(
+          modifier = Modifier
+            .width(136.dp)
+            .clickable { onItemClick(item) }
+        ) {
+          Box(
+            modifier = Modifier
+              .size(136.dp)
+              .clip(RoundedCornerShape(16.dp))
+              .background(Color(0xFF141722))
+              .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(16.dp))
+          ) {
+            SubcomposeAsyncImage(
+              model = item.thumbnailUrl,
+              contentDescription = item.title,
+              contentScale = ContentScale.Crop,
+              loading = {
+                Box(Modifier.fillMaxSize().shimmer().background(MaterialTheme.colorScheme.surfaceVariant))
+              },
+              modifier = Modifier.fillMaxSize()
+            )
+          }
+          Spacer(Modifier.height(8.dp))
+          Text(
+            text = item.title,
+            style = MaterialTheme.typography.bodyMedium.copy(
+              fontWeight = FontWeight.SemiBold,
+              fontSize = 14.sp
+            ),
+            color = Color.White,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+          )
+          Spacer(Modifier.height(2.dp))
+          Text(
+            text = item.subtitle,
+            style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
+            color = Color(0xFF94A3B8),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+          )
+        }
+      }
+    }
+  }
+}
+

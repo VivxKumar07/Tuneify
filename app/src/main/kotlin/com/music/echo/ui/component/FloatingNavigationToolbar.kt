@@ -20,6 +20,8 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -59,6 +61,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import echo.music.iad1tya.ui.component.liquidGlass
+import echo.music.iad1tya.ui.component.LocalGlassEffectConfig
+import echo.music.iad1tya.ui.component.GlassComponent
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
@@ -97,6 +102,7 @@ fun FloatingNavigationToolbar(
   aiHubIconRes: Int? = null,
   aiHubContentDescription: String = "",
   scrollBehavior: FloatingToolbarScrollBehavior? = null,
+  onSearchLongClick: (() -> Unit)? = null,
   isSelected: (Screens) -> Boolean,
   onItemClick: (Screens, Boolean) -> Unit,
 ) {
@@ -112,12 +118,19 @@ fun FloatingNavigationToolbar(
     )
 
   val outlineColor = androidx.compose.material3.MaterialTheme.colorScheme.outline
-  val toolbarModifier =
-    androidx.compose.ui.Modifier.clip(
-        androidx.compose.foundation.shape.RoundedCornerShape(percent = 50)
+  val glassConfig = LocalGlassEffectConfig.current
+  val useGlass = glassConfig.isEnabledFor(GlassComponent.NAV_BAR)
+
+  val toolbarModifier = if (useGlass) {
+    androidx.compose.ui.Modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(percent = 50))
+      .liquidGlass(
+        config = glassConfig,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(percent = 50)
       )
+  } else {
+    androidx.compose.ui.Modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(percent = 50))
       .background(toolbarContainerColor)
-      .border(
+  }.border(
         1.dp,
         outlineColor.copy(alpha = 0.3f),
         androidx.compose.foundation.shape.RoundedCornerShape(percent = 50)
@@ -157,7 +170,8 @@ fun FloatingNavigationToolbar(
         hasFabAction = hasFabAction,
         onFabClick = onFabClick,
         fabIconRes = fabIconRes,
-        fabContentDescription = fabContentDescription
+        fabContentDescription = fabContentDescription,
+        onSearchLongClick = onSearchLongClick,
       )
     }
   }
@@ -182,7 +196,8 @@ private fun ToolbarItemsContainer(
   hasFabAction: Boolean = false,
   onFabClick: (() -> Unit)? = null,
   fabIconRes: Int? = null,
-  fabContentDescription: String = ""
+  fabContentDescription: String = "",
+  onSearchLongClick: (() -> Unit)? = null
 ) {
   val density = LocalDensity.current
   val itemWidths = remember { mutableStateMapOf<Screens, Dp>() }
@@ -242,6 +257,7 @@ private fun ToolbarItemsContainer(
           showSelectedLabel = showSelectedLabels,
           pureBlack = pureBlack,
           onClick = { onItemClick(screen, selected) },
+          onLongClick = if (screen == Screens.Search) onSearchLongClick else null,
           modifier =
             Modifier.onGloballyPositioned { coordinates ->
               itemWidths[screen] = with(density) { coordinates.size.width.toDp() }
@@ -396,6 +412,7 @@ private fun FloatingNavigationToolbarItem(
   showSelectedLabel: Boolean,
   pureBlack: Boolean,
   onClick: () -> Unit,
+  onLongClick: (() -> Unit)? = null,
   modifier: Modifier = Modifier,
 ) {
   val shape = RoundedCornerShape(24.dp)
@@ -455,11 +472,12 @@ private fun FloatingNavigationToolbarItem(
       modifier
         .scale(pressScale)
         .clip(shape)
-        .clickable(
+        .combinedClickable(
           interactionSource = interactionSource,
           indication = LocalIndication.current,
           role = Role.Tab,
           onClick = onClick,
+          onLongClick = onLongClick,
         )
         .widthIn(min = 48.dp)
         .padding(horizontal = horizontalPadding, vertical = 12.dp),

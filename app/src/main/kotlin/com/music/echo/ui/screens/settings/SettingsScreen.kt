@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -43,6 +44,29 @@ import echo.music.iad1tya.ui.component.Material3SettingsGroup
 import echo.music.iad1tya.ui.component.Material3SettingsItem
 import echo.music.iad1tya.ui.screens.Screens
 import echo.music.iad1tya.ui.utils.backToMain
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.collectAsState
+import echo.music.iad1tya.LocalDatabase
+import echo.music.iad1tya.constants.AccountChannelHandleKey
+import echo.music.iad1tya.constants.AccountNameKey
+import echo.music.iad1tya.db.entities.PlaylistEntity
+import echo.music.iad1tya.utils.rememberPreference
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,6 +109,13 @@ fun SettingsScreen(
   val systemUpdateDesc = stringResource(R.string.setting_desc_update)
   val aboutDesc = stringResource(R.string.setting_desc_about)
 
+  val (innerTubeCookie) = rememberPreference(echo.music.iad1tya.constants.InnerTubeCookieKey, "")
+  val (accountNamePref, _) = rememberPreference(AccountNameKey, "")
+  val (accountChannelHandle, _) = rememberPreference(AccountChannelHandleKey, "")
+  val isLoggedIn = remember(innerTubeCookie) { "SAPISID" in com.music.innertube.utils.parseCookieString(innerTubeCookie) }
+  val displayName = if (isLoggedIn && accountNamePref.isNotBlank()) accountNamePref else "Guest"
+  val displayHandle = if (isLoggedIn && accountChannelHandle.isNotBlank()) "@$accountChannelHandle" else "Tap to sign in"
+
   val scrollState = rememberScrollState()
   Column(
     Modifier.windowInsetsPadding(
@@ -96,11 +127,21 @@ fun SettingsScreen(
     Spacer(
       Modifier.windowInsetsPadding(LocalPlayerAwareWindowInsets.current.only(WindowInsetsSides.Top))
     )
+
+    ProfileHeader(
+      navController = navController,
+      userName = displayName,
+      userHandle = displayHandle,
+      userImageUrl = null,
+      onProfileClick = { navController.navigate("settings/account") },
+      onSettingsClick = { /* scroll or focus */ }
+    )
+
     Text(
-      text = stringResource(R.string.settings),
-      style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.SemiBold),
-      color = MaterialTheme.colorScheme.onBackground,
-      modifier = Modifier.padding(start = 8.dp, top = 24.dp, bottom = 16.dp)
+      text = stringResource(R.string.settings).uppercase(),
+      style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+      color = MaterialTheme.colorScheme.onSurfaceVariant,
+      modifier = Modifier.padding(start = 8.dp, top = 8.dp, bottom = 12.dp)
     )
 
     TextField(
@@ -120,14 +161,16 @@ fun SettingsScreen(
           }
         }
       },
-      shape = RoundedCornerShape(28.dp),
+      shape = RoundedCornerShape(100),
       colors =
         TextFieldDefaults.colors(
-          focusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent,
-          unfocusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent,
-          disabledIndicatorColor = androidx.compose.ui.graphics.Color.Transparent
+          focusedContainerColor = Color(0xFF141722),
+          unfocusedContainerColor = Color(0xFF141722),
+          focusedIndicatorColor = Color.Transparent,
+          unfocusedIndicatorColor = Color.Transparent,
+          disabledIndicatorColor = Color.Transparent
         ),
-      modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp, bottom = 16.dp)
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 6.dp)
     )
 
     val itemsList = buildList {
@@ -424,20 +467,239 @@ fun SettingsScreen(
     )
   }
 
-  TopAppBar(
-    title = {
-      androidx.compose.animation.AnimatedVisibility(
-        visible = scrollState.value > 100,
-        enter = androidx.compose.animation.fadeIn(),
-        exit = androidx.compose.animation.fadeOut()
-      ) {
-        Text(text = stringResource(R.string.settings), style = MaterialTheme.typography.titleLarge)
+  val isRoot = navController.previousBackStackEntry == null ||
+      navController.currentDestination?.route == Screens.Profile.route ||
+      navController.currentDestination?.route == "settings"
+
+  if (!isRoot) {
+    TopAppBar(
+      title = {
+        androidx.compose.animation.AnimatedVisibility(
+          visible = scrollState.value > 100,
+          enter = androidx.compose.animation.fadeIn(),
+          exit = androidx.compose.animation.fadeOut()
+        ) {
+          Text(text = stringResource(R.string.settings), style = MaterialTheme.typography.titleLarge)
+        }
+      },
+      navigationIcon = {
+        IconButton(onClick = navController::navigateUp, onLongClick = navController::backToMain) {
+          Icon(painterResource(R.drawable.arrow_back), contentDescription = null)
+        }
       }
-    },
-    navigationIcon = {
-      IconButton(onClick = navController::navigateUp, onLongClick = navController::backToMain) {
-        Icon(painterResource(R.drawable.arrow_back), contentDescription = null)
+    )
+  }
+}
+
+@Composable
+fun ProfileHeader(
+  navController: NavController,
+  userName: String,
+  userHandle: String,
+  userImageUrl: String?,
+  onProfileClick: () -> Unit,
+  onSettingsClick: () -> Unit
+) {
+  val database = LocalDatabase.current
+  val likedCount by database.likedSongsCount().collectAsState(initial = 0)
+  val playlists by database.playlistsByNameAsc().collectAsState(initial = emptyList())
+  val downloadedSongs by database.downloadedSongsByCreateDateAsc().collectAsState(initial = emptyList())
+  val historyEvents by database.events().collectAsState(initial = emptyList())
+
+  Column(modifier = Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 12.dp)) {
+    // Top Bar: "Profile" title (No gear button)
+    Row(
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 8.dp),
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Text(
+        text = "Profile",
+        style = MaterialTheme.typography.headlineLarge.copy(
+          fontWeight = FontWeight.Bold,
+          fontSize = 28.sp
+        ),
+        color = Color.White
+      )
+    }
+
+    Spacer(modifier = Modifier.height(12.dp))
+
+    // Profile Info Row: Avatar + Name + Handle
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 4.dp),
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Box(
+        modifier = Modifier
+          .size(64.dp)
+          .clip(CircleShape)
+          .background(Color(0xFF1E2230)),
+        contentAlignment = Alignment.Center
+      ) {
+        if (!userImageUrl.isNullOrBlank()) {
+          AsyncImage(
+            model = userImageUrl,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+          )
+        } else {
+          Icon(
+            painter = painterResource(R.drawable.person),
+            contentDescription = null,
+            tint = Color(0xFFF1F5F9),
+            modifier = Modifier.size(36.dp)
+          )
+        }
+      }
+
+      Spacer(modifier = Modifier.width(16.dp))
+
+      Column(modifier = Modifier.weight(1f)) {
+        Text(
+          text = userName,
+          style = MaterialTheme.typography.titleLarge.copy(
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+          ),
+          color = Color.White
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        Row(
+          modifier = Modifier.clickable(onClick = onProfileClick),
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          Text(
+            text = userHandle,
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color(0xFF8E95A5)
+          )
+          Spacer(modifier = Modifier.width(4.dp))
+          Icon(
+            painter = painterResource(R.drawable.navigate_next),
+            contentDescription = null,
+            tint = Color(0xFF8E95A5),
+            modifier = Modifier.size(16.dp)
+          )
+        }
       }
     }
-  )
+
+    Spacer(modifier = Modifier.height(18.dp))
+
+    // 4 Quick Action Items in 2x2 uncolored Obsidian Dark tile grid matching Search browse tile structure
+    val likedSubtitle = if (likedCount > 0) "$likedCount songs" else "0 songs"
+    val playlistSubtitle = if (playlists.isNotEmpty()) "${playlists.size} playlists" else "0 playlists"
+    val downloadSubtitle = if (downloadedSongs.isNotEmpty()) "${downloadedSongs.size} songs" else "0 songs"
+    val historySubtitle = if (historyEvents.isNotEmpty()) "${historyEvents.size} tracks" else "0 tracks"
+
+    Column(
+      modifier = Modifier.fillMaxWidth(),
+      verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+      ) {
+        ProfileQuickActionTile(
+          iconRes = R.drawable.favorite_border,
+          title = "Liked Songs",
+          subtitle = likedSubtitle,
+          onClick = { navController.navigate("auto_playlist/liked") },
+          modifier = Modifier.weight(1f)
+        )
+        ProfileQuickActionTile(
+          iconRes = R.drawable.queue_music,
+          title = "Playlists",
+          subtitle = playlistSubtitle,
+          onClick = { navController.navigate(Screens.Library.route) },
+          modifier = Modifier.weight(1f)
+        )
+      }
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+      ) {
+        ProfileQuickActionTile(
+          iconRes = R.drawable.download,
+          title = "Downloads",
+          subtitle = downloadSubtitle,
+          onClick = { navController.navigate("auto_playlist/downloaded") },
+          modifier = Modifier.weight(1f)
+        )
+        ProfileQuickActionTile(
+          iconRes = R.drawable.history,
+          title = "Listening History",
+          subtitle = historySubtitle,
+          onClick = { navController.navigate("history") },
+          modifier = Modifier.weight(1f)
+        )
+      }
+    }
+  }
 }
+
+@Composable
+private fun ProfileQuickActionTile(
+  iconRes: Int,
+  title: String,
+  subtitle: String?,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier
+) {
+  Box(
+    modifier = modifier
+      .height(68.dp)
+      .clip(RoundedCornerShape(16.dp))
+      .background(Color(0xFF141722))
+      .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(16.dp))
+      .clickable(onClick = onClick)
+      .padding(horizontal = 14.dp, vertical = 8.dp),
+    contentAlignment = Alignment.CenterStart
+  ) {
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.Start
+    ) {
+      Box(
+        modifier = Modifier
+          .size(36.dp)
+          .clip(RoundedCornerShape(10.dp))
+          .background(Color(0xFF1E2230)),
+        contentAlignment = Alignment.Center
+      ) {
+        Icon(
+          painter = painterResource(iconRes),
+          contentDescription = null,
+          tint = Color(0xFFF1F5F9),
+          modifier = Modifier.size(18.dp)
+        )
+      }
+      Spacer(modifier = Modifier.width(10.dp))
+      Column {
+        Text(
+          text = title,
+          style = MaterialTheme.typography.bodyMedium.copy(
+            fontWeight = FontWeight.Bold,
+            fontSize = 13.sp
+          ),
+          color = Color.White,
+          maxLines = 1,
+          overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+        )
+        if (subtitle != null) {
+          Text(
+            text = subtitle,
+            style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+            color = Color(0xFF8E95A5),
+            maxLines = 1,
+            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+          )
+        }
+      }
+    }
+  }
+}
+

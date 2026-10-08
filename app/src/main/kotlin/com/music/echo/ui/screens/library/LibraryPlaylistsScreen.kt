@@ -258,7 +258,7 @@ fun LibraryPlaylistsScreen(
                 AutoPlaylistButton(
                   title = stringResource(R.string.liked),
                   icon = R.drawable.favorite,
-                  iconTint = Color(0xFFE57373),
+                  iconTint = Color(0xFF00E5FF),
                   onClick = { navController.navigate("auto_playlist/liked") },
                   modifier = itemModifier
                 )
@@ -388,7 +388,7 @@ fun LibraryPlaylistsScreen(
                 AutoPlaylistButton(
                   title = stringResource(R.string.liked),
                   icon = R.drawable.favorite,
-                  iconTint = Color(0xFFE57373),
+                  iconTint = Color(0xFF00E5FF),
                   onClick = { navController.navigate("auto_playlist/liked") },
                   modifier = itemModifier
                 )

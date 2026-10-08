@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Switch
@@ -305,6 +306,13 @@ fun AppNavigationBar(
             contentDescription = stringResource(screen.titleId)
           )
         },
+        colors = NavigationBarItemDefaults.colors(
+          indicatorColor = Color(0xFF141722),
+          selectedIconColor = Color(0xFF00E5FF),
+          unselectedIconColor = Color(0xFF8E95A5),
+          selectedTextColor = Color(0xFF00E5FF),
+          unselectedTextColor = Color(0xFF8E95A5)
+        ),
         label =
           if (!slimNav) {
             {

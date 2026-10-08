@@ -26,15 +26,19 @@ class PoTokenGenerator {
 
   fun initialize() {
     if (!webViewSupported || webViewBadImpl) return
-    kotlinx.coroutines.GlobalScope.launch(Dispatchers.Main) {
+    // Defer PO Token WebView warm-up so it never contends with initial frame rendering or freezes Android < 12 cold start
+    kotlinx.coroutines.GlobalScope.launch(Dispatchers.Default) {
       try {
-        webPoTokenGenLock.withLock {
-          if (webPoTokenGenerator == null) {
-            Timber.tag(TAG).d("Pre-initializing PoTokenWebView in background...")
-            webPoTokenSessionId = "init-" + System.currentTimeMillis()
-            webPoTokenGenerator =
-              PoTokenWebView.getNewPoTokenGenerator(CipherDeobfuscator.appContext)
-            webPoTokenStreamingPot = webPoTokenGenerator!!.generatePoToken(webPoTokenSessionId!!)
+        kotlinx.coroutines.delay(4000L) // Wait until initial activity frame and UI are fully drawn
+        withContext(Dispatchers.Main) {
+          webPoTokenGenLock.withLock {
+            if (webPoTokenGenerator == null) {
+              Timber.tag(TAG).d("Pre-initializing PoTokenWebView in background...")
+              webPoTokenSessionId = "init-" + System.currentTimeMillis()
+              webPoTokenGenerator =
+                PoTokenWebView.getNewPoTokenGenerator(CipherDeobfuscator.appContext)
+              webPoTokenStreamingPot = webPoTokenGenerator!!.generatePoToken(webPoTokenSessionId!!)
+            }
           }
         }
       } catch (e: Exception) {

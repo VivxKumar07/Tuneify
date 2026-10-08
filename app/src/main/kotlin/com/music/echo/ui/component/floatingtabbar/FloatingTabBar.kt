@@ -38,7 +38,10 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -68,6 +71,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.Spring
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
@@ -370,6 +374,7 @@ interface FloatingTabBarScope {
     title: @Composable () -> Unit,
     icon: @Composable () -> Unit,
     onClick: () -> Unit,
+    onLongClick: (() -> Unit)? = null,
     indication: (@Composable () -> Indication)? = { LocalIndication.current }
   )
 
@@ -388,6 +393,7 @@ interface FloatingTabBarScope {
     key: Any,
     icon: @Composable () -> Unit,
     onClick: () -> Unit,
+    onLongClick: (() -> Unit)? = null,
     indication: (@Composable () -> Indication)? = { LocalIndication.current }
   )
 }
@@ -485,11 +491,12 @@ private fun SharedTransitionScope.InlineTab(
         .background(color = colors.backgroundColor, shape = shapes.tabBarShape)
         .clip(shapes.tabBarShape)
         .then(tabBarContentModifier)
-        .clickable(
+        .combinedClickable(
           onClick = {
             onInlineTabClick()
             inlineTab.onClick()
           },
+          onLongClick = inlineTab.onLongClick,
           indication = inlineTab.indication?.invoke(),
           interactionSource = remember { MutableInteractionSource() }
         )
@@ -539,8 +546,9 @@ private fun SharedTransitionScope.InlineStandaloneTab(
         .background(color = colors.backgroundColor, shape = shapes.standaloneTabShape)
         .clip(shapes.standaloneTabShape)
         .then(tabBarContentModifier)
-        .clickable(
+        .combinedClickable(
           onClick = standaloneTab.onClick,
+          onLongClick = standaloneTab.onLongClick,
           indication = standaloneTab.indication?.invoke(),
           interactionSource = remember { MutableInteractionSource() }
         )
@@ -708,13 +716,32 @@ private fun SharedTransitionScope.ExpandedTabs(
   val density = LocalDensity.current
 
   val selectedIndex = scope.tabs.indexOfFirst { it.key == selectedTabKey }.takeIf { it >= 0 } ?: 0
-  val targetWidth = tabWidths[selectedIndex] ?: 0.dp
-  val targetHeight = tabHeights[selectedIndex] ?: 0.dp
-  val targetOffset = tabOffsets[selectedIndex] ?: 0.dp
+  val measuredWidth = tabWidths[selectedIndex]
+  val measuredOffset = tabOffsets[selectedIndex]
+  val isMeasured = measuredWidth != null && measuredOffset != null
 
-  val animatedWidth by animateDpAsState(targetValue = targetWidth, label = "width", animationSpec = spring(stiffness = 500f, dampingRatio = 0.9f))
-  val animatedHeight by animateDpAsState(targetValue = targetHeight, label = "height", animationSpec = spring(stiffness = 500f, dampingRatio = 0.9f))
-  val animatedOffset by animateDpAsState(targetValue = targetOffset, label = "offset", animationSpec = spring(stiffness = 500f, dampingRatio = 0.9f))
+  // Retain the last known measured geometry so the indicator never collapses to 0.dp or animates from 0.dp
+  var lastStableWidth by remember { mutableStateOf<Dp?>(null) }
+  var lastStableOffset by remember { mutableStateOf<Dp?>(null) }
+
+  if (isMeasured) {
+    lastStableWidth = measuredWidth
+    lastStableOffset = measuredOffset
+  }
+
+  val activeWidth = lastStableWidth ?: measuredWidth ?: 96.dp
+  val activeOffset = lastStableOffset ?: measuredOffset ?: 0.dp
+
+  val animatedWidth by animateDpAsState(
+    targetValue = activeWidth,
+    label = "width",
+    animationSpec = spring(stiffness = Spring.StiffnessMediumLow, dampingRatio = Spring.DampingRatioLowBouncy)
+  )
+  val animatedOffset by animateDpAsState(
+    targetValue = activeOffset,
+    label = "offset",
+    animationSpec = spring(stiffness = Spring.StiffnessMediumLow, dampingRatio = Spring.DampingRatioLowBouncy)
+  )
 
   Box(
     contentAlignment = Alignment.CenterStart,
@@ -725,22 +752,51 @@ private fun SharedTransitionScope.ExpandedTabs(
           animatedVisibilityScope = animatedVisibilityScope,
           zIndexInOverlay = 1f
         )
-        .shadow(shape = shapes.tabBarShape, elevation = elevations.expandedElevation)
-        .background(color = colors.backgroundColor, shape = shapes.tabBarShape)
-        .clip(shapes.tabBarShape)
+        .shadow(
+          elevation = 16.dp,
+          shape = RoundedCornerShape(32.dp),
+          spotColor = androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.6f)
+        )
+        .background(
+          color = androidx.compose.ui.graphics.Color(0xFF0D0F16).copy(alpha = 0.88f),
+          shape = RoundedCornerShape(32.dp)
+        )
+        .border(
+          width = 1.dp,
+          color = androidx.compose.ui.graphics.Color.White.copy(alpha = 0.12f),
+          shape = RoundedCornerShape(32.dp)
+        )
+        .clip(RoundedCornerShape(32.dp))
         .then(tabBarContentModifier)
         .padding(sizes.tabBarContentPadding)
         .wrapContentWidth(align = Alignment.Start, unbounded = true)
-        .animateContentSize()
   ) {
-    if (targetWidth > 0.dp) {
+    if (isMeasured || lastStableWidth != null) {
       Box(
         Modifier
           .offset(x = animatedOffset)
           .width(animatedWidth)
-          .height(52.dp)
-          .clip(shapes.tabShape)
-          .background(androidx.compose.ui.graphics.Color.White.copy(alpha = 0.25f))
+          .height(44.dp)
+          .shadow(
+            elevation = 12.dp,
+            shape = RoundedCornerShape(22.dp),
+            ambientColor = androidx.compose.ui.graphics.Color(0xFF00E5FF),
+            spotColor = androidx.compose.ui.graphics.Color(0xFF00E5FF)
+          )
+          .clip(RoundedCornerShape(22.dp))
+          .background(
+            androidx.compose.ui.graphics.Brush.linearGradient(
+              listOf(
+                androidx.compose.ui.graphics.Color(0x4000E5FF),
+                androidx.compose.ui.graphics.Color(0x2500D2C4)
+              )
+            )
+          )
+          .border(
+            width = 1.dp,
+            color = androidx.compose.ui.graphics.Color(0xFF00E5FF).copy(alpha = 0.70f),
+            shape = RoundedCornerShape(22.dp)
+          )
       )
     }
 
@@ -789,8 +845,9 @@ private fun SharedTransitionScope.ExpandedTabs(
               }
               .skipToLookaheadSize()
               .clip(shapes.tabShape)
-              .clickable(
+              .combinedClickable(
                 onClick = tab.onClick,
+                onLongClick = tab.onLongClick,
                 indication = tab.indication?.invoke(),
                 interactionSource = remember { MutableInteractionSource() }
               )
@@ -827,8 +884,9 @@ private fun SharedTransitionScope.ExpandedStandaloneTab(
         .background(color = colors.backgroundColor, shape = shapes.standaloneTabShape)
         .clip(shapes.standaloneTabShape)
         .then(tabBarContentModifier)
-        .clickable(
+        .combinedClickable(
           onClick = standaloneTab.onClick,
+          onLongClick = standaloneTab.onLongClick,
           indication = standaloneTab.indication?.invoke(),
           interactionSource = remember { MutableInteractionSource() }
         )
@@ -844,23 +902,11 @@ private fun Tab(
   isStandalone: Boolean = false,
   isSelected: Boolean = false
 ) {
-  Row(
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.Center,
+  Box(
+    contentAlignment = Alignment.Center,
     modifier = modifier
   ) {
     icon()
-    if (!isStandalone && !isInline) {
-      androidx.compose.animation.AnimatedVisibility(
-        visible = isSelected,
-        enter = androidx.compose.animation.expandHorizontally(expandFrom = Alignment.Start) + androidx.compose.animation.fadeIn(),
-        exit = androidx.compose.animation.shrinkHorizontally(shrinkTowards = Alignment.Start) + androidx.compose.animation.fadeOut()
-      ) {
-        Box(Modifier.padding(start = 4.dp)) {
-          title()
-        }
-      }
-    }
   }
 }
 
@@ -974,6 +1020,7 @@ private class FloatingTabBarScopeImpl : FloatingTabBarScope {
     title: @Composable () -> Unit,
     icon: @Composable () -> Unit,
     onClick: () -> Unit,
+    onLongClick: (() -> Unit)?,
     indication: (@Composable () -> Indication)?
   ) {
     tabs.add(
@@ -982,6 +1029,7 @@ private class FloatingTabBarScopeImpl : FloatingTabBarScope {
         title = title,
         icon = icon,
         onClick = onClick,
+        onLongClick = onLongClick,
         indication = indication
       )
     )
@@ -991,6 +1039,7 @@ private class FloatingTabBarScopeImpl : FloatingTabBarScope {
     key: Any,
     icon: @Composable () -> Unit,
     onClick: () -> Unit,
+    onLongClick: (() -> Unit)?,
     indication: (@Composable () -> Indication)?
   ) {
     standaloneTab =
@@ -999,6 +1048,7 @@ private class FloatingTabBarScopeImpl : FloatingTabBarScope {
         title = {},
         icon = icon,
         onClick = onClick,
+        onLongClick = onLongClick,
         indication = indication
       )
   }
@@ -1009,6 +1059,7 @@ private data class FloatingTabBarTab(
   val title: @Composable () -> Unit,
   val icon: @Composable () -> Unit,
   val onClick: () -> Unit,
+  val onLongClick: (() -> Unit)? = null,
   val indication: (@Composable () -> Indication)?
 )
 

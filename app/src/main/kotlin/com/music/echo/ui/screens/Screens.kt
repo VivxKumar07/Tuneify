@@ -44,7 +44,15 @@ sealed class Screens(
       route = "library"
     )
 
+  object Profile :
+    Screens(
+      titleId = R.string.account,
+      iconIdInactive = R.drawable.person,
+      iconIdActive = R.drawable.person,
+      route = "profile"
+    )
+
   companion object {
-    val MainScreens = listOf(Home, Search, ListenTogether, Library)
+    val MainScreens = listOf(Home, Search, Library, Profile)
   }
 }

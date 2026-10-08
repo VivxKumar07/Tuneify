@@ -155,6 +155,40 @@ fun GlassEffectSettings(
         Spacer(modifier = Modifier.height(16.dp))
 
         Material3SettingsGroup(
+            title = stringResource(R.string.liquid_glass),
+            items = listOf(
+                Material3SettingsItem(
+                    icon = painterResource(R.drawable.check),
+                    title = { Text(stringResource(R.string.liquid_glass_global_enabled)) },
+                    description = {
+                        Text(stringResource(R.string.liquid_glass_performance_warning))
+                    },
+                    trailingContent = {
+                        Switch(
+                            checked = globalEnabled,
+                            onCheckedChange = onGlobalEnabledChange,
+                            enabled = true,
+                            thumbContent = {
+                                Icon(
+                                    painter = painterResource(
+                                        id = if (globalEnabled) R.drawable.check else R.drawable.close
+                                    ),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(SwitchDefaults.IconSize)
+                                )
+                            }
+                        )
+                    },
+                    onClick = { onGlobalEnabledChange(!globalEnabled) }
+                )
+            )
+        )
+
+        
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Material3SettingsGroup(
             title = stringResource(R.string.nav_bar_style),
             items = listOf(
                 Material3SettingsItem(
@@ -178,50 +212,6 @@ fun GlassEffectSettings(
                     },
                     onClick = { onUseFloatingNavBarChange(!useFloatingNavBar) }
                 ),
-            )
-        )
-
-        
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Material3SettingsGroup(
-            title = stringResource(R.string.liquid_glass),
-            items = listOf(
-                Material3SettingsItem(
-                    icon = painterResource(R.drawable.check),
-                    title = { Text(stringResource(R.string.liquid_glass_global_enabled)) },
-                    description = {
-                        Text(
-                            stringResource(
-                                // Glass is part of the floating nav bar experience and only
-                                // takes effect while that bar is enabled.
-                                if (useFloatingNavBar) {
-                                    R.string.liquid_glass_performance_warning
-                                } else {
-                                    R.string.liquid_glass_requires_floating_nav_bar
-                                }
-                            )
-                        )
-                    },
-                    trailingContent = {
-                        Switch(
-                            checked = globalEnabled && useFloatingNavBar,
-                            onCheckedChange = onGlobalEnabledChange,
-                            enabled = useFloatingNavBar,
-                            thumbContent = {
-                                Icon(
-                                    painter = painterResource(
-                                        id = if (globalEnabled && useFloatingNavBar) R.drawable.check else R.drawable.close
-                                    ),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(SwitchDefaults.IconSize)
-                                )
-                            }
-                        )
-                    },
-                    onClick = { if (useFloatingNavBar) onGlobalEnabledChange(!globalEnabled) }
-                )
             )
         )
 
@@ -309,7 +299,7 @@ fun GlassEffectSettings(
             title = stringResource(R.string.liquid_glass_appearance),
             items = listOf(
                 Material3SettingsItem(
-                    icon = painterResource(R.drawable.palette),
+                    icon = painterResource(R.drawable.contrast),
                     title = { Text(stringResource(R.string.liquid_glass_surface_tint)) },
                     description = { Text(stringResource(R.string.liquid_glass_surface_tint_desc)) },
                     onClick = { showSurfaceTintDialog = true }
@@ -321,7 +311,7 @@ fun GlassEffectSettings(
                     onClick = { showSurfaceOpacityDialog = true }
                 ),
                 Material3SettingsItem(
-                    icon = painterResource(R.drawable.palette),
+                    icon = painterResource(R.drawable.ic_text_color),
                     title = { Text(stringResource(R.string.liquid_glass_text_color)) },
                     description = { Text(stringResource(R.string.liquid_glass_text_color_desc)) },
                     onClick = { showTextColorDialog = true }
@@ -337,7 +327,7 @@ fun GlassEffectSettings(
             title = stringResource(R.string.liquid_glass_per_component),
             items = listOf(
                 Material3SettingsItem(
-                    icon = painterResource(R.drawable.music_note),
+                    icon = painterResource(R.drawable.drag_handle),
                     title = { Text(stringResource(R.string.liquid_glass_player)) },
                     description = { Text(stringResource(R.string.liquid_glass_player_desc)) },
                     trailingContent = {
@@ -358,7 +348,7 @@ fun GlassEffectSettings(
                     onClick = { onPlayerEnabledChange(!playerEnabled) }
                 ),
                 Material3SettingsItem(
-                    icon = painterResource(R.drawable.music_note),
+                    icon = painterResource(R.drawable.drag_handle),
                     title = { Text(stringResource(R.string.liquid_glass_mini_player)) },
                     description = { Text(stringResource(R.string.liquid_glass_mini_player_desc)) },
                     trailingContent = {

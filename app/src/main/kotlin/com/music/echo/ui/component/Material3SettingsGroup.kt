@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -62,11 +63,11 @@ fun Material3SettingsGroup(
       items.forEachIndexed { index, item ->
         val shape =
           when {
-            items.size == 1 -> RoundedCornerShape(24.dp)
+            items.size == 1 -> RoundedCornerShape(20.dp)
             index == 0 ->
               RoundedCornerShape(
-                topStart = 24.dp,
-                topEnd = 24.dp,
+                topStart = 20.dp,
+                topEnd = 20.dp,
                 bottomStart = 4.dp,
                 bottomEnd = 4.dp
               )
@@ -74,8 +75,8 @@ fun Material3SettingsGroup(
               RoundedCornerShape(
                 topStart = 4.dp,
                 topEnd = 4.dp,
-                bottomStart = 24.dp,
-                bottomEnd = 24.dp
+                bottomStart = 20.dp,
+                bottomEnd = 20.dp
               )
             else -> RoundedCornerShape(4.dp)
           }
@@ -83,11 +84,16 @@ fun Material3SettingsGroup(
         Card(
           modifier = Modifier.fillMaxWidth().animateContentSize(),
           shape = shape,
+          border = androidx.compose.foundation.BorderStroke(
+            1.dp,
+            if (item.isHighlighted) Color(0xFF64B5F6).copy(alpha = 0.4f)
+            else Color(0xFF90CAF9).copy(alpha = 0.08f)
+          ),
           colors =
             CardDefaults.cardColors(
               containerColor =
-                if (item.isHighlighted) MaterialTheme.colorScheme.surfaceVariant
-                else MaterialTheme.colorScheme.surfaceContainerHigh
+                if (item.isHighlighted) Color(0xFF1E293B).copy(alpha = 0.85f)
+                else Color(0xFF0F172A).copy(alpha = 0.65f)
             ),
           elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {

@@ -16,7 +16,25 @@ class CrashHandler private constructor(private val applicationContext: Context) 
   private val defaultHandler: Thread.UncaughtExceptionHandler? =
     Thread.getDefaultUncaughtExceptionHandler()
 
+  private fun isNetworkException(throwable: Throwable?): Boolean {
+    if (throwable == null) return false
+    if (throwable is java.net.UnknownHostException ||
+        throwable is java.net.SocketTimeoutException ||
+        throwable is java.net.ConnectException ||
+        throwable is java.net.SocketException ||
+        throwable is javax.net.ssl.SSLException ||
+        throwable is java.io.InterruptedIOException) {
+      return true
+    }
+    return isNetworkException(throwable.cause)
+  }
+
   override fun uncaughtException(thread: Thread, throwable: Throwable) {
+    if (isNetworkException(throwable)) {
+      Timber.w(throwable, "Suppressed offline / network exception in CrashHandler")
+      return
+    }
+
     if (
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
         throwable is android.app.ForegroundServiceStartNotAllowedException
@@ -71,7 +89,7 @@ class CrashHandler private constructor(private val applicationContext: Context) 
       StringWriter().apply { throwable.printStackTrace(PrintWriter(this)) }.toString()
 
     return buildString {
-      appendLine("echomusic Crash Report")
+      appendLine("Tuneify Crash Report")
       appendLine("=".repeat(50))
       appendLine()
       appendLine("Manufacturer: ${Build.MANUFACTURER}")

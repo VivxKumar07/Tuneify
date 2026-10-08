@@ -14,10 +14,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,9 +55,13 @@ import coil3.compose.AsyncImage
 import echo.music.iad1tya.LocalListenTogetherManager
 import echo.music.iad1tya.LocalPlayerConnection
 import echo.music.iad1tya.R
+import echo.music.iad1tya.constants.MiniPlayerBackgroundStyleKey
+import echo.music.iad1tya.constants.PlayerBackgroundStyle
 import echo.music.iad1tya.constants.SwipeSensitivityKey
 import echo.music.iad1tya.constants.SwipeThumbnailKey
 import echo.music.iad1tya.extensions.togglePlayPause
+import echo.music.iad1tya.ui.component.PremiumGlow
+import echo.music.iad1tya.utils.rememberEnumPreference
 import echo.music.iad1tya.utils.rememberPreference
 import kotlin.math.abs
 import kotlin.math.exp
@@ -82,6 +92,11 @@ fun FloatingMiniPlayer(
   val listenTogetherManager = LocalListenTogetherManager.current
   val isListenTogetherGuest = listenTogetherManager?.let { it.isInRoom && !it.isHost } ?: false
   val swipeEnabled = swipeThumbnailPref && !isListenTogetherGuest
+
+  val miniPlayerBackground by rememberEnumPreference(
+    MiniPlayerBackgroundStyleKey,
+    defaultValue = PlayerBackgroundStyle.GLOW_ANIMATED
+  )
 
   val layoutDirection = LocalLayoutDirection.current
   val coroutineScope = rememberCoroutineScope()
@@ -114,6 +129,8 @@ fun FloatingMiniPlayer(
   // Same structure as MiniPlayer: the drag detector sits on the outermost
   // container so the whole accessory is swipeable, and the entire content row
   // slides with the drag.
+  val pillShape = RoundedCornerShape(32.dp)
+
   Box(
     contentAlignment = Alignment.CenterStart,
     modifier =
@@ -122,7 +139,14 @@ fun FloatingMiniPlayer(
           scaleY = pressScale
         }
         .then(modifier)
-        .clipToBounds()
+        .shadow(
+          elevation = 12.dp,
+          shape = pillShape,
+          spotColor = Color.Black.copy(alpha = 0.6f)
+        )
+        .background(Color(0xF0121520), pillShape)
+        .border(1.dp, Color.White.copy(alpha = 0.08f), pillShape)
+        .clip(pillShape)
         .then(
           if (swipeEnabled) {
             Modifier.pointerInput(Unit) {
@@ -195,69 +219,90 @@ fun FloatingMiniPlayer(
             onClick = onClick,
           )
           .padding(
-            horizontal = if (isInline) 8.dp else 12.dp,
-            vertical = if (isInline) 4.dp else 8.dp,
+            horizontal = 10.dp,
+            vertical = 6.dp,
           ),
     ) {
-      AsyncImage(
-        model = mediaMetadata?.thumbnailUrl,
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        modifier = Modifier.size(artSize).clip(RoundedCornerShape(artCornerRadius)),
-      )
+      // Circular Vinyl Disc Thumbnail with subtle outer ring border
+      Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+          .size(46.dp)
+          .clip(CircleShape)
+          .background(Color(0xFF1E2230))
+          .border(1.5.dp, Color.White.copy(alpha = 0.15f), CircleShape)
+      ) {
+        AsyncImage(
+          model = mediaMetadata?.thumbnailUrl,
+          contentDescription = null,
+          contentScale = ContentScale.Crop,
+          modifier = Modifier.size(40.dp).clip(CircleShape),
+        )
+      }
 
-      Spacer(Modifier.width(if (isInline) 8.dp else 12.dp))
+      Spacer(Modifier.width(10.dp))
 
-      if (isInline) {
+      Column(modifier = Modifier.weight(1f)) {
         Text(
           text = mediaMetadata?.title.orEmpty(),
-          style = MaterialTheme.typography.bodySmall,
-          color = contentColor,
+          style = MaterialTheme.typography.bodyMedium,
+          fontWeight = FontWeight.Bold,
+          color = Color.White,
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
-          modifier = Modifier.weight(1f),
         )
-      } else {
-        Column(modifier = Modifier.weight(1f)) {
-          Text(
-            text = mediaMetadata?.title.orEmpty(),
-            style = MaterialTheme.typography.bodyMedium,
-            color = contentColor,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-          )
-          Text(
-            text = mediaMetadata?.artists?.joinToString { it.name }.orEmpty(),
-            style = MaterialTheme.typography.bodySmall,
-            color = contentColor.copy(alpha = 0.7f),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-          )
-        }
+        Text(
+          text = mediaMetadata?.artists?.joinToString { it.name }.orEmpty(),
+          style = MaterialTheme.typography.bodySmall,
+          color = Color.White.copy(alpha = 0.65f),
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis,
+        )
       }
 
       IconButton(
-        onClick = { playerConnection.player.togglePlayPause() },
-        modifier = Modifier.size(controlSize),
+        onClick = { playerConnection.player.seekToPreviousMediaItem() },
+        modifier = Modifier.size(36.dp),
+      ) {
+        Icon(
+          painter = painterResource(R.drawable.skip_previous),
+          contentDescription = null,
+          tint = Color.White,
+          modifier = Modifier.size(20.dp)
+        )
+      }
+
+      Spacer(Modifier.width(2.dp))
+
+      // Circular filled play/pause button (cream/white circle, black icon)
+      Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+          .size(42.dp)
+          .clip(CircleShape)
+          .background(Color(0xFFF2F2F2))
+          .clickable { playerConnection.player.togglePlayPause() }
       ) {
         Icon(
           painter = painterResource(if (isPlaying) R.drawable.pause else R.drawable.play),
           contentDescription = null,
-          tint = contentColor,
+          tint = Color.Black,
+          modifier = Modifier.size(22.dp)
         )
       }
 
-      if (!isInline) {
-        IconButton(
-          onClick = { playerConnection.player.seekToNext() },
-          modifier = Modifier.size(controlSize),
-        ) {
-          Icon(
-            painter = painterResource(R.drawable.skip_next),
-            contentDescription = null,
-            tint = contentColor,
-          )
-        }
+      Spacer(Modifier.width(2.dp))
+
+      IconButton(
+        onClick = { playerConnection.player.seekToNext() },
+        modifier = Modifier.size(36.dp),
+      ) {
+        Icon(
+          painter = painterResource(R.drawable.skip_next),
+          contentDescription = null,
+          tint = Color.White,
+          modifier = Modifier.size(20.dp)
+        )
       }
     }
   }

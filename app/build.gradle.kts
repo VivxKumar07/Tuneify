@@ -30,11 +30,11 @@ android {
   ndkVersion = "27.0.12077973"
 
   defaultConfig {
-    applicationId = "echo.music.iad1tya"
+    applicationId = "com.tuneify.app"
     minSdk = 26
     targetSdk = 36
-    versionCode = 158
-    versionName = "1.3.0"
+    versionCode = 110
+    versionName = "1.1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import echo.music.iad1tya.R
 
 @Composable
@@ -55,16 +57,18 @@ fun NavigationTitle(
       label?.let { label ->
         Text(
           text = label,
-          style = MaterialTheme.typography.labelLarge,
+          style = MaterialTheme.typography.labelSmall,
+          color = androidx.compose.ui.graphics.Color(0x99FFFFFF),
           overflow = TextOverflow.Ellipsis,
         )
       }
 
       Text(
-        text = title.uppercase(),
+        text = title,
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        fontSize = 20.sp,
+        color = androidx.compose.ui.graphics.Color.White,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
       )
@@ -73,16 +77,17 @@ fun NavigationTitle(
     onPlayAllClick?.let { playAllClick ->
       OutlinedButton(
         onClick = playAllClick,
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)),
+        shape = RoundedCornerShape(100),
+        border = BorderStroke(1.dp, androidx.compose.ui.graphics.Color.White.copy(alpha = 0.22f)),
         colors =
           ButtonDefaults.outlinedButtonColors(
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            containerColor = androidx.compose.ui.graphics.Color.White.copy(alpha = 0.12f),
+            contentColor = androidx.compose.ui.graphics.Color.White
           ),
-        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 2.dp),
-        modifier = Modifier.height(24.dp)
+        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 2.dp),
+        modifier = Modifier.height(28.dp)
       ) {
-        Text(text = stringResource(R.string.play_all), style = MaterialTheme.typography.labelSmall)
+        Text(text = stringResource(R.string.play_all), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium))
       }
     }
 
@@ -90,7 +95,8 @@ fun NavigationTitle(
       Icon(
         painter = painterResource(R.drawable.arrow_forward),
         contentDescription = null,
-        tint = MaterialTheme.colorScheme.onSurfaceVariant
+        tint = androidx.compose.ui.graphics.Color.White.copy(alpha = 0.6f),
+        modifier = Modifier.size(18.dp)
       )
     }
   }
