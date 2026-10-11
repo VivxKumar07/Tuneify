@@ -342,7 +342,7 @@
     <string name="listen_together_smart_resync">Intelligens hálózati újraszinkronizálás</string>
     <string name="listen_together_smart_resync_desc">Automatikus felzárkózás a házigazdához a kapcsolat megszakadása után</string>
     <string name="spotify_import_title">Importálás a Spotifyból</string>
-    <string name="spotify_import_desc">Csatlakoztasd a Spotifyt, válassz lejátszási listákat, majd tükrözd őket helyi Echo Music-lejátszási listákba.</string>
+    <string name="spotify_import_desc">Csatlakoztasd a Spotifyt, válassz lejátszási listákat, majd tükrözd őket helyi Tuneify - lejátszási listákba.</string>
     <string name="spotify_connect">Spotify csatlakoztatása</string>
     <string name="spotify_refresh">Spotify-könyvtár frissítése</string>
     <string name="spotify_select_sources">Spotify-lejátszási listák kiválasztása</string>
@@ -402,7 +402,7 @@
     <string name="recognition_notification_processing">Azonosítás…</string>
     <string name="recognition_notification_no_match">Nincs találat</string>
     <string name="recognition_notification_failed">A felismerés sikertelen</string>
-    <string name="listen_on_echo_music">Meghallgatás az Echo Musicban</string>
+    <string name="listen_on_echo_music">Meghallgatás az Tuneifyban</string>
     <string name="qs_tile_music_recognizer">Zene felismerése</string>
     <string name="echo_brain_beta">Echo Brain (béta)</string>
     <string name="echo_brain_enable">Echo Brain engedélyezése</string>

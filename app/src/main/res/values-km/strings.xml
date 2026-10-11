@@ -339,7 +339,7 @@
     <string name="listen_together_smart_resync">ធ្វើសមកាលកម្មបណ្តាញឆ្លាតវៃឡើងវិញ</string>
     <string name="listen_together_smart_resync_desc">តាមទាន់ម្ចាស់បន្ទប់ដោយស្វ័យប្រវត្តិបន្ទាប់ពីការតភ្ជាប់ដាច់</string>
     <string name="spotify_import_title">នាំចូលពី Spotify</string>
-    <string name="spotify_import_desc">ភ្ជាប់ Spotify ជ្រើសរើសបញ្ជីចាក់ ហើយចម្លងពួកវាទៅក្នុងបញ្ជីចាក់ Echo Music ក្នុងឧបករណ៍។</string>
+    <string name="spotify_import_desc">ភ្ជាប់ Spotify ជ្រើសរើសបញ្ជីចាក់ ហើយចម្លងពួកវាទៅក្នុងបញ្ជីចាក់ Tuneify ក្នុងឧបករណ៍។</string>
     <string name="spotify_connect">ភ្ជាប់ Spotify</string>
     <string name="spotify_refresh">ផ្ទុកបណ្ណាល័យ Spotify ឡើងវិញ</string>
     <string name="spotify_select_sources">ជ្រើសរើសបញ្ជីចាក់ Spotify</string>
@@ -383,7 +383,7 @@
     <string name="recognition_notification_processing">កំពុងសម្គាល់…</string>
     <string name="recognition_notification_no_match">រកមិនឃើញបទដែលត្រូវគ្នា</string>
     <string name="recognition_notification_failed">ការសម្គាល់បានបរាជ័យ</string>
-    <string name="listen_on_echo_music">ស្តាប់លើ Echo Music</string>
+    <string name="listen_on_echo_music">ស្តាប់លើ Tuneify</string>
     <string name="qs_tile_music_recognizer">សម្គាល់តន្ត្រី</string>
     <string name="echo_brain_beta">Echo Brain (សាកល្បង)</string>
     <string name="echo_brain_enable">បើក Echo Brain</string>

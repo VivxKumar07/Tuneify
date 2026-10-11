@@ -353,7 +353,7 @@
     <string name="listen_together_smart_resync">Resincronizare inteligentă a rețelei</string>
     <string name="listen_together_smart_resync_desc">Prinde din urmă automat gazda după o cădere a conexiunii</string>
     <string name="spotify_import_title">Importă din Spotify</string>
-    <string name="spotify_import_desc">Conectează Spotify, alege playlisturile și oglindește-le în playlisturi locale Echo Music.</string>
+    <string name="spotify_import_desc">Conectează Spotify, alege playlisturile și oglindește-le în playlisturi locale Tuneify.</string>
     <string name="spotify_connect">Conectează Spotify</string>
     <string name="spotify_refresh">Reîmprospătează biblioteca Spotify</string>
     <string name="spotify_select_sources">Selectează playlisturile Spotify</string>
@@ -413,7 +413,7 @@
     <string name="recognition_notification_processing">Se identifică…</string>
     <string name="recognition_notification_no_match">Nu s-a găsit nicio potrivire</string>
     <string name="recognition_notification_failed">Recunoașterea a eșuat</string>
-    <string name="listen_on_echo_music">Ascultă în Echo Music</string>
+    <string name="listen_on_echo_music">Ascultă în Tuneify</string>
     <string name="qs_tile_music_recognizer">Recunoaște muzica</string>
     <string name="echo_brain_beta">Echo Brain (Beta)</string>
     <string name="echo_brain_enable">Activează Echo Brain</string>

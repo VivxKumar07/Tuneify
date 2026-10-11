@@ -332,7 +332,7 @@
     <string name="listen_together_smart_resync">智能网络重新同步</string>
     <string name="listen_together_smart_resync_desc">连接断开后自动与主机同步</string>
     <string name="spotify_import_title">从 Spotify 导入</string>
-    <string name="spotify_import_desc">连接 Spotify，选择播放列表，并将其镜像到本地 Echo Music 播放列表。</string>
+    <string name="spotify_import_desc">连接 Spotify，选择播放列表，并将其镜像到本地 Tuneify 播放列表。</string>
     <string name="spotify_connect">连接 Spotify</string>
     <string name="spotify_refresh">刷新 Spotify 媒体库</string>
     <string name="spotify_select_sources">选择 Spotify 播放列表</string>
@@ -392,7 +392,7 @@
     <string name="recognition_notification_processing">正在识别…</string>
     <string name="recognition_notification_no_match">未找到匹配项</string>
     <string name="recognition_notification_failed">识别失败</string>
-    <string name="listen_on_echo_music">在 Echo Music 中收听</string>
+    <string name="listen_on_echo_music">在 Tuneify 中收听</string>
     <string name="qs_tile_music_recognizer">识别音乐</string>
     <string name="echo_brain_beta">Echo Brain（测试版）</string>
     <string name="echo_brain_enable">启用 Echo Brain</string>

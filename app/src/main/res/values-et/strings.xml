@@ -342,7 +342,7 @@
     <string name="listen_together_smart_resync">Nutikas võrgu uuesti sünkroonimine</string>
     <string name="listen_together_smart_resync_desc">Pärast ühenduse katkemist saavuta automaatselt uuesti hostiga kooskõla</string>
     <string name="spotify_import_title">Impordi Spotify-st</string>
-    <string name="spotify_import_desc">Ühenda Spotify, vali esitusloendid ja peegelda need kohalikesse Echo Music esitusloenditesse.</string>
+    <string name="spotify_import_desc">Ühenda Spotify, vali esitusloendid ja peegelda need kohalikesse Tuneify esitusloenditesse.</string>
     <string name="spotify_connect">Ühenda Spotify</string>
     <string name="spotify_refresh">Värskenda Spotify muusikakogu</string>
     <string name="spotify_select_sources">Vali Spotify esitusloendid</string>
@@ -402,7 +402,7 @@
     <string name="recognition_notification_processing">Tuvastamine…</string>
     <string name="recognition_notification_no_match">Vastet ei leitud</string>
     <string name="recognition_notification_failed">Tuvastamine ebaõnnestus</string>
-    <string name="listen_on_echo_music">Kuula Echo Musicus</string>
+    <string name="listen_on_echo_music">Kuula Tuneifyus</string>
     <string name="qs_tile_music_recognizer">Tuvasta muusika</string>
     <string name="echo_brain_beta">Echo Brain (beeta)</string>
     <string name="echo_brain_enable">Luba Echo Brain</string>

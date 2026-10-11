@@ -342,7 +342,7 @@
     <string name="listen_together_smart_resync">Умна мрежова повторна синхронизация</string>
     <string name="listen_together_smart_resync_desc">Автоматично наваксване на водещия след прекъсване на връзката</string>
     <string name="spotify_import_title">Импортиране от Spotify</string>
-    <string name="spotify_import_desc">Свържете Spotify, изберете плейлисти и ги огледайте в локални плейлисти на Echo Music.</string>
+    <string name="spotify_import_desc">Свържете Spotify, изберете плейлисти и ги огледайте в локални плейлисти на Tuneify.</string>
     <string name="spotify_connect">Свързване със Spotify</string>
     <string name="spotify_refresh">Обновяване на библиотеката на Spotify</string>
     <string name="spotify_select_sources">Избор на плейлисти от Spotify</string>
@@ -402,7 +402,7 @@
     <string name="recognition_notification_processing">Разпознаване…</string>
     <string name="recognition_notification_no_match">Не е намерено съвпадение</string>
     <string name="recognition_notification_failed">Разпознаването е неуспешно</string>
-    <string name="listen_on_echo_music">Слушане в Echo Music</string>
+    <string name="listen_on_echo_music">Слушане в Tuneify</string>
     <string name="qs_tile_music_recognizer">Разпознаване на музика</string>
     <string name="echo_brain_beta">Echo Brain (бета)</string>
     <string name="echo_brain_enable">Активиране на Echo Brain</string>

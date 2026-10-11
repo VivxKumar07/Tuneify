@@ -363,7 +363,7 @@
     <string name="listen_together_smart_resync">Разумная сеткавая перасінхранізацыя</string>
     <string name="listen_together_smart_resync_desc">Аўтаматычна сінхранізавацца з вядучым пасля разрыву злучэння</string>
     <string name="spotify_import_title">Імпарт са Spotify</string>
-    <string name="spotify_import_desc">Падлучыце Spotify, выберыце плэй-лісты і скапіруйце іх у лакальныя плэй-лісты Echo Music.</string>
+    <string name="spotify_import_desc">Падлучыце Spotify, выберыце плэй-лісты і скапіруйце іх у лакальныя плэй-лісты Tuneify.</string>
     <string name="spotify_connect">Падлучыць Spotify</string>
     <string name="spotify_refresh">Абнавіць бібліятэку Spotify</string>
     <string name="spotify_select_sources">Выбраць плэй-лісты Spotify</string>
@@ -427,7 +427,7 @@
     <string name="recognition_notification_processing">Распазнаванне…</string>
     <string name="recognition_notification_no_match">Супадзенняў не знойдзена</string>
     <string name="recognition_notification_failed">Не ўдалося распазнаць</string>
-    <string name="listen_on_echo_music">Слухаць у Echo Music</string>
+    <string name="listen_on_echo_music">Слухаць у Tuneify</string>
     <string name="qs_tile_music_recognizer">Распазнаць музыку</string>
     <string name="echo_brain_beta">Echo Brain (бэта-версія)</string>
     <string name="echo_brain_enable">Уключыць Echo Brain</string>

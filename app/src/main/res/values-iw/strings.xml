@@ -352,7 +352,7 @@
     <string name="listen_together_smart_resync">סנכרון מחדש חכם של הרשת</string>
     <string name="listen_together_smart_resync_desc">התעדכן אוטומטית עם המארח לאחר ניתוק חיבור</string>
     <string name="spotify_import_title">ייבא מספוטיפיי</string>
-    <string name="spotify_import_desc">חבר את Spotify, בחר פלייליסטים ושקף אותם לפלייליסטים מקומיים של Echo Music.</string>
+    <string name="spotify_import_desc">חבר את Spotify, בחר פלייליסטים ושקף אותם לפלייליסטים מקומיים של Tuneify.</string>
     <string name="spotify_connect">חבר את Spotify</string>
     <string name="spotify_refresh">רענן את ספריית Spotify</string>
     <string name="spotify_select_sources">בחר פלייליסטים של Spotify</string>
@@ -412,7 +412,7 @@
     <string name="recognition_notification_processing">מתבצע זיהוי…</string>
     <string name="recognition_notification_no_match">לא נמצאה התאמה</string>
     <string name="recognition_notification_failed">הזיהוי נכשל</string>
-    <string name="listen_on_echo_music">האזנה ב-Echo Music</string>
+    <string name="listen_on_echo_music">האזנה ב-Tuneify</string>
     <string name="qs_tile_music_recognizer">זיהוי מוזיקה</string>
     <string name="echo_brain_beta">Echo Brain (בטא)</string>
     <string name="echo_brain_enable">הפעלת Echo Brain</string>

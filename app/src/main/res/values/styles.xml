@@ -1,13 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.echomusic" parent="Theme.SplashScreen">
+    <style name="Theme.Tuneify" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#09070F</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/tuneify_logo</item>
-        <item name="postSplashScreenTheme">@style/Theme.echomusic.App</item>
+        <item name="postSplashScreenTheme">@style/Theme.Tuneify.App</item>
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
 
-    <style name="Theme.echomusic.App" parent="android:Theme.Material.NoActionBar">
+    <style name="Theme.Tuneify.App" parent="android:Theme.Material.NoActionBar">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowMinWidthMinor">100%</item>
@@ -20,7 +20,7 @@
     </style>
 
     <!-- Widget Theme with Material 3 colors fallback for API < 31 -->
-    <style name="Theme.Widget.echomusic" parent="@android:style/Theme.DeviceDefault.DayNight">
+    <style name="Theme.Widget.Tuneify" parent="@android:style/Theme.DeviceDefault.DayNight">
         <item name="android:colorBackground">#E6E1E5</item>
     </style>
 

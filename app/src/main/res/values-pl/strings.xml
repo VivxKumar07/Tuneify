@@ -363,7 +363,7 @@
     <string name="listen_together_smart_resync">Inteligentna resynchronizacja sieci</string>
     <string name="listen_together_smart_resync_desc">Automatycznie dogoń gospodarza po przerwaniu połączenia</string>
     <string name="spotify_import_title">Importuj z Spotify</string>
-    <string name="spotify_import_desc">Połącz Spotify, wybierz playlisty i odzwierciedl je w lokalnych playlistach Echo Music.</string>
+    <string name="spotify_import_desc">Połącz Spotify, wybierz playlisty i odzwierciedl je w lokalnych playlistach Tuneify.</string>
     <string name="spotify_connect">Połącz Spotify</string>
     <string name="spotify_refresh">Odśwież bibliotekę Spotify</string>
     <string name="spotify_select_sources">Wybierz playlisty Spotify</string>
@@ -423,7 +423,7 @@
     <string name="recognition_notification_processing">Rozpoznawanie…</string>
     <string name="recognition_notification_no_match">Nie znaleziono dopasowania</string>
     <string name="recognition_notification_failed">Rozpoznawanie nie powiodło się</string>
-    <string name="listen_on_echo_music">Posłuchaj w Echo Music</string>
+    <string name="listen_on_echo_music">Posłuchaj w Tuneify</string>
     <string name="qs_tile_music_recognizer">Rozpoznaj muzykę</string>
     <string name="echo_brain_beta">Echo Brain (wersja beta)</string>
     <string name="echo_brain_enable">Włącz Echo Brain</string>

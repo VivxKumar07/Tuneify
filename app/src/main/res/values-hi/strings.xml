@@ -390,7 +390,7 @@
     <string name="listen_together_smart_resync">स्मार्ट नेटवर्क रीसिंक</string>
     <string name="listen_together_smart_resync_desc">कनेक्शन टूटने के बाद स्वचालित रूप से होस्ट के साथ तालमेल बिठाएँ</string>
     <string name="spotify_import_title">Spotify से आयात करें</string>
-    <string name="spotify_import_desc">Spotify कनेक्ट करें, प्लेलिस्ट चुनें, और उन्हें स्थानीय Echo Music प्लेलिस्ट में मिरर करें।</string>
+    <string name="spotify_import_desc">Spotify कनेक्ट करें, प्लेलिस्ट चुनें, और उन्हें स्थानीय Tuneify प्लेलिस्ट में मिरर करें।</string>
     <string name="spotify_connect">Spotify कनेक्ट करें</string>
     <string name="spotify_refresh">Spotify लाइब्रेरी रीफ़्रेश करें</string>
     <string name="spotify_select_sources">Spotify प्लेलिस्ट चुनें</string>
@@ -434,7 +434,7 @@
     <string name="recognition_notification_processing">पहचान हो रही है…</string>
     <string name="recognition_notification_no_match">कोई मिलान नहीं मिला</string>
     <string name="recognition_notification_failed">पहचान विफल</string>
-    <string name="listen_on_echo_music">Echo Music पर सुनें</string>
+    <string name="listen_on_echo_music">Tuneify पर सुनें</string>
     <string name="qs_tile_music_recognizer">संगीत पहचानें</string>
     <string name="listenbrainz_scrobbling">ListenBrainz स्क्रोब्लिंग</string>
     <string name="listenbrainz_scrobbling_description">अपने सुने गए ट्रैक स्वचालित रूप से ListenBrainz पर सबमिट करें</string>

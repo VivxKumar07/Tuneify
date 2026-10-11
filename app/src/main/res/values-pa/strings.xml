@@ -292,7 +292,7 @@
     <string name="listen_together_smart_resync">ਸਮਾਰਟ ਨੈੱਟਵਰਕ ਰੀਸਿੰਕ</string>
     <string name="listen_together_smart_resync_desc">ਕਨੈਕਸ਼ਨ ਡਿੱਗਣ ਤੋਂ ਬਾਅਦ ਆਪਣੇ ਆਪ ਹੋਸਟ ਨਾਲ ਮੇਲ ਕਰੋ</string>
     <string name="spotify_import_title">Spotify ਤੋਂ ਅਯਾਤ ਕਰੋ</string>
-    <string name="spotify_import_desc">Spotify ਨਾਲ ਕਨੈਕਟ ਕਰੋ, ਪਲੇਲਿਸਟਾਂ ਚੁਣੋ, ਅਤੇ ਉਹਨਾਂ ਨੂੰ ਸਥਾਨਕ Echo Music ਪਲੇਲਿਸਟਾਂ ਵਿੱਚ ਸ਼ੀਸ਼ਾ ਬਣਾਓ।</string>
+    <string name="spotify_import_desc">Spotify ਨਾਲ ਕਨੈਕਟ ਕਰੋ, ਪਲੇਲਿਸਟਾਂ ਚੁਣੋ, ਅਤੇ ਉਹਨਾਂ ਨੂੰ ਸਥਾਨਕ Tuneify ਪਲੇਲਿਸਟਾਂ ਵਿੱਚ ਸ਼ੀਸ਼ਾ ਬਣਾਓ।</string>
     <string name="spotify_connect">Spotify ਕਨੈਕਟ ਕਰੋ</string>
     <string name="spotify_refresh">Spotify ਲਾਇਬ੍ਰੇਰੀ ਰਿਫ੍ਰੈਸ਼ ਕਰੋ</string>
     <string name="spotify_select_sources">Spotify ਪਲੇਲਿਸਟਾਂ ਚੁਣੋ</string>
@@ -403,7 +403,7 @@
     <string name="recognition_notification_processing">ਪਛਾਣ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ…</string>
     <string name="recognition_notification_no_match">ਕੋਈ ਮੇਲ ਨਹੀਂ ਮਿਲਿਆ</string>
     <string name="recognition_notification_failed">ਪਛਾਣ ਅਸਫਲ ਰਹੀ</string>
-    <string name="listen_on_echo_music">Echo Music ਉੱਤੇ ਸੁਣੋ</string>
+    <string name="listen_on_echo_music">Tuneify ਉੱਤੇ ਸੁਣੋ</string>
     <string name="qs_tile_music_recognizer">ਸੰਗੀਤ ਪਛਾਣੋ</string>
     <string name="echo_brain_beta">Echo Brain (ਬੀਟਾ)</string>
     <string name="echo_brain_enable">Echo Brain ਚਾਲੂ ਕਰੋ</string>

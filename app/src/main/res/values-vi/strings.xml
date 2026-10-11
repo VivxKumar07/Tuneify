@@ -326,7 +326,7 @@
     <string name="listen_together_smart_resync">Đồng bộ lại mạng thông minh</string>
     <string name="listen_together_smart_resync_desc">Tự động bắt kịp máy chủ sau khi mất kết nối</string>
     <string name="spotify_import_title">Nhập từ Spotify</string>
-    <string name="spotify_import_desc">Kết nối Spotify, chọn danh sách phát và phản chiếu chúng vào danh sách phát Echo Music cục bộ.</string>
+    <string name="spotify_import_desc">Kết nối Spotify, chọn danh sách phát và phản chiếu chúng vào danh sách phát Tuneify cục bộ.</string>
     <string name="spotify_connect">Kết nối Spotify</string>
     <string name="spotify_refresh">Làm mới thư viện Spotify</string>
     <string name="spotify_select_sources">Chọn danh sách phát Spotify</string>
@@ -389,7 +389,7 @@
     <string name="recognition_notification_processing">Đang nhận diện…</string>
     <string name="recognition_notification_no_match">Không tìm thấy kết quả phù hợp</string>
     <string name="recognition_notification_failed">Nhận diện thất bại</string>
-    <string name="listen_on_echo_music">Nghe trên Echo Music</string>
+    <string name="listen_on_echo_music">Nghe trên Tuneify</string>
     <string name="qs_tile_music_recognizer">Nhận diện nhạc</string>
     <string name="echo_brain_beta">Echo Brain (Beta)</string>
     <string name="echo_brain_enable">Bật Echo Brain</string>

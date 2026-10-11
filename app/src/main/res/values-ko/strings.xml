@@ -332,7 +332,7 @@
     <string name="listen_together_smart_resync">스마트 네트워크 재동기화</string>
     <string name="listen_together_smart_resync_desc">연결이 끊긴 후 호스트의 재생 위치에 자동으로 맞춥니다</string>
     <string name="spotify_import_title">Spotify에서 가져오기</string>
-    <string name="spotify_import_desc">Spotify를 연결하고 재생목록을 선택하여 로컬 Echo Music 재생목록으로 동기화합니다.</string>
+    <string name="spotify_import_desc">Spotify를 연결하고 재생목록을 선택하여 로컬 Tuneify 재생목록으로 동기화합니다.</string>
     <string name="spotify_connect">Spotify 연결</string>
     <string name="spotify_refresh">Spotify 보관함 새로고침</string>
     <string name="spotify_select_sources">Spotify 재생목록 선택</string>
@@ -392,7 +392,7 @@
     <string name="recognition_notification_processing">식별 중…</string>
     <string name="recognition_notification_no_match">일치하는 결과를 찾을 수 없습니다</string>
     <string name="recognition_notification_failed">음악 인식 실패</string>
-    <string name="listen_on_echo_music">Echo Music에서 듣기</string>
+    <string name="listen_on_echo_music">Tuneify에서 듣기</string>
     <string name="qs_tile_music_recognizer">음악 인식</string>
     <string name="echo_brain_beta">Echo Brain(베타)</string>
     <string name="echo_brain_enable">Echo Brain 사용</string>

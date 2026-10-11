@@ -342,7 +342,7 @@
     <string name="listen_together_smart_resync">স্মার্ট নেটওয়ার্ক পুনঃসিঙ্ক</string>
     <string name="listen_together_smart_resync_desc">সংযোগ বিচ্ছিন্ন হওয়ার পর স্বয়ংক্রিয়ভাবে হোস্টের সঙ্গে সিঙ্ক করুন</string>
     <string name="spotify_import_title">Spotify থেকে আমদানি করুন</string>
-    <string name="spotify_import_desc">Spotify সংযুক্ত করুন, প্লেলিস্ট বেছে নিন এবং সেগুলো স্থানীয় Echo Music প্লেলিস্টে প্রতিলিপি করুন।</string>
+    <string name="spotify_import_desc">Spotify সংযুক্ত করুন, প্লেলিস্ট বেছে নিন এবং সেগুলো স্থানীয় Tuneify প্লেলিস্টে প্রতিলিপি করুন।</string>
     <string name="spotify_connect">Spotify সংযুক্ত করুন</string>
     <string name="spotify_refresh">Spotify লাইব্রেরি রিফ্রেশ করুন</string>
     <string name="spotify_select_sources">Spotify প্লেলিস্ট বেছে নিন</string>
@@ -402,7 +402,7 @@
     <string name="recognition_notification_processing">শনাক্ত করা হচ্ছে…</string>
     <string name="recognition_notification_no_match">কোনো মিল পাওয়া যায়নি</string>
     <string name="recognition_notification_failed">শনাক্তকরণ ব্যর্থ হয়েছে</string>
-    <string name="listen_on_echo_music">Echo Music-এ শুনুন</string>
+    <string name="listen_on_echo_music">Tuneify - এ শুনুন</string>
     <string name="qs_tile_music_recognizer">সঙ্গীত শনাক্ত করুন</string>
     <string name="echo_brain_beta">Echo Brain (বিটা)</string>
     <string name="echo_brain_enable">Echo Brain চালু করুন</string>

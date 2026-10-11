@@ -352,7 +352,7 @@
     <string name="listen_together_smart_resync">Pametna mrežna ponovna sinhronizacija</string>
     <string name="listen_together_smart_resync_desc">Automatski se uskladite s domaćinom nakon prekida veze</string>
     <string name="spotify_import_title">Uvezi sa Spotifyja</string>
-    <string name="spotify_import_desc">Povežite Spotify, odaberite spiskove i preslikajte ih u lokalne Echo Music spiskove.</string>
+    <string name="spotify_import_desc">Povežite Spotify, odaberite spiskove i preslikajte ih u lokalne Tuneify spiskove.</string>
     <string name="spotify_connect">Poveži Spotify</string>
     <string name="spotify_refresh">Osvježi Spotify biblioteku</string>
     <string name="spotify_select_sources">Odaberite Spotify spiskove</string>
@@ -413,7 +413,7 @@
     <string name="other_services">Ostale usluge</string>
     <string name="status_online">Na mreži</string>
     <string name="status_offline">Van mreže</string>
-    <string name="listen_on_echo_music">Slušajte na Echo Music</string>
+    <string name="listen_on_echo_music">Slušajte na Tuneify</string>
     <string name="qs_tile_music_recognizer">Prepoznaj muziku</string>
     <string name="echo_brain_beta">Echo Brain (Beta)</string>
     <string name="echo_brain_enable">Omogući Echo Brain</string>

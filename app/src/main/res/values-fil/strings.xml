@@ -355,7 +355,7 @@
     <string name="listen_together_smart_resync">Smart Network Resync</string>
     <string name="listen_together_smart_resync_desc">Awtomatikong humabol sa host pagkatapos ng pagkawala ng koneksyon</string>
     <string name="spotify_import_title">Mag-import Mula sa Spotify</string>
-    <string name="spotify_import_desc">Ikonekta ang Spotify, pumili ng mga playlist, at i-mirror ang mga ito sa mga lokal na Echo Music playlist.</string>
+    <string name="spotify_import_desc">Ikonekta ang Spotify, pumili ng mga playlist, at i-mirror ang mga ito sa mga lokal na Tuneify playlist.</string>
     <string name="spotify_connect">Ikonekta ang Spotify</string>
     <string name="spotify_refresh">I-refresh ang Spotify library</string>
     <string name="spotify_select_sources">Pumili ng mga Spotify playlist</string>
@@ -415,7 +415,7 @@
     <string name="recognition_notification_processing">Kinikilala…</string>
     <string name="recognition_notification_no_match">Walang nakitang katugma</string>
     <string name="recognition_notification_failed">Nabigo ang pagkilala</string>
-    <string name="listen_on_echo_music">Pakinggan sa Echo Music</string>
+    <string name="listen_on_echo_music">Pakinggan sa Tuneify</string>
     <string name="qs_tile_music_recognizer">Kilalanin ang musika</string>
     <string name="echo_brain_beta">Echo Brain (Beta)</string>
     <string name="echo_brain_enable">Paganahin ang Echo Brain</string>

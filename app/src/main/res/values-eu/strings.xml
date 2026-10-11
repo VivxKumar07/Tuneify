@@ -349,7 +349,7 @@
     <string name="listen_together_smart_resync">Sareko birsinkronizazio adimenduna</string>
     <string name="listen_together_smart_resync_desc">Sinkronizatu automatikoki ostalariarekin konexioa eten ondoren</string>
     <string name="spotify_import_title">Inportatu Spotify-tik</string>
-    <string name="spotify_import_desc">Konektatu Spotify, aukeratu erreprodukzio-zerrendak eta kopiatu Echo Music-eko tokiko erreprodukzio-zerrendetara.</string>
+    <string name="spotify_import_desc">Konektatu Spotify, aukeratu erreprodukzio-zerrendak eta kopiatu Tuneify - eko tokiko erreprodukzio-zerrendetara.</string>
     <string name="spotify_connect">Konektatu Spotify</string>
     <string name="spotify_refresh">Freskatu Spotify liburutegia</string>
     <string name="spotify_select_sources">Hautatu Spotify erreprodukzio-zerrendak</string>
@@ -393,7 +393,7 @@
     <string name="recognition_notification_processing">Identifikatzen…</string>
     <string name="recognition_notification_no_match">Ez da bat datorrenik aurkitu</string>
     <string name="recognition_notification_failed">Ezin izan da ezagutu</string>
-    <string name="listen_on_echo_music">Entzun Echo Music-en</string>
+    <string name="listen_on_echo_music">Entzun Tuneify - en</string>
     <string name="qs_tile_music_recognizer">Ezagutu musika</string>
     <string name="echo_brain_beta">Echo Brain (Beta)</string>
     <string name="echo_brain_enable">Gaitu Echo Brain</string>

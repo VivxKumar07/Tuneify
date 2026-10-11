@@ -1,4 +1,4 @@
-package echo.music.iad1tya.ui.screens.settings
+﻿package echo.music.iad1tya.ui.screens.settings
 
 import android.content.Context
 import java.util.concurrent.atomic.AtomicBoolean
@@ -84,7 +84,7 @@ object ListenBrainzManager {
                     artistNames,
                 )}\",\"track_name\":\"${escapeJson(
                     title,
-                )}\",${releasePart}\"additional_info\":{\"duration_ms\":$durationMs,\"position_ms\":$positionMs,\"submission_client\":\"Echo Music\",\"submission_client_version\":\"5.2.89\"}}}"
+                )}\",${releasePart}\"additional_info\":{\"duration_ms\":$durationMs,\"position_ms\":$positionMs,\"submission_client\":\"Tuneify\",\"submission_client_version\":\"5.2.89\"}}}"
         val listensJson = "[$trackMetadata]"
         val bodyJson = "{\"listen_type\":\"playing_now\",\"payload\":$listensJson}"
         Timber.tag(logTag).d("submitPlayingNow JSON: %s", bodyJson)
@@ -153,7 +153,7 @@ object ListenBrainzManager {
                     artistNames,
                 )}\",\"track_name\":\"${escapeJson(
                     title,
-                )}\",${releasePart}\"additional_info\":{\"duration_ms\":$durationMs,\"start_ms\":$startMs,\"end_ms\":$endMs,\"submission_client\":\"Echo Music\",\"submission_client_version\":\"5.2.89\"}}}"
+                )}\",${releasePart}\"additional_info\":{\"duration_ms\":$durationMs,\"start_ms\":$startMs,\"end_ms\":$endMs,\"submission_client\":\"Tuneify\",\"submission_client_version\":\"5.2.89\"}}}"
         val listensJson = "[$trackMetadataSingle]"
         val bodyJson = "{\"listen_type\":\"single\",\"payload\":$listensJson}"
         Timber.tag(logTag).d("submitFinished JSON: %s", bodyJson)

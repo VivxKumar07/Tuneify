@@ -382,7 +382,7 @@
     <string name="listen_together_smart_resync">إعادة مزامنة الشبكة الذكية</string>
     <string name="listen_together_smart_resync_desc">مزامنة التشغيل تلقائيًا مع المضيف بعد انقطاع الاتصال</string>
     <string name="spotify_import_title">الاستيراد من Spotify</string>
-    <string name="spotify_import_desc">اربط Spotify واختر قوائم التشغيل، ثم انسخها إلى قوائم تشغيل Echo Music المحلية.</string>
+    <string name="spotify_import_desc">اربط Spotify واختر قوائم التشغيل، ثم انسخها إلى قوائم تشغيل Tuneify المحلية.</string>
     <string name="spotify_connect">ربط Spotify</string>
     <string name="spotify_refresh">تحديث مكتبة Spotify</string>
     <string name="spotify_select_sources">اختيار قوائم تشغيل Spotify</string>
@@ -442,7 +442,7 @@
     <string name="recognition_notification_processing">جارٍ التعرف…</string>
     <string name="recognition_notification_no_match">لم يتم العثور على تطابق</string>
     <string name="recognition_notification_failed">فشل التعرف</string>
-    <string name="listen_on_echo_music">الاستماع على Echo Music</string>
+    <string name="listen_on_echo_music">الاستماع على Tuneify</string>
     <string name="qs_tile_music_recognizer">التعرف على الموسيقى</string>
     <string name="echo_brain_beta">Echo Brain (تجريبي)</string>
     <string name="echo_brain_enable">تفعيل Echo Brain</string>

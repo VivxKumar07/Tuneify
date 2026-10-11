@@ -349,7 +349,7 @@
     <string name="listen_together_smart_resync">Smart nätverkssynkronisering</string>
     <string name="listen_together_smart_resync_desc">Synkronisera automatiskt med värden efter ett anslutningsavbrott</string>
     <string name="spotify_import_title">Importera från Spotify</string>
-    <string name="spotify_import_desc">Anslut Spotify, välj spellistor och spegla dem till lokala spellistor i Echo Music.</string>
+    <string name="spotify_import_desc">Anslut Spotify, välj spellistor och spegla dem till lokala spellistor i Tuneify.</string>
     <string name="spotify_connect">Anslut Spotify</string>
     <string name="spotify_refresh">Uppdatera Spotify-biblioteket</string>
     <string name="spotify_select_sources">Välj Spotify-spellistor</string>
@@ -393,7 +393,7 @@
     <string name="recognition_notification_processing">Identifierar…</string>
     <string name="recognition_notification_no_match">Ingen matchning hittades</string>
     <string name="recognition_notification_failed">Igenkänningen misslyckades</string>
-    <string name="listen_on_echo_music">Lyssna i Echo Music</string>
+    <string name="listen_on_echo_music">Lyssna i Tuneify</string>
     <string name="qs_tile_music_recognizer">Identifiera musik</string>
     <string name="echo_brain_beta">Echo Brain (beta)</string>
     <string name="echo_brain_enable">Aktivera Echo Brain</string>

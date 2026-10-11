@@ -392,7 +392,7 @@
     <string name="recognition_notification_processing">Wird erkannt…</string>
     <string name="recognition_notification_no_match">Kei Treffer gfunde</string>
     <string name="recognition_notification_failed">Erchennig fählgschlage</string>
-    <string name="listen_on_echo_music">Uf Echo Music lose</string>
+    <string name="listen_on_echo_music">Uf Tuneify lose</string>
     <string name="qs_tile_music_recognizer">Müsig erkenne</string>
     <string name="echo_brain_beta">Echo Brain (Beta)</string>
     <string name="echo_brain_enable">Echo Brain aktiviere</string>

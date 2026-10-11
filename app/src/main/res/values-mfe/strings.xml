@@ -348,7 +348,7 @@
     <string name="listen_together_smart_resync">Resinkronizasion intelizan rezo</string>
     <string name="listen_together_smart_resync_desc">Ratrap lot otomatikman apre enn koupir koneksion</string>
     <string name="spotify_import_title">Inporte depi Spotify</string>
-    <string name="spotify_import_desc">Konekte Spotify, swazir bann list lekout ek kopi zot dan bann list lekout lokal Echo Music.</string>
+    <string name="spotify_import_desc">Konekte Spotify, swazir bann list lekout ek kopi zot dan bann list lekout lokal Tuneify.</string>
     <string name="spotify_connect">Konekte Spotify</string>
     <string name="spotify_refresh">Rafresi bibliotek Spotify</string>
     <string name="spotify_select_sources">Seleksionn bann list lekout Spotify</string>
@@ -392,7 +392,7 @@
     <string name="recognition_notification_processing">Pe idantifie…</string>
     <string name="recognition_notification_no_match">Okenn korespondans pa finn trouve</string>
     <string name="recognition_notification_failed">Rekonesans finn fel</string>
-    <string name="listen_on_echo_music">Ekoute lor Echo Music</string>
+    <string name="listen_on_echo_music">Ekoute lor Tuneify</string>
     <string name="qs_tile_music_recognizer">Rekonet mizik</string>
     <string name="echo_brain_beta">Echo Brain (Beta)</string>
     <string name="echo_brain_enable">Aktiv Echo Brain</string>

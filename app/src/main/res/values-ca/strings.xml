@@ -351,7 +351,7 @@
     <string name="listen_together_smart_resync">Resincronització intel·ligent de xarxa</string>
     <string name="listen_together_smart_resync_desc">Posi’s al dia automàticament amb l’amfitrió després d’una caiguda de la connexió</string>
     <string name="spotify_import_title">Importa des de Spotify</string>
-    <string name="spotify_import_desc">Connecteu Spotify, trieu llistes de reproducció i copieu-les a les llistes locals d’Echo Music.</string>
+    <string name="spotify_import_desc">Connecteu Spotify, trieu llistes de reproducció i copieu-les a les llistes locals d’Tuneify.</string>
     <string name="spotify_connect">Connecta Spotify</string>
     <string name="spotify_refresh">Actualitza la col·lecció de Spotify</string>
     <string name="spotify_select_sources">Selecciona les llistes de Spotify</string>
@@ -412,7 +412,7 @@
     <string name="recognition_notification_processing">S\'està identificant…</string>
     <string name="recognition_notification_no_match">No s\'ha trobat cap coincidència</string>
     <string name="recognition_notification_failed">Ha fallat el reconeixement</string>
-    <string name="listen_on_echo_music">Escolta-ho a Echo Music</string>
+    <string name="listen_on_echo_music">Escolta-ho a Tuneify</string>
     <string name="qs_tile_music_recognizer">Reconeix música</string>
     <string name="echo_brain_beta">Echo Brain (beta)</string>
     <string name="echo_brain_enable">Activa Echo Brain</string>

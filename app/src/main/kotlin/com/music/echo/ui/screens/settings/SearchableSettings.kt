@@ -2274,12 +2274,12 @@ fun getAllSearchableSettings(): List<SearchableSetting> {
     ),
 
     // About Screen - Social & Support Links
-    SearchableSetting("Website", "Visit the Echo Music website", "About", "settings/about"),
-    SearchableSetting("Instagram", "Follow Echo Music on Instagram", "About", "settings/about"),
-    SearchableSetting("X (Twitter)", "Follow Echo Music on X", "About", "settings/about"),
+    SearchableSetting("Website", "Visit the Tuneify website", "About", "settings/about"),
+    SearchableSetting("Instagram", "Follow Tuneify on Instagram", "About", "settings/about"),
+    SearchableSetting("X (Twitter)", "Follow Tuneify on X", "About", "settings/about"),
     SearchableSetting("Buy Me a Coffee", "Support the developer", "About", "settings/about"),
     SearchableSetting("Patreon", "Support the developer on Patreon", "About", "settings/about"),
     SearchableSetting("UPI", "Support the developer via UPI", "About", "settings/about"),
-    SearchableSetting("Discord", "Join the Echo Music community", "About", "settings/about"),
+    SearchableSetting("Discord", "Join the Tuneify community", "About", "settings/about"),
   )
 }

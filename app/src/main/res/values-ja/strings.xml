@@ -334,7 +334,7 @@
     <string name="listen_together_smart_resync">スマートネットワーク再同期</string>
     <string name="listen_together_smart_resync_desc">接続が切れた後にホストに自動的に追いつく</string>
     <string name="spotify_import_title">Spotifyからインポート</string>
-    <string name="spotify_import_desc">Spotifyに接続し、プレイリストを選択して、ローカルのEcho Musicプレイリストにミラーリングします。</string>
+    <string name="spotify_import_desc">Spotifyに接続し、プレイリストを選択して、ローカルのTuneifyプレイリストにミラーリングします。</string>
     <string name="spotify_connect">Spotifyに接続</string>
     <string name="spotify_refresh">Spotifyライブラリを更新</string>
     <string name="spotify_select_sources">Spotifyプレイリストを選択</string>
@@ -394,7 +394,7 @@
     <string name="recognition_notification_processing">識別中…</string>
     <string name="recognition_notification_no_match">一致する曲が見つかりませんでした</string>
     <string name="recognition_notification_failed">認識に失敗しました</string>
-    <string name="listen_on_echo_music">Echo Musicで聴く</string>
+    <string name="listen_on_echo_music">Tuneifyで聴く</string>
     <string name="qs_tile_music_recognizer">音楽を認識</string>
     <string name="echo_brain_beta">Echo Brain（ベータ版）</string>
     <string name="echo_brain_enable">Echo Brainを有効にする</string>

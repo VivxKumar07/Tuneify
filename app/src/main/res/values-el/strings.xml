@@ -342,7 +342,7 @@
     <string name="listen_together_smart_resync">Έξυπνος επανασυγχρονισμός δικτύου</string>
     <string name="listen_together_smart_resync_desc">Αυτόματος συγχρονισμός με τον οικοδεσπότη μετά από διακοπή σύνδεσης</string>
     <string name="spotify_import_title">Εισαγωγή από το Spotify</string>
-    <string name="spotify_import_desc">Συνδέστε το Spotify, επιλέξτε λίστες αναπαραγωγής και αντιγράψτε τις σε τοπικές λίστες αναπαραγωγής του Echo Music.</string>
+    <string name="spotify_import_desc">Συνδέστε το Spotify, επιλέξτε λίστες αναπαραγωγής και αντιγράψτε τις σε τοπικές λίστες αναπαραγωγής του Tuneify.</string>
     <string name="spotify_connect">Σύνδεση Spotify</string>
     <string name="spotify_refresh">Ανανέωση βιβλιοθήκης Spotify</string>
     <string name="spotify_select_sources">Επιλογή λιστών αναπαραγωγής Spotify</string>
@@ -402,7 +402,7 @@
     <string name="recognition_notification_processing">Αναγνώριση…</string>
     <string name="recognition_notification_no_match">Δεν βρέθηκε αντιστοιχία</string>
     <string name="recognition_notification_failed">Η αναγνώριση απέτυχε</string>
-    <string name="listen_on_echo_music">Ακρόαση στο Echo Music</string>
+    <string name="listen_on_echo_music">Ακρόαση στο Tuneify</string>
     <string name="qs_tile_music_recognizer">Αναγνώριση μουσικής</string>
     <string name="echo_brain_beta">Echo Brain (Beta)</string>
     <string name="echo_brain_enable">Ενεργοποίηση Echo Brain</string>

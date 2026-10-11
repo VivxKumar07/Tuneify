@@ -339,7 +339,7 @@
     <string name="listen_together_smart_resync">ซิงค์เครือข่ายอัจฉริยะ</string>
     <string name="listen_together_smart_resync_desc">ตามให้ทันโฮสต์โดยอัตโนมัติหลังการเชื่อมต่อหลุด</string>
     <string name="spotify_import_title">นำเข้าจาก Spotify</string>
-    <string name="spotify_import_desc">เชื่อมต่อ Spotify เลือกเพลย์ลิสต์ แล้วคัดลอกมาเป็นเพลย์ลิสต์ใน Echo Music</string>
+    <string name="spotify_import_desc">เชื่อมต่อ Spotify เลือกเพลย์ลิสต์ แล้วคัดลอกมาเป็นเพลย์ลิสต์ใน Tuneify</string>
     <string name="spotify_connect">เชื่อมต่อ Spotify</string>
     <string name="spotify_refresh">รีเฟรชคลังเพลง Spotify</string>
     <string name="spotify_select_sources">เลือกเพลย์ลิสต์ Spotify</string>
@@ -383,7 +383,7 @@
     <string name="recognition_notification_processing">กำลังระบุเพลง…</string>
     <string name="recognition_notification_no_match">ไม่พบเพลงที่ตรงกัน</string>
     <string name="recognition_notification_failed">การจดจำเพลงล้มเหลว</string>
-    <string name="listen_on_echo_music">ฟังบน Echo Music</string>
+    <string name="listen_on_echo_music">ฟังบน Tuneify</string>
     <string name="qs_tile_music_recognizer">จดจำเพลง</string>
     <string name="echo_brain_beta">Echo Brain (เบต้า)</string>
     <string name="echo_brain_enable">เปิดใช้ Echo Brain</string>

@@ -363,7 +363,7 @@
     <string name="listen_together_smart_resync">Умная повторная синхронизация сети</string>
     <string name="listen_together_smart_resync_desc">Автоматически подстраиваться под ведущего после обрыва соединения</string>
     <string name="spotify_import_title">Импорт из Spotify</string>
-    <string name="spotify_import_desc">Подключите Spotify, выберите плейлисты и зеркально отразите их в локальных плейлистах Echo Music.</string>
+    <string name="spotify_import_desc">Подключите Spotify, выберите плейлисты и зеркально отразите их в локальных плейлистах Tuneify.</string>
     <string name="spotify_connect">Подключить Spotify</string>
     <string name="spotify_refresh">Обновить библиотеку Spotify</string>
     <string name="spotify_select_sources">Выбрать плейлисты Spotify</string>
@@ -423,7 +423,7 @@
     <string name="recognition_notification_processing">Определяю…</string>
     <string name="recognition_notification_no_match">Нет совпадений</string>
     <string name="recognition_notification_failed">Ошибка распознавания</string>
-    <string name="listen_on_echo_music">Слушать в Echo Music</string>
+    <string name="listen_on_echo_music">Слушать в Tuneify</string>
     <string name="qs_tile_music_recognizer">Распознать музыку</string>
     <string name="echo_brain_beta">Echo Brain (Бета)</string>
     <string name="echo_brain_enable">Включить Echo Brain</string>

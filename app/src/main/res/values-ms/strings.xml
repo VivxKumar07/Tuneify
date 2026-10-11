@@ -339,7 +339,7 @@
     <string name="listen_together_smart_resync">Penyegerakan Semula Rangkaian Pintar</string>
     <string name="listen_together_smart_resync_desc">Selaras semula dengan hos secara automatik selepas sambungan terputus</string>
     <string name="spotify_import_title">Import daripada Spotify</string>
-    <string name="spotify_import_desc">Sambungkan Spotify, pilih senarai main dan salinnya ke senarai main Echo Music setempat.</string>
+    <string name="spotify_import_desc">Sambungkan Spotify, pilih senarai main dan salinnya ke senarai main Tuneify setempat.</string>
     <string name="spotify_connect">Sambungkan Spotify</string>
     <string name="spotify_refresh">Muat semula pustaka Spotify</string>
     <string name="spotify_select_sources">Pilih senarai main Spotify</string>
@@ -383,7 +383,7 @@
     <string name="recognition_notification_processing">Mengenal pasti…</string>
     <string name="recognition_notification_no_match">Tiada padanan ditemui</string>
     <string name="recognition_notification_failed">Pengecaman gagal</string>
-    <string name="listen_on_echo_music">Dengar di Echo Music</string>
+    <string name="listen_on_echo_music">Dengar di Tuneify</string>
     <string name="qs_tile_music_recognizer">Kenal pasti muzik</string>
     <string name="echo_brain_beta">Echo Brain (Beta)</string>
     <string name="echo_brain_enable">Dayakan Echo Brain</string>

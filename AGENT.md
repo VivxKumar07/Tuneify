@@ -1,8 +1,8 @@
-# AGENT.md - Echo Music
+# AGENT.md - Tuneify
 
-Context file for AI agents (Antigravity, Claude Code, etc.) working in this repo.
+Context file for developers and tools working in this repo.
 Keep this file up to date as the project evolves — it's the fastest way to give
-the agent full context without re-scanning the whole codebase every session.
+full context without re-scanning the whole codebase every session.
 
 ## Development Rules & Guidelines
 
@@ -73,7 +73,7 @@ All UI work — new screens, new components, and edits to existing ones —
 applying standard Material Design 3 guidelines or Material You.
 
 We maintain a dedicated **[DESIGN.md](DESIGN.md)** file which serves as the central
-hub for all design decisions, component usage, and style choices in the Echo Music codebase.
+hub for all design decisions, component usage, and style choices in the Tuneify codebase.
 
 **Key Requirements:**
 - **Clean and Minimal:** Emphasize the Nothing OS 5.0 aesthetic. Focus on high-contrast, typography-driven layouts, monochrome or minimal color palettes, and distinct geometry.
@@ -100,19 +100,19 @@ If a new feature needs a UI pattern not covered in `DESIGN.md`, create a minimal
 
 ### Things to double check before assuming
 
-- Exact current contents of `com/music/echo/echomusic/` (contains core app-level initializers/application class) and `:unison` (cross-cutting/shared utilities and common base classes) — check source before editing.
+- Exact current contents of `com/music/echo/tuneify/` (contains core app-level initializers/application class) and `:unison` (cross-cutting/shared utilities and common base classes) — check source before editing.
 
 ## What this app is
 
-Echo Music is a native **Android** music streaming client (Kotlin + Jetpack
+Tuneify is a native **Android** music streaming client (Kotlin + Jetpack
 Compose) that streams from YouTube Music's catalog ad-free, and layers on
-offline downloads, real-time synced lyrics, music recognition ("Echo Find"),
+offline downloads, real-time synced lyrics, music recognition ("Tuneify Find"),
 podcasts, local media playback, Spotify import, "Listen Together" (synced
 group listening), Discord Rich Presence, and more. It ships as a single
 **GMS** build variant (Google Cast + Firebase enabled) — the previous FOSS
 (no-Google-services) flavor has been removed. See "Build variants" below.
 
-Package/namespace: `echo.music.iad1tya` (app module). Application ID matches.
+Package/namespace: `com.tuneify.app` (application ID). Source package: `com.music.echo` (internal, legacy).
 
 ## Tech stack
 
@@ -156,7 +156,7 @@ mostly-independent feature/integration:
 | `:lyrics` | Lyrics orchestration — LyricsHelper, LyricsEntry, LyricsUtils, all provider impls, AI translation |
 | `:innertube` | YouTube Music InnerTube API client (the core music source) |
 | `:kugou`, `:lrclib`, `:betterlyrics`, `:youlyplus`, `:paxsenixlyrics`, `:simpmusic` | Individual lyrics source providers (each consumed by `:lyrics`) |
-| `:shazamkit` | Music recognition ("Echo Find") |
+| `:shazamkit` | Music recognition ("Tuneify Find") |
 | `:canvas`, `:echomusiccanvas`, `:applecanvas` | Canvas-style looping video backgrounds for tracks (different providers) |
 | `:artistvideo` | Artist video features |
 | `:unison` | Cross-cutting shared utility module (check source before editing) |
@@ -181,7 +181,7 @@ db/
   daos/         Room DAOs
 di/             Hilt modules (AppModule, NetworkModule, Qualifiers, entry points)
 discord/        Discord Rich Presence integration
-echomusic/      Core app-level classes (Application class, core initializers)
+tuneify/        Core app-level classes (Application class, core initializers)
 eq/             Equalizer
 extensions/     Kotlin extension functions
 listentogether/ "Listen Together" synced group listening feature
@@ -190,7 +190,7 @@ lyrics/         Lyrics orchestration (aggregates the lyrics provider modules)
 models/         Shared data models
 playback/       Media3/ExoPlayer service, download manager, queueing, audio
 quicksettings/  Android quick settings tile
-recognition/    Music recognition (Echo Find) app-side logic
+recognition/    Music recognition (Tuneify Find) app-side logic
 spotify/        Spotify API integration
 spotifyimport/  Import playlists/tracks from Spotify
 ui/

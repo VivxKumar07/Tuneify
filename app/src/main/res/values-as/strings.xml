@@ -349,7 +349,7 @@
     <string name="listen_together_smart_resync">স্মাৰ্ট নেটৱৰ্ক পুনঃসমলয়</string>
     <string name="listen_together_smart_resync_desc">সংযোগ বিচ্ছিন্ন হোৱাৰ পিছত স্বয়ংক্ৰিয়ভাৱে হ’ষ্টৰ সৈতে মিলাওক</string>
     <string name="spotify_import_title">Spotify-ৰ পৰা আমদানি কৰক</string>
-    <string name="spotify_import_desc">Spotify সংযোগ কৰক, প্লেলিষ্ট বাছক আৰু সেইবোৰ স্থানীয় Echo Music প্লেলিষ্টলৈ প্ৰতিফলিত কৰক।</string>
+    <string name="spotify_import_desc">Spotify সংযোগ কৰক, প্লেলিষ্ট বাছক আৰু সেইবোৰ স্থানীয় Tuneify প্লেলিষ্টলৈ প্ৰতিফলিত কৰক।</string>
     <string name="spotify_connect">Spotify সংযোগ কৰক</string>
     <string name="spotify_refresh">Spotify লাইব্ৰেৰী সতেজ কৰক</string>
     <string name="spotify_select_sources">Spotify প্লেলিষ্টসমূহ বাছক</string>
@@ -393,7 +393,7 @@
     <string name="recognition_notification_processing">চিনাক্ত কৰা হৈছে…</string>
     <string name="recognition_notification_no_match">কোনো মিল পোৱা নগ’ল</string>
     <string name="recognition_notification_failed">চিনাক্তকৰণ বিফল হ’ল</string>
-    <string name="listen_on_echo_music">Echo Music-ত শুনক</string>
+    <string name="listen_on_echo_music">Tuneify - ত শুনক</string>
     <string name="qs_tile_music_recognizer">সংগীত চিনাক্ত কৰক</string>
     <string name="echo_brain_beta">Echo Brain (বিটা)</string>
     <string name="echo_brain_enable">Echo Brain সক্ষম কৰক</string>
