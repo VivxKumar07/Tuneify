@@ -667,7 +667,7 @@ class MusicService : MediaLibraryService(), Player.Listener, PlaybackStatsListen
         NotificationCompat.Builder(this, CHANNEL_ID)
           .setContentTitle(getString(R.string.music_player))
           .setContentText("")
-          .setSmallIcon(R.drawable.ic_launcher_nobg)
+          .setSmallIcon(R.drawable.ic_tuneify_notification)
           .setContentIntent(pending)
           .setOngoing(true)
           .build()
@@ -679,7 +679,7 @@ class MusicService : MediaLibraryService(), Player.Listener, PlaybackStatsListen
 
     setMediaNotificationProvider(
       EchoNotificationProvider(this, { NOTIFICATION_ID }, CHANNEL_ID, R.string.music_player).apply {
-        setSmallIcon(R.drawable.ic_launcher_nobg)
+        setSmallIcon(R.drawable.ic_tuneify_notification)
       },
     )
     player = createExoPlayer()

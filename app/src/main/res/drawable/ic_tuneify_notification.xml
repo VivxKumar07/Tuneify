@@ -1,0 +1,24 @@
+<!-- Tuneify status bar and notification icon: pure white silhouette on transparent background -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="9"
+        android:strokeLineCap="round"
+        android:pathData="M78.27,71.63 A30,30 0 1 1 78.27,36.37" />
+
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:pathData="M71.8,66.93 A22,22 0 1 1 71.8,41.07" />
+
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M40,54 a14,14 0 1 0 28,0 a14,14 0 1 0 -28,0 Z M47,43.92 L47,64.08 L64.08,54 Z" />
+</vector>

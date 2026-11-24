@@ -1068,9 +1068,27 @@ fun HomeScreen(
         homePage?.sections?.flatMap { it.items }?.filterIsInstance<SongItem>()?.distinctBy { it.id } ?: emptyList()
       }
 
-      val songsForCarousel = remember(quickPicks, homeSongs) {
-        when {
-          !quickPicks.isNullOrEmpty() -> quickPicks!!.map { pick ->
+      val defaultHits = remember {
+        listOf(
+          SongItem(id = "HrnrqYxYrbk", title = "Satranga", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/HrnrqYxYrbk/hqdefault.jpg"),
+          SongItem(id = "VAdGW7QDJiU", title = "Chaleya", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/VAdGW7QDJiU/hqdefault.jpg"),
+          SongItem(id = "ElZfdU54Cp8", title = "Apna Bana Le", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/ElZfdU54Cp8/hqdefault.jpg"),
+          SongItem(id = "BddP6PYo2gs", title = "Kesariya", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg"),
+          SongItem(id = "RLzC55ai0eo", title = "Heeriye", artists = listOf(com.music.innertube.models.Artist("Jasleen Royal", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/RLzC55ai0eo/hqdefault.jpg"),
+          SongItem(id = "SlPhMPnQ58k", title = "Tum Hi Ho", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/SlPhMPnQ58k/hqdefault.jpg"),
+          SongItem(id = "xRb8hxwN5zc", title = "Agar Tum Saath Ho", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/xRb8hxwN5zc/hqdefault.jpg"),
+          SongItem(id = "K-pX4qwtAxA", title = "Chaiyya Chaiyya", artists = listOf(com.music.innertube.models.Artist("Sukhwinder Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/K-pX4qwtAxA/hqdefault.jpg"),
+          SongItem(id = "6FURuLYrR_Q", title = "Paro", artists = listOf(com.music.innertube.models.Artist("Aditya Rikhari", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/6FURuLYrR_Q/hqdefault.jpg"),
+          SongItem(id = "sAzlWScHTc4", title = "Jaana Samjho Na", artists = listOf(com.music.innertube.models.Artist("Aditya Rikhari", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/sAzlWScHTc4/hqdefault.jpg"),
+          SongItem(id = "9-7mQ6lV-yI", title = "Sajna Ve", artists = listOf(com.music.innertube.models.Artist("Aditya Rikhari", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/9-7mQ6lV-yI/hqdefault.jpg"),
+          SongItem(id = "2Vv-BfVoq4g", title = "Perfect", artists = listOf(com.music.innertube.models.Artist("Ed Sheeran", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/2Vv-BfVoq4g/hqdefault.jpg")
+        )
+      }
+
+      val songsForCarousel = remember(quickPicks, homeSongs, defaultHits) {
+        val list = mutableListOf<SongItem>()
+        if (!quickPicks.isNullOrEmpty()) {
+          list.addAll(quickPicks!!.map { pick ->
             SongItem(
               id = pick.id,
               title = pick.title,
@@ -1080,29 +1098,32 @@ fun HomeScreen(
               thumbnail = pick.thumbnailUrl ?: "https://i.ytimg.com/vi/${pick.id}/hqdefault.jpg",
               endpoint = WatchEndpoint(videoId = pick.id)
             )
-          }
-          homeSongs.isNotEmpty() -> homeSongs
-          else -> listOf(
-            SongItem(id = "HrnrqYxYrbk", title = "Satranga", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/HrnrqYxYrbk/hqdefault.jpg"),
-            SongItem(id = "VAdGW7QDJiU", title = "Chaleya", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/VAdGW7QDJiU/hqdefault.jpg"),
-            SongItem(id = "ElZfdU54Cp8", title = "Apna Bana Le", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/ElZfdU54Cp8/hqdefault.jpg"),
-            SongItem(id = "BddP6PYo2gs", title = "Kesariya", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg"),
-            SongItem(id = "RLzC55ai0eo", title = "Heeriye", artists = listOf(com.music.innertube.models.Artist("Jasleen Royal", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/RLzC55ai0eo/hqdefault.jpg"),
-            SongItem(id = "SlPhMPnQ58k", title = "Tum Hi Ho", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/SlPhMPnQ58k/hqdefault.jpg"),
-            SongItem(id = "xRb8hxwN5zc", title = "Agar Tum Saath Ho", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/xRb8hxwN5zc/hqdefault.jpg"),
-            SongItem(id = "K-pX4qwtAxA", title = "Chaiyya Chaiyya", artists = listOf(com.music.innertube.models.Artist("Sukhwinder Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/K-pX4qwtAxA/hqdefault.jpg")
-          )
+          })
         }
+        list.addAll(homeSongs)
+        list.addAll(defaultHits)
+        list.distinctBy { it.id }.take(16)
       }
 
-      val trendingSongs = remember(homeSongs) { homeSongs.drop(4).take(8) }
-      val dailyDiscoveries = remember(homeSongs, songsForCarousel) {
-        val pool = when {
-          homeSongs.size >= 12 -> homeSongs.drop(8)
-          songsForCarousel.size >= 8 -> songsForCarousel.drop(4)
-          else -> songsForCarousel
-        }
-        pool.take(8)
+      val trendingSongs = remember(homeSongs, defaultHits) {
+        val list = mutableListOf<SongItem>()
+        if (homeSongs.size > 4) list.addAll(homeSongs.drop(4))
+        list.addAll(defaultHits.reversed())
+        list.distinctBy { it.id }.take(12)
+      }
+
+      val dailyDiscoveries = remember(homeSongs, defaultHits, songsForCarousel) {
+        val list = mutableListOf<SongItem>()
+        if (homeSongs.size > 8) list.addAll(homeSongs.drop(8))
+        list.addAll(defaultHits.shuffled())
+        list.distinctBy { it.id }.take(12)
+      }
+
+      val spotlightMixes = remember(defaultHits, homeSongs) {
+        val list = mutableListOf<SongItem>()
+        list.addAll(defaultHits.takeLast(8))
+        list.addAll(homeSongs)
+        list.distinctBy { it.id }.take(8)
       }
 
       LazyColumn(
@@ -1118,7 +1139,7 @@ fun HomeScreen(
           TuneifyHeaderRow(
             onNotificationClick = { navController.navigate("update") },
             onSettingsClick = { navController.navigate("settings") },
-            onProfileClick = { navController.navigate("account") },
+            onProfileClick = { navController.navigate("settings/account") },
             accountImageUrl = accountImageUrl
           )
         }
@@ -1315,7 +1336,65 @@ fun HomeScreen(
           }
         }
 
-        // 5. Quick Picks / Song Mixes (The signature 4-track stack carousel from YouTube Music)
+        // 5. Recently Played (Placed directly below Hero Carousel & Mood Pills as requested)
+        if (recentDisplaySongs.isNotEmpty()) {
+          item(key = "tuneify_recently_played_header") {
+            NavigationTitle(
+              title = "Recently played",
+              onClick = { navController.navigate("history") },
+              modifier = Modifier.animateItem()
+            )
+          }
+
+          item(key = "tuneify_recently_played_content") {
+            LazyRow(
+              contentPadding = PaddingValues(horizontal = 20.dp),
+              horizontalArrangement = Arrangement.spacedBy(14.dp),
+              modifier = Modifier.padding(bottom = 16.dp)
+            ) {
+              items(recentDisplaySongs, key = { it.id }) { item ->
+                TuneifyMusicCard(
+                  title = item.title,
+                  artist = item.artist,
+                  artworkUrl = item.artworkUrl,
+                  genreName = item.genreName,
+                  genreColor = item.genreColor,
+                  isActive = (item.song?.id ?: item.id) == mediaMetadata?.id,
+                  isPlaying = isPlaying,
+                  onClick = {
+                    if (item.song != null) {
+                      if (item.song.id == mediaMetadata?.id) {
+                        playerConnection.togglePlayPause()
+                      } else {
+                        playerConnection.playQueue(
+                          YouTubeQueue.radio(item.song.toMediaMetadata())
+                        )
+                      }
+                    } else {
+                      playerConnection.playQueue(
+                        YouTubeQueue(WatchEndpoint(videoId = item.id))
+                      )
+                    }
+                  },
+                  onLongClick = {
+                    if (item.song != null) {
+                      haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                      menuState.show {
+                        SongMenu(
+                          originalSong = item.song,
+                          navController = navController,
+                          onDismiss = menuState::dismiss
+                        )
+                      }
+                    }
+                  }
+                )
+              }
+            }
+          }
+        }
+
+        // 6. Signature 4-Track Stack Carousel #1: Song Mixes (reverted & guaranteed full columns)
         item(key = "tuneify_quick_picks_header") {
           ExpressiveSectionHeader(
             title = "Song Mixes",
@@ -1338,7 +1417,7 @@ fun HomeScreen(
           )
         }
 
-        // 6. Discover Trending Charts & Essentials (Banner)
+        // 7. Discover Trending Charts & Essentials (Banner)
         item(key = "tuneify_promo_banner") {
           TuneifyPromoBannerCard(
             title = "Discover Trending Charts & Essentials",
@@ -1349,7 +1428,32 @@ fun HomeScreen(
           )
         }
 
-        // 7. Made For You Section (Standard cute 150.dp glass rounded square cards)
+        // 8. Signature 4-Track Stack Carousel #2: Trending Hits
+        if (trendingSongs.size >= 4) {
+          item(key = "tuneify_trending_hits_header") {
+            ExpressiveSectionHeader(
+              title = "Trending Hits",
+              onChevronClick = { navController.navigate("charts_screen") }
+            )
+          }
+
+          item(key = "tuneify_trending_hits_row") {
+            TuneifySongColumnGridCarousel(
+              songs = trendingSongs,
+              onSongClick = { song ->
+                playerConnection.playQueue(
+                  YouTubeQueue(
+                    endpoint = song.endpoint ?: WatchEndpoint(videoId = song.id),
+                    preloadItem = song.toMediaMetadata()
+                  )
+                )
+              },
+              modifier = Modifier.padding(bottom = 16.dp)
+            )
+          }
+        }
+
+        // 9. Made For You Section (Standard cute 150.dp glass rounded square cards)
         item(key = "tuneify_made_for_you_header") {
           ExpressiveSectionHeader(
             title = "Made For You",
@@ -1417,18 +1521,18 @@ fun HomeScreen(
           }
         }
 
-        // 8. Trending Hits 4-Track Stack (Second YouTube Music signature column stack)
-        if (trendingSongs.size >= 4) {
-          item(key = "tuneify_trending_hits_header") {
+        // 10. Signature 4-Track Stack Carousel #3: Daily Discoveries
+        if (dailyDiscoveries.size >= 4) {
+          item(key = "tuneify_daily_discoveries_header") {
             ExpressiveSectionHeader(
-              title = "Trending Hits",
-              onChevronClick = { navController.navigate("charts_screen") }
+              title = "Daily Discoveries",
+              onChevronClick = { navController.navigate("auto_playlist/top") }
             )
           }
 
-          item(key = "tuneify_trending_hits_row") {
+          item(key = "tuneify_daily_discoveries_row") {
             TuneifySongColumnGridCarousel(
-              songs = trendingSongs,
+              songs = dailyDiscoveries,
               onSongClick = { song ->
                 playerConnection.playQueue(
                   YouTubeQueue(
@@ -1442,77 +1546,18 @@ fun HomeScreen(
           }
         }
 
-        if (recentDisplaySongs.isNotEmpty()) {
-          item(key = "tuneify_recently_played_header") {
-            NavigationTitle(
-              title = "Recently played",
-              onClick = { navController.navigate("history") },
-              modifier = Modifier.animateItem()
-            )
-          }
-        }
-
-        if (recentDisplaySongs.isNotEmpty()) {
-          item(key = "tuneify_recently_played_content") {
-            LazyRow(
-              contentPadding = PaddingValues(horizontal = 20.dp),
-              horizontalArrangement = Arrangement.spacedBy(14.dp),
-              modifier = Modifier.padding(bottom = 16.dp)
-            ) {
-              items(recentDisplaySongs, key = { it.id }) { item ->
-                TuneifyMusicCard(
-                  title = item.title,
-                  artist = item.artist,
-                  artworkUrl = item.artworkUrl,
-                  genreName = item.genreName,
-                  genreColor = item.genreColor,
-                  isActive = (item.song?.id ?: item.id) == mediaMetadata?.id,
-                  isPlaying = isPlaying,
-                  onClick = {
-                    if (item.song != null) {
-                      if (item.song.id == mediaMetadata?.id) {
-                        playerConnection.togglePlayPause()
-                      } else {
-                        playerConnection.playQueue(
-                          YouTubeQueue.radio(item.song.toMediaMetadata())
-                        )
-                      }
-                    } else {
-                      playerConnection.playQueue(
-                        YouTubeQueue(WatchEndpoint(videoId = item.id))
-                      )
-                    }
-                  },
-                  onLongClick = {
-                    if (item.song != null) {
-                      haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                      menuState.show {
-                        SongMenu(
-                          originalSong = item.song,
-                          navController = navController,
-                          onDismiss = menuState::dismiss
-                        )
-                      }
-                    }
-                  }
-                )
-              }
-            }
-          }
-        }
-
-        // 9. Daily Discoveries 4-Track Stack (Third signature column stack carousel)
-        if (dailyDiscoveries.size >= 4) {
-          item(key = "tuneify_daily_discoveries_header") {
+        // 11. Signature 4-Track Stack Carousel #4: Spotlight Mixes
+        if (spotlightMixes.size >= 4) {
+          item(key = "tuneify_spotlight_mixes_header") {
             ExpressiveSectionHeader(
-              title = "Daily Discoveries",
+              title = "Spotlight Mixes",
               onChevronClick = { navController.navigate("auto_playlist/top") }
             )
           }
 
-          item(key = "tuneify_daily_discoveries_row") {
+          item(key = "tuneify_spotlight_mixes_row") {
             TuneifySongColumnGridCarousel(
-              songs = dailyDiscoveries,
+              songs = spotlightMixes,
               onSongClick = { song ->
                 playerConnection.playQueue(
                   YouTubeQueue(

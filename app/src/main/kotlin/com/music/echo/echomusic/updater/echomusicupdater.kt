@@ -672,8 +672,97 @@ suspend fun checkForUpdate(
     ) -> Unit,
   onError: () -> Unit,
 ) {
-  // Disabled for Tuneify v1.0.0
-  onSuccess(BuildConfig.VERSION_NAME, false, emptyList(), "", "", null, null, null)
+  withContext(Dispatchers.IO) {
+    try {
+      val url = URL("https://api.github.com/repos/VivxKumar07/Tuneify/releases/latest")
+      val connection = (url.openConnection() as java.net.HttpURLConnection).apply {
+        connectTimeout = 10_000
+        readTimeout = 10_000
+        setRequestProperty("Accept", "application/vnd.github.v3+json")
+        setRequestProperty("User-Agent", "Tuneify-App")
+      }
+      if (connection.responseCode != java.net.HttpURLConnection.HTTP_OK) {
+        withContext(Dispatchers.Main) {
+          onSuccess(BuildConfig.VERSION_NAME, false, emptyList(), "", "", null, null, null)
+        }
+        return@withContext
+      }
+
+      val json = connection.inputStream.bufferedReader().use { it.readText() }
+      val targetRelease = JSONObject(json)
+
+      val currentVersion = BuildConfig.VERSION_NAME
+      val targetTagName = targetRelease.getString("tag_name")
+      val currentClean = currentVersion.removePrefix("b").removePrefix("v").trim()
+      val targetClean = targetTagName.removePrefix("b").removePrefix("v").trim()
+      val shouldShow = currentClean != targetClean
+
+      if (shouldShow) {
+        val changelogList = mutableListOf<ChangelogSection>()
+        var description: String? = null
+        var imageUrl: String? = null
+
+        var body = targetRelease.optString("body", context.getString(R.string.no_changelog_available))
+        val imageRegex = Regex("!\\[(.*?)\\]\\((.*?)\\)")
+        val match = imageRegex.find(body)
+        if (match != null) {
+          imageUrl = match.groupValues[2]
+          body = body.replace(match.value, "").trim()
+        }
+        val (parsedDesc, parsedSections) = parseMarkdownToSections(body)
+        description = parsedDesc ?: body.takeIf { parsedSections.isEmpty() }
+        changelogList.addAll(parsedSections)
+
+        val publishedAt = targetRelease.optString("published_at", "")
+        val formattedReleaseDate = if (publishedAt.isNotEmpty()) formatGitHubDate(publishedAt) else ""
+        val assets = targetRelease.optJSONArray("assets") ?: JSONArray()
+
+        var apkSizeInMB = ""
+        var apkDownloadUrl = ""
+        for (j in 0 until assets.length()) {
+          val asset = assets.getJSONObject(j)
+          val assetName = asset.getString("name")
+          if (assetName.endsWith(".apk", ignoreCase = true)) {
+            val apkSizeInBytes = asset.optLong("size", 0L)
+            if (apkSizeInBytes > 0) {
+              apkSizeInMB = String.format("%.1f MB", apkSizeInBytes / (1024.0 * 1024.0))
+            }
+            apkDownloadUrl = asset.getString("browser_download_url")
+            if (!assetName.lowercase().contains("debug")) {
+              break
+            }
+          }
+        }
+
+        if (apkDownloadUrl.isEmpty()) {
+          apkDownloadUrl = "https://github.com/VivxKumar07/Tuneify/releases/download/$targetTagName/app-universal-gms-debug.apk"
+        }
+
+        withContext(Dispatchers.Main) {
+          onSuccess(
+            targetTagName,
+            true,
+            changelogList,
+            apkSizeInMB,
+            formattedReleaseDate,
+            description,
+            imageUrl,
+            apkDownloadUrl
+          )
+        }
+        return@withContext
+      }
+
+      withContext(Dispatchers.Main) {
+        onSuccess(currentVersion, false, emptyList(), "", "", null, null, null)
+      }
+    } catch (e: Exception) {
+      Log.e("UpdateCheck", "Error checking for updates: ${e.message}", e)
+      withContext(Dispatchers.Main) {
+        onSuccess(BuildConfig.VERSION_NAME, false, emptyList(), "", "", null, null, null)
+      }
+    }
+  }
 }
 
 

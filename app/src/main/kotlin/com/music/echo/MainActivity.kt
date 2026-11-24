@@ -526,6 +526,9 @@ class MainActivity : ComponentActivity() {
     var availableUpdateDescription by remember {
       androidx.compose.runtime.mutableStateOf<String?>(null)
     }
+    var availableUpdateApkUrl by remember {
+      androidx.compose.runtime.mutableStateOf<String?>(null)
+    }
     var whatsNewInfo by remember {
       androidx.compose.runtime.mutableStateOf<echo.music.iad1tya.echomusic.updater.WhatsNewInfo?>(
         null
@@ -558,7 +561,23 @@ class MainActivity : ComponentActivity() {
     }
 
     LaunchedEffect(Unit) {
-      saveUpdateAvailableState(context, false)
+      kotlinx.coroutines.delay(2000L)
+      echo.music.iad1tya.echomusic.updater.checkForUpdate(
+        context = context,
+        onSuccess = { latestVersion, isAvailable, changelog, _, _, description, _, apkUrl ->
+          echo.music.iad1tya.echomusic.updater.saveUpdateAvailableState(context, isAvailable)
+          if (isAvailable) {
+            availableUpdateVersion = latestVersion
+            availableUpdateChangelog = changelog
+            availableUpdateDescription = description
+            availableUpdateApkUrl = apkUrl
+            showUpdateDialog = true
+          }
+        },
+        onError = {
+          echo.music.iad1tya.echomusic.updater.saveUpdateAvailableState(context, false)
+        }
+      )
     }
 
     val HasShownBirthdayNotificationKey = remember {
@@ -600,7 +619,7 @@ class MainActivity : ComponentActivity() {
 
             val notification =
               androidx.core.app.NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(R.drawable.echomusicnotification) // Use correct transparent echo icon
+                .setSmallIcon(R.drawable.ic_tuneify_notification)
                 .setContentTitle("Happy Birthday Aditya!")
                 .setContentText("Today is the developer's birthday!")
                 .setLargeIcon(bitmap)
@@ -722,6 +741,7 @@ class MainActivity : ComponentActivity() {
           version = availableUpdateVersion,
           changelog = availableUpdateChangelog,
           description = availableUpdateDescription,
+          apkUrl = availableUpdateApkUrl,
           onDismiss = { showUpdateDialog = false }
         )
       } else {
