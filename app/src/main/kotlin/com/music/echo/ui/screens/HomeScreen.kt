@@ -1096,6 +1096,14 @@ fun HomeScreen(
       }
 
       val trendingSongs = remember(homeSongs) { homeSongs.drop(4).take(8) }
+      val dailyDiscoveries = remember(homeSongs, songsForCarousel) {
+        val pool = when {
+          homeSongs.size >= 12 -> homeSongs.drop(8)
+          songsForCarousel.size >= 8 -> songsForCarousel.drop(4)
+          else -> songsForCarousel
+        }
+        pool.take(8)
+      }
 
       LazyColumn(
         state = lazylistState,
@@ -1109,7 +1117,8 @@ fun HomeScreen(
         item(key = "tuneify_home_header") {
           TuneifyHeaderRow(
             onNotificationClick = { navController.navigate("update") },
-            onProfileClick = { navController.navigate("settings") },
+            onSettingsClick = { navController.navigate("settings") },
+            onProfileClick = { navController.navigate("account") },
             accountImageUrl = accountImageUrl
           )
         }
@@ -1127,33 +1136,116 @@ fun HomeScreen(
           )
         }
 
-        // 3. Hero Section: Interactive Spotlight Carousel with promotional artist artwork
+        // 3. Hero Section: Interactive Spotlight Carousel with dynamically rotating artist artwork
         item(key = "tuneify_hero_card") {
-          val firstSong = homeSongs.firstOrNull()
           val heroSpotlights = remember(homeSongs) {
-            listOf(
-              SpotlightItem(
-                id = "arijit_essentials",
-                title = "Arijit Singh",
-                subtitle = "Essentials",
-                artworkUrl = "https://i.ytimg.com/vi/6FURuLYrR_Q/hqdefault.jpg",
-                videoId = "6FURuLYrR_Q"
+            val daySlot = (java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_YEAR) / 3) % 4
+            val curatedSets = listOf(
+              listOf(
+                SpotlightItem(
+                  id = "the_weeknd",
+                  title = "The Weeknd",
+                  subtitle = "After Hours & Dawn FM",
+                  artworkUrl = "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=80",
+                  videoId = "4NRXx6U8ABQ"
+                ),
+                SpotlightItem(
+                  id = "dua_lipa",
+                  title = "Dua Lipa",
+                  subtitle = "Future Nostalgia",
+                  artworkUrl = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&q=80",
+                  videoId = "BC19kwABFwc"
+                ),
+                SpotlightItem(
+                  id = "diljit",
+                  title = "Diljit Dosanjh",
+                  subtitle = "Born to Shine",
+                  artworkUrl = "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80",
+                  videoId = "cl0a3i2wFcc"
+                )
               ),
-              SpotlightItem(
-                id = "dil_se",
-                title = "A.R. Rahman",
-                subtitle = "Dil Se Classics",
-                artworkUrl = "https://i.ytimg.com/vi/zaJPvEM7fVY/hqdefault.jpg",
-                videoId = "zaJPvEM7fVY"
+              listOf(
+                SpotlightItem(
+                  id = "arijit_essentials",
+                  title = "Arijit Singh",
+                  subtitle = "Soulful Essentials",
+                  artworkUrl = "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80",
+                  videoId = "6FURuLYrR_Q"
+                ),
+                SpotlightItem(
+                  id = "billie_eilish",
+                  title = "Billie Eilish",
+                  subtitle = "Hit Me Hard and Soft",
+                  artworkUrl = "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=800&q=80",
+                  videoId = "V1Pl8CzNzCw"
+                ),
+                SpotlightItem(
+                  id = "shreya_ghoshal",
+                  title = "Shreya Ghoshal",
+                  subtitle = "Timeless Melodies",
+                  artworkUrl = "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80",
+                  videoId = "zaJPvEM7fVY"
+                )
               ),
-              SpotlightItem(
-                id = "animal_soundtrack",
-                title = "Animal",
-                subtitle = "Soundtrack",
-                artworkUrl = "https://i.ytimg.com/vi/HrnrqYxYrbk/hqdefault.jpg",
-                videoId = "HrnrqYxYrbk"
+              listOf(
+                SpotlightItem(
+                  id = "post_malone",
+                  title = "Post Malone",
+                  subtitle = "Austin & Top Hits",
+                  artworkUrl = "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&q=80",
+                  videoId = "UYwF-jdcVjY"
+                ),
+                SpotlightItem(
+                  id = "taylor_swift",
+                  title = "Taylor Swift",
+                  subtitle = "The Eras Tour",
+                  artworkUrl = "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&q=80",
+                  videoId = "b1kbLwvqugk"
+                ),
+                SpotlightItem(
+                  id = "sidhu",
+                  title = "Sidhu Moose Wala",
+                  subtitle = "Signature Anthems",
+                  artworkUrl = "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=800&q=80",
+                  videoId = "HrnrqYxYrbk"
+                )
+              ),
+              listOf(
+                SpotlightItem(
+                  id = "coldplay",
+                  title = "Coldplay",
+                  subtitle = "Music of the Spheres",
+                  artworkUrl = "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=800&q=80",
+                  videoId = "VPRjCeoBqrI"
+                ),
+                SpotlightItem(
+                  id = "anuv_jain",
+                  title = "Anuv Jain",
+                  subtitle = "Acoustic Stories",
+                  artworkUrl = "https://images.unsplash.com/photo-1485579149621-3123dd979885?w=800&q=80",
+                  videoId = "sAzlWScHTc4"
+                ),
+                SpotlightItem(
+                  id = "kendrick",
+                  title = "Kendrick Lamar",
+                  subtitle = "Modern Hip-Hop",
+                  artworkUrl = "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=800&q=80",
+                  videoId = "tvTRZJ-4EyI"
+                )
               )
             )
+            val selected = curatedSets[daySlot].toMutableList()
+            val topSong = homeSongs.firstOrNull()
+            if (topSong != null && !topSong.thumbnail.isNullOrBlank()) {
+              selected[0] = SpotlightItem(
+                id = topSong.id,
+                title = topSong.title,
+                subtitle = topSong.artists.joinToString { it.name }.ifEmpty { "Trending Hit" },
+                artworkUrl = topSong.thumbnail,
+                videoId = topSong.id
+              )
+            }
+            selected
           }
 
           HeroSpotlightCarousel(
@@ -1363,8 +1455,8 @@ fun HomeScreen(
         if (recentDisplaySongs.isNotEmpty()) {
           item(key = "tuneify_recently_played_content") {
             LazyRow(
-              contentPadding = PaddingValues(horizontal = 16.dp),
-              horizontalArrangement = Arrangement.spacedBy(12.dp),
+              contentPadding = PaddingValues(horizontal = 20.dp),
+              horizontalArrangement = Arrangement.spacedBy(14.dp),
               modifier = Modifier.padding(bottom = 16.dp)
             ) {
               items(recentDisplaySongs, key = { it.id }) { item ->
@@ -1406,6 +1498,31 @@ fun HomeScreen(
                 )
               }
             }
+          }
+        }
+
+        // 9. Daily Discoveries 4-Track Stack (Third signature column stack carousel)
+        if (dailyDiscoveries.size >= 4) {
+          item(key = "tuneify_daily_discoveries_header") {
+            ExpressiveSectionHeader(
+              title = "Daily Discoveries",
+              onChevronClick = { navController.navigate("auto_playlist/top") }
+            )
+          }
+
+          item(key = "tuneify_daily_discoveries_row") {
+            TuneifySongColumnGridCarousel(
+              songs = dailyDiscoveries,
+              onSongClick = { song ->
+                playerConnection.playQueue(
+                  YouTubeQueue(
+                    endpoint = song.endpoint ?: WatchEndpoint(videoId = song.id),
+                    preloadItem = song.toMediaMetadata()
+                  )
+                )
+              },
+              modifier = Modifier.padding(bottom = 16.dp)
+            )
           }
         }
 
@@ -1767,10 +1884,9 @@ fun HomeScreen(
                     LazyHorizontalGrid(
                       state = rememberLazyGridState(),
                       rows = GridCells.Fixed(rows),
-                      contentPadding =
-                        WindowInsets.systemBars
-                          .only(WindowInsetsSides.Horizontal)
-                          .asPaddingValues(),
+                      contentPadding = PaddingValues(horizontal = 20.dp),
+                      horizontalArrangement = Arrangement.spacedBy(14.dp),
+                      verticalArrangement = Arrangement.spacedBy(10.dp),
                       modifier =
                         Modifier.fillMaxWidth()
                           .height(
@@ -1830,14 +1946,12 @@ fun HomeScreen(
 
                   item(key = "account_playlists_list") {
                     LazyRow(
-                      contentPadding =
-                        WindowInsets.systemBars
-                          .only(WindowInsetsSides.Horizontal)
-                          .asPaddingValues(),
+                      contentPadding = PaddingValues(horizontal = 20.dp),
+                      horizontalArrangement = Arrangement.spacedBy(14.dp),
                       modifier = Modifier.animateItem()
                     ) {
                       items(
-                        items = accountPlaylists.distinctBy { it.title.trim().lowercase() },
+                        items = accountPlaylists.distinctBy { it.title.trim().lowercase() }.filter { it.title.isNotBlank() },
                         key = { it.id },
                       ) { item ->
                         ytGridItem(item)
@@ -1871,10 +1985,9 @@ fun HomeScreen(
                     LazyHorizontalGrid(
                       state = forgottenFavoritesLazyGridState,
                       rows = GridCells.Fixed(rows),
-                      contentPadding =
-                        WindowInsets.systemBars
-                          .only(WindowInsetsSides.Horizontal)
-                          .asPaddingValues(),
+                      contentPadding = PaddingValues(horizontal = 20.dp),
+                      horizontalArrangement = Arrangement.spacedBy(14.dp),
+                      verticalArrangement = Arrangement.spacedBy(10.dp),
                       flingBehavior =
                         rememberSnapFlingBehavior(forgottenFavoritesSnapLayoutInfoProvider),
                       modifier = Modifier.fillMaxWidth().height(ListItemHeight * rows).animateItem()
@@ -1974,8 +2087,8 @@ fun HomeScreen(
 
                 item(key = "similar_to_list_${section.index}") {
                   LazyRow(
-                    contentPadding =
-                      WindowInsets.systemBars.only(WindowInsetsSides.Horizontal).asPaddingValues(),
+                    contentPadding = PaddingValues(horizontal = 20.dp),
+                    horizontalArrangement = Arrangement.spacedBy(14.dp),
                     modifier = Modifier.animateItem()
                   ) {
                     items(recommendation.items.distinctBy { it.id }, key = { it.id }) { item ->
@@ -2014,8 +2127,8 @@ fun HomeScreen(
                 }
 
                 when {
-                  // 1. If section has songs and index is divisible by 3: YouTube Music 4-Song Stack Carousel
-                  hasPlayableSongs && sectionSongs.size >= 4 && section.index % 3 == 0 -> {
+                  // 1. If section has songs: YouTube Music 4-Song Stack Carousel
+                  hasPlayableSongs && sectionSongs.size >= 4 -> {
                     item(key = "home_section_stack_${section.index}") {
                       TuneifySongColumnGridCarousel(
                         songs = sectionSongs,

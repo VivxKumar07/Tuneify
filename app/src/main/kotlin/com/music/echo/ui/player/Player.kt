@@ -124,6 +124,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -2635,10 +2636,16 @@ fun BottomSheetPlayer(
                   modifier = Modifier
                     .fillMaxSize()
                     .pointerInput(Unit) {
-                      detectHorizontalDragGestures { change, dragAmount ->
-                        if (dragAmount > 20f) {
-                          change.consume()
-                          showInlineLyrics = false
+                      awaitPointerEventScope {
+                        while (true) {
+                          val event = awaitPointerEvent(PointerEventPass.Initial)
+                          val change = event.changes.firstOrNull() ?: continue
+                          val deltaX = change.position.x - change.previousPosition.x
+                          val deltaY = change.position.y - change.previousPosition.y
+                          if (deltaX > 20f && deltaX > kotlin.math.abs(deltaY) * 1.2f) {
+                            change.consume()
+                            showInlineLyrics = false
+                          }
                         }
                       }
                     }

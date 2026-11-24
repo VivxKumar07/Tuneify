@@ -238,6 +238,7 @@ fun ExploreScreen(
             selected = selectedFilter == "Decades",
             onClick = {
               selectedFilter = "Decades"
+              navController.navigate("mood_and_genres")
             },
             icon = {
               Icon(

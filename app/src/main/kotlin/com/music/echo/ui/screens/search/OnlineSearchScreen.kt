@@ -137,7 +137,7 @@ fun OnlineSearchScreen(
       LocalPlayerAwareWindowInsets.current.only(WindowInsetsSides.Bottom).asPaddingValues(),
     modifier =
       Modifier.fillMaxSize()
-        .background(if (pureBlack) Color.Black else MaterialTheme.colorScheme.background)
+        .background(Color.Transparent)
   ) {
     if (viewState.history.isNotEmpty()) {
       item(key = "history_header") {
@@ -456,10 +456,14 @@ private fun BrowseCategoryTile(
   modifier: Modifier = Modifier,
   onClick: () -> Unit,
 ) {
+  val shape = RoundedCornerShape(16.dp)
   Surface(
-    shape = TuneifyTokens.ShapeMedium,
-    color = MaterialTheme.colorScheme.surfaceContainerHigh,
-    modifier = modifier.clickable(onClick = onClick)
+    shape = shape,
+    color = Color(0x3514261B),
+    modifier = modifier
+      .clip(shape)
+      .background(Color(0x3514261B), shape)
+      .clickable(onClick = onClick)
   ) {
     Row(
       verticalAlignment = Alignment.CenterVertically,

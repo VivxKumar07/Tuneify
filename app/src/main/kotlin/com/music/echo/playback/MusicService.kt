@@ -3982,21 +3982,32 @@ class MusicService : MediaLibraryService(), Player.Listener, PlaybackStatsListen
   override fun onBind(intent: Intent?) = super.onBind(intent) ?: binder
 
   override fun onTaskRemoved(rootIntent: Intent?) {
-    super.onTaskRemoved(rootIntent)
-
     val stopOnTaskClear = dataStore.get(echo.music.iad1tya.constants.StopMusicOnTaskClearKey, false)
     
-    if (::player.isInitialized && stopOnTaskClear && player.isPlaying) {
-      player.pause()
+    if (stopOnTaskClear) {
+      if (::player.isInitialized && player.isPlaying) {
+        player.pause()
+      }
+      super.onTaskRemoved(rootIntent)
+      stopForeground(STOP_FOREGROUND_REMOVE)
+      stopSelf()
+      return
     }
 
     if (::player.isInitialized && dataStore.get(PersistentQueueKey, true)) {
       saveQueueToDisk()
     }
 
-    // Keep background playback alive when the user dismisses the UI while a song is
-    // actually playing. If playback is paused/stopped, however, there is no reason to
-    // retain the foreground service or its MediaSession notification.
+    // Keep background playback alive when the user dismisses the UI while a song is playing.
+    // Returning without calling super.onTaskRemoved / stopSelf keeps the foreground service
+    // running uninterrupted on aggressive OEM skins (OxygenOS, ColorOS, HyperOS).
+    if (::player.isInitialized && (player.isPlaying || player.playWhenReady)) {
+      Timber.tag(TAG).d("App task removed but playback active; keeping service alive in background")
+      return
+    }
+
+    super.onTaskRemoved(rootIntent)
+
     if (::player.isInitialized && !player.isPlaying) {
       Timber.tag(TAG).d("App task removed while playback is inactive; stopping service")
 
@@ -4072,7 +4083,8 @@ class MusicService : MediaLibraryService(), Player.Listener, PlaybackStatsListen
       }
     }
 
-    return super.onStartCommand(intent, flags, startId)
+    super.onStartCommand(intent, flags, startId)
+    return START_STICKY
   }
 
   private fun updateWidgetUI(isPlaying: Boolean) {

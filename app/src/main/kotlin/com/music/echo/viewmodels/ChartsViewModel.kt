@@ -7,6 +7,7 @@ import com.music.innertube.models.SongItem
 import com.music.innertube.pages.ChartsPage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -23,16 +24,36 @@ class ChartsViewModel @Inject constructor() : ViewModel() {
   val error = _error.asStateFlow()
 
   fun loadCharts() {
-    viewModelScope.launch {
+    viewModelScope.launch(Dispatchers.IO) {
       _isLoading.value = true
       _error.value = null
 
+      val songsList = mutableListOf<SongItem>()
+
+      // 1. Fetch inner charts page
       val result = YouTube.getChartsPage()
       val page = result.getOrNull()
-      if (result.isSuccess && page != null && page.sections.isNotEmpty()) {
-        _chartsPage.value = page
-      } else {
-        // Fallback 1: explore new releases
+      if (result.isSuccess && page != null) {
+        val extractedSongs = page.sections.flatMap { it.items }.filterIsInstance<SongItem>()
+        songsList.addAll(extractedSongs)
+      }
+
+      // 2. If fewer than 40 songs, enrich with YouTube searchSummary "Top 50 Hits" & "Trending Songs"
+      if (songsList.size < 40) {
+        YouTube.searchSummary("Top 50 Hits").onSuccess { summary ->
+          val moreSongs = summary.summaries.flatMap { it.items }.filterIsInstance<SongItem>()
+          songsList.addAll(moreSongs)
+        }
+      }
+      if (songsList.size < 40) {
+        YouTube.searchSummary("Trending Global Top 50").onSuccess { summary ->
+          val moreSongs = summary.summaries.flatMap { it.items }.filterIsInstance<SongItem>()
+          songsList.addAll(moreSongs)
+        }
+      }
+
+      // 3. Fallback to new release explore if still empty
+      if (songsList.isEmpty()) {
         val exploreResult = YouTube.explore()
         val explore = exploreResult.getOrNull()
         if (explore != null && !explore.newReleaseAlbums.isNullOrEmpty()) {
@@ -48,34 +69,24 @@ class ChartsViewModel @Inject constructor() : ViewModel() {
               endpoint = null
             )
           }
-          _chartsPage.value = ChartsPage(
-            sections = listOf(
-              ChartsPage.ChartSection(
-                title = "Top Trending Hits",
-                items = fallbackItems,
-                chartType = ChartsPage.ChartType.TRENDING
-              )
-            ),
-            continuation = null
-          )
-        } else {
-          // Fallback 2: search top hits
-          YouTube.searchSummary("Top 50 Hits").onSuccess { summary ->
-            val songs = summary.summaries.flatMap { it.items }.filterIsInstance<SongItem>()
-            if (songs.isNotEmpty()) {
-              _chartsPage.value = ChartsPage(
-                sections = listOf(
-                  ChartsPage.ChartSection(
-                    title = "Top Trending Hits",
-                    items = songs,
-                    chartType = ChartsPage.ChartType.TRENDING
-                  )
-                ),
-                continuation = null
-              )
-            }
-          }
+          songsList.addAll(fallbackItems)
         }
+      }
+
+      val distinctSongs = songsList.distinctBy { it.id }
+      if (distinctSongs.isNotEmpty()) {
+        _chartsPage.value = ChartsPage(
+          sections = listOf(
+            ChartsPage.ChartSection(
+              title = "Top 50 Global & Trending Charts",
+              items = distinctSongs,
+              chartType = ChartsPage.ChartType.TRENDING
+            )
+          ),
+          continuation = null
+        )
+      } else {
+        _error.value = "Failed to load charts"
       }
 
       _isLoading.value = false

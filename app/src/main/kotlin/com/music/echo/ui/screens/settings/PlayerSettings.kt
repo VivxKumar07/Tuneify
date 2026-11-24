@@ -175,7 +175,7 @@ fun PlayerSettings(
   val (preventDuplicateTracksInQueue, onPreventDuplicateTracksInQueueChange) =
     rememberPreference(PreventDuplicateTracksInQueueKey, defaultValue = false)
   val (stopMusicOnTaskClear, onStopMusicOnTaskClearChange) =
-    rememberPreference(StopMusicOnTaskClearKey, defaultValue = true)
+    rememberPreference(StopMusicOnTaskClearKey, defaultValue = false)
   val (pauseOnMute, onPauseOnMuteChange) = rememberPreference(PauseOnMute, defaultValue = false)
   val (resumeOnBluetoothConnect, onResumeOnBluetoothConnectChange) =
     rememberPreference(ResumeOnBluetoothConnectKey, defaultValue = false)

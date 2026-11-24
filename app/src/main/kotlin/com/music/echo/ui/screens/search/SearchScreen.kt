@@ -123,17 +123,6 @@ fun SearchScreen(navController: NavController, pureBlack: Boolean) {
 
   var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
   var searchActive by rememberSaveable { mutableStateOf(false) }
-  var showSearchContent by remember { mutableStateOf(false) }
-
-  LaunchedEffect(searchActive) {
-    if (searchActive) {
-
-      kotlinx.coroutines.delay(100)
-      showSearchContent = true
-    } else {
-      showSearchContent = false
-    }
-  }
 
   val searchBarHorizontalPadding by
     animateDpAsState(
@@ -334,7 +323,7 @@ fun SearchScreen(navController: NavController, pureBlack: Boolean) {
         LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateBottomPadding()
 
       Box(modifier = Modifier.padding(top = paddingValues.calculateTopPadding()).fillMaxSize()) {
-        if (searchActive && showSearchContent) {
+        if (searchActive) {
           when (searchSource) {
             SearchSource.LOCAL ->
               LocalSearchScreen(

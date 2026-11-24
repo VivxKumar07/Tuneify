@@ -104,7 +104,7 @@ fun LocalSearchScreen(
       LocalPlayerAwareWindowInsets.current.only(WindowInsetsSides.Bottom).asPaddingValues(),
     modifier =
       Modifier.fillMaxSize()
-        .background(if (pureBlack) Color.Black else MaterialTheme.colorScheme.background)
+        .background(Color.Transparent)
         .let { base ->
           if (isLandscape) {
             base.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))

@@ -75,6 +75,7 @@ import echo.music.iad1tya.R
 @Composable
 fun TuneifyHeaderRow(
   onNotificationClick: () -> Unit,
+  onSettingsClick: () -> Unit = {},
   onProfileClick: () -> Unit,
   accountImageUrl: String?,
   modifier: Modifier = Modifier,
@@ -90,7 +91,7 @@ fun TuneifyHeaderRow(
     // Logo with waveform symbol
     TuneifyWaveformLogo(accentColor = accentColor)
 
-    // Right action buttons: Notification + Profile
+    // Right action buttons: Notification + Settings + Profile
     Row(
       horizontalArrangement = Arrangement.spacedBy(10.dp),
       verticalAlignment = Alignment.CenterVertically
@@ -103,6 +104,19 @@ fun TuneifyHeaderRow(
         Icon(
           painter = painterResource(R.drawable.notification),
           contentDescription = "Notifications",
+          tint = TuneifyGlassTokens.TextPrimary,
+          modifier = Modifier.size(20.dp)
+        )
+      }
+
+      // Settings Gear Button
+      GlassButton(
+        onClick = onSettingsClick,
+        size = 40.dp
+      ) {
+        Icon(
+          painter = painterResource(R.drawable.settings),
+          contentDescription = "Settings",
           tint = TuneifyGlassTokens.TextPrimary,
           modifier = Modifier.size(20.dp)
         )
@@ -240,14 +254,9 @@ fun HeroSpotlightCarousel(
     label = "heroFloatTilt"
   )
 
-  // Material Expressive tilted asymmetric pill shape
+  // Material Expressive sleek stadium pill container
   val shape = remember {
-    RoundedCornerShape(
-      topStart = 38.dp,
-      bottomEnd = 38.dp,
-      topEnd = 20.dp,
-      bottomStart = 20.dp
-    )
+    RoundedCornerShape(28.dp)
   }
 
   Box(
@@ -257,7 +266,7 @@ fun HeroSpotlightCarousel(
       .padding(horizontal = 20.dp, vertical = 4.dp)
       .graphicsLayer {
         translationY = floatY
-        rotationZ = -1.4f + floatTilt
+        rotationZ = floatTilt
         cameraDistance = 14f * density
       }
       .shadow(

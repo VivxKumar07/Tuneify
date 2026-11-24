@@ -55,6 +55,7 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -867,27 +868,50 @@ fun DynamicArtworkBackground(
   accentColor: Color = LocalDynamicAccentColor.current,
   content: @Composable () -> Unit
 ) {
+  val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+
   val animatedAccent by animateColorAsState(
     targetValue = accentColor,
     animationSpec = tween(durationMillis = 650),
     label = "dynamicBgAccent"
   )
 
-  val baseTop = remember(animatedAccent) {
-    Color(
-      red = (0.02f + animatedAccent.red * 0.05f).coerceIn(0f, 1f),
-      green = (0.04f + animatedAccent.green * 0.08f).coerceIn(0f, 1f),
-      blue = (0.02f + animatedAccent.blue * 0.05f).coerceIn(0f, 1f),
-      alpha = 1f
-    )
+  val baseTop = remember(animatedAccent, isDark) {
+    if (isDark) {
+      Color(
+        red = (0.02f + animatedAccent.red * 0.05f).coerceIn(0f, 1f),
+        green = (0.04f + animatedAccent.green * 0.08f).coerceIn(0f, 1f),
+        blue = (0.02f + animatedAccent.blue * 0.05f).coerceIn(0f, 1f),
+        alpha = 1f
+      )
+    } else {
+      Color(
+        red = (0.94f + animatedAccent.red * 0.04f).coerceIn(0f, 1f),
+        green = (0.97f + animatedAccent.green * 0.02f).coerceIn(0f, 1f),
+        blue = (0.94f + animatedAccent.blue * 0.04f).coerceIn(0f, 1f),
+        alpha = 1f
+      )
+    }
   }
-  val baseMid = remember(animatedAccent) {
-    Color(
-      red = (0.03f + animatedAccent.red * 0.04f).coerceIn(0f, 1f),
-      green = (0.06f + animatedAccent.green * 0.06f).coerceIn(0f, 1f),
-      blue = (0.03f + animatedAccent.blue * 0.04f).coerceIn(0f, 1f),
-      alpha = 1f
-    )
+  val baseMid = remember(animatedAccent, isDark) {
+    if (isDark) {
+      Color(
+        red = (0.03f + animatedAccent.red * 0.04f).coerceIn(0f, 1f),
+        green = (0.06f + animatedAccent.green * 0.06f).coerceIn(0f, 1f),
+        blue = (0.03f + animatedAccent.blue * 0.04f).coerceIn(0f, 1f),
+        alpha = 1f
+      )
+    } else {
+      Color(
+        red = (0.91f + animatedAccent.red * 0.05f).coerceIn(0f, 1f),
+        green = (0.95f + animatedAccent.green * 0.03f).coerceIn(0f, 1f),
+        blue = (0.91f + animatedAccent.blue * 0.05f).coerceIn(0f, 1f),
+        alpha = 1f
+      )
+    }
+  }
+  val baseBottom = remember(isDark) {
+    if (isDark) Color(0xFF020603) else Color(0xFFEDF4EA)
   }
 
   Box(
@@ -898,7 +922,7 @@ fun DynamicArtworkBackground(
           colors = listOf(
             baseTop,
             baseMid,
-            Color(0xFF020603)
+            baseBottom
           )
         )
       )
@@ -908,34 +932,58 @@ fun DynamicArtworkBackground(
 
         // 1. Top-right dynamic artwork aura (behind header & hero card)
         val topAuraBrush = Brush.radialGradient(
-          colors = listOf(
-            animatedAccent.copy(alpha = 0.28f),
-            TuneifyGlassTokens.EmeraldGlow.copy(alpha = 0.16f),
-            Color(0xFF1E5B3A).copy(alpha = 0.08f),
-            Color.Transparent
-          ),
+          colors = if (isDark) {
+            listOf(
+              animatedAccent.copy(alpha = 0.28f),
+              TuneifyGlassTokens.EmeraldGlow.copy(alpha = 0.16f),
+              Color(0xFF1E5B3A).copy(alpha = 0.08f),
+              Color.Transparent
+            )
+          } else {
+            listOf(
+              animatedAccent.copy(alpha = 0.18f),
+              Color(0xFFC6F53D).copy(alpha = 0.14f),
+              Color.Transparent
+            )
+          },
           center = Offset(w * 0.85f, h * 0.12f),
           radius = w * 0.70f
         )
 
         // 2. Top-left subtle atmospheric bloom
         val topLeftBrush = Brush.radialGradient(
-          colors = listOf(
-            animatedAccent.copy(alpha = 0.18f),
-            TuneifyGlassTokens.EmeraldGlow.copy(alpha = 0.10f),
-            Color.Transparent
-          ),
+          colors = if (isDark) {
+            listOf(
+              animatedAccent.copy(alpha = 0.18f),
+              TuneifyGlassTokens.EmeraldGlow.copy(alpha = 0.10f),
+              Color.Transparent
+            )
+          } else {
+            listOf(
+              animatedAccent.copy(alpha = 0.12f),
+              Color(0xFF5AB67B).copy(alpha = 0.08f),
+              Color.Transparent
+            )
+          },
           center = Offset(w * 0.15f, h * 0.20f),
           radius = w * 0.60f
         )
 
         // 3. Center organic fluid aura
         val centerBrush = Brush.radialGradient(
-          colors = listOf(
-            animatedAccent.copy(alpha = 0.15f),
-            Color(0xFF0E3320).copy(alpha = 0.09f),
-            Color.Transparent
-          ),
+          colors = if (isDark) {
+            listOf(
+              animatedAccent.copy(alpha = 0.15f),
+              Color(0xFF0E3320).copy(alpha = 0.09f),
+              Color.Transparent
+            )
+          } else {
+            listOf(
+              animatedAccent.copy(alpha = 0.10f),
+              Color(0xFFC6F53D).copy(alpha = 0.06f),
+              Color.Transparent
+            )
+          },
           center = Offset(w * 0.45f, h * 0.50f),
           radius = w * 0.80f
         )
