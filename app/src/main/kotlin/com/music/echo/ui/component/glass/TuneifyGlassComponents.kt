@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -621,11 +622,12 @@ fun GlassArtworkCard(
   onPlayClick: () -> Unit,
   modifier: Modifier = Modifier,
   badgeText: String? = null,
-  cardWidth: Dp = 158.dp,
-  cardHeight: Dp = 205.dp,
-  accentColor: Color = TuneifyGlassTokens.VoltLime
+  cardWidth: Dp = 150.dp,
+  cardHeight: Dp = Dp.Unspecified,
+  accentColor: Color = LocalDynamicAccentColor.current
 ) {
-  val shape = RoundedCornerShape(22.dp)
+  val cardShape = RoundedCornerShape(20.dp)
+  val thumbShape = RoundedCornerShape(16.dp)
 
   val playInteraction = remember { MutableInteractionSource() }
   val isPlayPressed by playInteraction.collectIsPressedAsState()
@@ -637,148 +639,124 @@ fun GlassArtworkCard(
 
   Box(
     modifier = modifier
-      .size(width = cardWidth, height = cardHeight)
+      .width(cardWidth)
       .shadow(
-        elevation = 10.dp,
-        shape = shape,
+        elevation = 8.dp,
+        shape = cardShape,
         clip = false,
         ambientColor = Color(0x60000000),
-        spotColor = Color(0x40000000)
+        spotColor = Color(0x30000000)
       )
-      .clip(shape)
-      .background(Color(0xFF07170E), shape)
+      .clip(cardShape)
+      .background(Color(0x3514261B), cardShape)
       .border(
-        width = 1.25.dp,
+        width = 1.dp,
         brush = Brush.verticalGradient(
           listOf(
-            Color(0x60FFFFFF),
-            Color(0x15FFFFFF),
-            accentColor.copy(alpha = 0.35f)
+            Color(0x35FFFFFF),
+            Color(0x10FFFFFF),
+            accentColor.copy(alpha = 0.25f)
           )
         ),
-        shape = shape
+        shape = cardShape
       )
       .clickable(onClick = onClick)
+      .padding(8.dp)
   ) {
-    // 1. Real Artwork Image (Full Bleed)
-    if (!thumbnailUrl.isNullOrBlank()) {
-      AsyncImage(
-        model = thumbnailUrl,
-        contentDescription = title,
-        contentScale = ContentScale.Crop,
-        modifier = Modifier.fillMaxSize()
-      )
-    } else {
+    Column(modifier = Modifier.fillMaxWidth()) {
+      // 1. Square Artwork Container (1:1 aspect ratio)
       Box(
         modifier = Modifier
-          .fillMaxSize()
-          .background(Color(0xFF10261A))
-      )
-    }
-
-    // 2. Top Specular Glass Sheen
-    Box(
-      modifier = Modifier
-        .fillMaxWidth()
-        .height(36.dp)
-        .background(
-          Brush.verticalGradient(
-            listOf(Color(0x30FFFFFF), Color.Transparent)
-          )
-        )
-    )
-
-    // 3. Optional YouTube Music style Pill Badge
-    if (!badgeText.isNullOrBlank()) {
-      Box(
-        modifier = Modifier
-          .padding(top = 10.dp, start = 10.dp)
-          .clip(CircleShape)
-          .background(Color(0x80000000))
-          .border(0.75.dp, Color(0x40FFFFFF), CircleShape)
-          .padding(horizontal = 7.dp, vertical = 2.dp)
-      ) {
-        Text(
-          text = badgeText,
-          fontSize = 9.sp,
-          fontWeight = FontWeight.Bold,
-          color = accentColor,
-          letterSpacing = 0.5.sp
-        )
-      }
-    }
-
-    // 4. Bottom dark frosted glass gradient (starts at 50% height so artwork is bright)
-    Box(
-      modifier = Modifier
-        .fillMaxSize()
-        .background(
-          brush = Brush.verticalGradient(
-            colors = listOf(
-              Color.Transparent,
-              Color(0x40030B06),
-              Color(0xCC030B06),
-              Color(0xF5030B06)
-            ),
-            startY = 200f
-          )
-        )
-    )
-
-    // 5. Text & interactive glass play button at bottom
-    Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .align(Alignment.BottomStart)
-        .padding(horizontal = 12.dp, vertical = 12.dp),
-      verticalAlignment = Alignment.Bottom,
-      horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-      Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
-        Text(
-          text = title,
-          color = Color.White,
-          fontSize = 14.sp,
-          fontWeight = FontWeight.Bold,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis
-        )
-        Spacer(Modifier.height(2.dp))
-        Text(
-          text = subtitle,
-          color = Color(0xB8FFFFFF),
-          fontSize = 11.5.sp,
-          fontWeight = FontWeight.Medium,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis
-        )
-      }
-
-      // Glass play button with smooth spring animation
-      Box(
-        modifier = Modifier
-          .size(32.dp)
-          .graphicsLayer {
-            scaleX = playScale
-            scaleY = playScale
-          }
-          .clip(CircleShape)
-          .background(Color(0x40FFFFFF))
-          .border(
-            0.75.dp,
-            Brush.verticalGradient(listOf(Color(0x99FFFFFF), accentColor.copy(alpha = 0.70f))),
-            CircleShape
-          )
-          .clickable(interactionSource = playInteraction, indication = null, onClick = onPlayClick),
+          .fillMaxWidth()
+          .aspectRatio(1f)
+          .clip(thumbShape)
+          .background(Color(0xFF0C1F14)),
         contentAlignment = Alignment.Center
       ) {
-        Icon(
-          painter = painterResource(R.drawable.play),
-          contentDescription = "Play",
-          tint = Color.White,
-          modifier = Modifier.size(15.dp)
-        )
+        if (!thumbnailUrl.isNullOrBlank()) {
+          AsyncImage(
+            model = thumbnailUrl,
+            contentDescription = title,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+          )
+        } else {
+          // Sleek glass placeholder with heart or music icon
+          Box(
+            modifier = Modifier
+              .fillMaxSize()
+              .background(
+                Brush.linearGradient(
+                  listOf(
+                    accentColor.copy(alpha = 0.35f),
+                    Color(0xFF132F1E),
+                    Color(0xFF09160E)
+                  )
+                )
+              ),
+            contentAlignment = Alignment.Center
+          ) {
+            Icon(
+              painter = painterResource(
+                if (title.contains("Liked", ignoreCase = true)) R.drawable.favorite
+                else R.drawable.music_note
+              ),
+              contentDescription = null,
+              tint = accentColor,
+              modifier = Modifier.size(36.dp)
+            )
+          }
+        }
+
+        // Circular play button in bottom-end corner
+        Box(
+          modifier = Modifier
+            .align(Alignment.BottomEnd)
+            .padding(8.dp)
+            .size(32.dp)
+            .graphicsLayer {
+              scaleX = playScale
+              scaleY = playScale
+            }
+            .clip(CircleShape)
+            .background(Color(0xD90A1A10))
+            .border(0.75.dp, Color(0x40FFFFFF), CircleShape)
+            .clickable(
+              interactionSource = playInteraction,
+              indication = null,
+              onClick = onPlayClick
+            ),
+          contentAlignment = Alignment.Center
+        ) {
+          Icon(
+            painter = painterResource(R.drawable.play),
+            contentDescription = "Play",
+            tint = accentColor,
+            modifier = Modifier.size(14.dp)
+          )
+        }
       }
+
+      Spacer(Modifier.height(8.dp))
+
+      // 2. Title & Subtitle Below the artwork
+      Text(
+        text = title,
+        color = Color.White,
+        fontSize = 13.sp,
+        fontWeight = FontWeight.SemiBold,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+      )
+      Spacer(Modifier.height(2.dp))
+      Text(
+        text = subtitle,
+        color = Color(0xB0FFFFFF),
+        fontSize = 11.sp,
+        fontWeight = FontWeight.Normal,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+      )
     }
   }
 }
@@ -1029,40 +1007,22 @@ fun OrganicArtworkContainer(
   thumbnailUrl: String?,
   modifier: Modifier = Modifier,
   isPlaying: Boolean = false,
-  accentColor: Color = TuneifyGlassTokens.VoltLime,
+  accentColor: Color = LocalDynamicAccentColor.current,
   onSwipeLeft: (() -> Unit)? = null,
   onSwipeRight: (() -> Unit)? = null
 ) {
-  val infiniteTransition = rememberInfiniteTransition(label = "organicBreathing")
-  val phase by infiniteTransition.animateFloat(
-    initialValue = 0f,
-    targetValue = 6.28318f,
-    animationSpec = infiniteRepeatable(
-      animation = tween(if (isPlaying) 6000 else 12000, easing = LinearEasing),
-      repeatMode = RepeatMode.Restart
-    ),
-    label = "organicPhase"
-  )
+  val artworkShape = RoundedCornerShape(28.dp)
 
+  val infiniteTransition = rememberInfiniteTransition(label = "playerAuraPulse")
   val auraPulse by infiniteTransition.animateFloat(
-    initialValue = 0.94f,
-    targetValue = 1.06f,
+    initialValue = 0.95f,
+    targetValue = 1.05f,
     animationSpec = infiniteRepeatable(
-      animation = tween(if (isPlaying) 2200 else 4000, easing = LinearEasing),
+      animation = tween(if (isPlaying) 2600 else 4500, easing = LinearEasing),
       repeatMode = RepeatMode.Reverse
     ),
     label = "auraPulse"
   )
-
-  val m = kotlin.math.sin(phase) * 2.5f
-  val organicShape = remember(phase) {
-    RoundedCornerShape(
-      topStart = (36f + m).dp,
-      topEnd = (28f - m).dp,
-      bottomStart = (28f - m).dp,
-      bottomEnd = (36f + m).dp
-    )
-  }
 
   Box(
     modifier = modifier
@@ -1070,10 +1030,10 @@ fun OrganicArtworkContainer(
         if (onSwipeLeft != null || onSwipeRight != null) {
           Modifier.pointerInput(Unit) {
             detectHorizontalDragGestures { change, dragAmount ->
-              if (dragAmount < -22f && onSwipeLeft != null) {
+              if (dragAmount < -20f && onSwipeLeft != null) {
                 change.consume()
                 onSwipeLeft()
-              } else if (dragAmount > 22f && onSwipeRight != null) {
+              } else if (dragAmount > 20f && onSwipeRight != null) {
                 change.consume()
                 onSwipeRight()
               }
@@ -1083,78 +1043,98 @@ fun OrganicArtworkContainer(
       ),
     contentAlignment = Alignment.Center
   ) {
-    // 1. Radiant glowing translucent wave aura behind the artwork
-    Canvas(modifier = Modifier.fillMaxSize().graphicsLayer { scaleX = auraPulse; scaleY = auraPulse }) {
+    // 1. Radiant glowing translucent aura behind the artwork
+    Canvas(
+      modifier = Modifier
+        .fillMaxSize(1.08f)
+        .graphicsLayer {
+          scaleX = auraPulse
+          scaleY = auraPulse
+        }
+    ) {
       val w = size.width
       val h = size.height
 
-      // Glowing fluid aura
       drawCircle(
         brush = Brush.radialGradient(
           colors = listOf(
-            accentColor.copy(alpha = 0.50f),
-            TuneifyGlassTokens.EmeraldGlow.copy(alpha = 0.35f),
+            accentColor.copy(alpha = 0.45f),
+            TuneifyGlassTokens.EmeraldGlow.copy(alpha = 0.25f),
             Color.Transparent
           ),
-          center = Offset(w * 0.48f, h * 0.48f),
-          radius = w * 0.58f
+          center = Offset(w * 0.5f, h * 0.5f),
+          radius = w * 0.55f
         )
       )
     }
 
-    // 2. The organic wavy translucent fluid outer glass border
+    // 2. High-resolution Artwork Container with Frosted Glass Border
     Box(
       modifier = Modifier
-        .fillMaxSize(0.96f)
-        .shadow(elevation = 20.dp, shape = organicShape, ambientColor = Color.Black, spotColor = accentColor)
-        .clip(organicShape)
-        .background(
-          brush = Brush.linearGradient(
-            colors = listOf(
-              accentColor.copy(alpha = 0.45f),
-              Color(0x35102418),
-              Color(0x60030C05)
-            )
-          ),
-          shape = organicShape
+        .fillMaxSize()
+        .shadow(
+          elevation = 24.dp,
+          shape = artworkShape,
+          ambientColor = Color(0x80000000),
+          spotColor = accentColor.copy(alpha = 0.5f)
         )
+        .clip(artworkShape)
+        .background(Color(0xFF0C1A10), artworkShape)
         .border(
-          width = 1.75.dp,
-          brush = Brush.linearGradient(
+          width = 1.25.dp,
+          brush = Brush.verticalGradient(
             listOf(
-              Color(0x90FFFFFF),
-              accentColor.copy(alpha = 0.7f),
-              Color(0x30FFFFFF)
+              Color(0x70FFFFFF),
+              Color(0x18FFFFFF),
+              accentColor.copy(alpha = 0.40f)
             )
           ),
-          shape = organicShape
+          shape = artworkShape
         )
-        .padding(4.dp)
     ) {
-      // 3. Album artwork filling the container cleanly without being over-cut
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .clip(organicShape)
-          .background(Color(0xFF0C1A10))
-      ) {
-        if (!thumbnailUrl.isNullOrBlank()) {
-          AsyncImage(
-            model = thumbnailUrl,
-            contentDescription = "Artwork",
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
-          )
-        } else {
+      if (!thumbnailUrl.isNullOrBlank()) {
+        AsyncImage(
+          model = thumbnailUrl,
+          contentDescription = "Artwork",
+          contentScale = ContentScale.Crop,
+          alignment = Alignment.Center,
+          modifier = Modifier.fillMaxSize()
+        )
+      } else {
+        Box(
+          modifier = Modifier
+            .fillMaxSize()
+            .background(
+              Brush.linearGradient(
+                listOf(
+                  accentColor.copy(alpha = 0.4f),
+                  Color(0xFF132F1E),
+                  Color(0xFF09160E)
+                )
+              )
+            ),
+          contentAlignment = Alignment.Center
+        ) {
           Icon(
             painter = painterResource(R.drawable.album),
             contentDescription = null,
-            tint = TuneifyGlassTokens.SageMuted,
-            modifier = Modifier.size(64.dp).align(Alignment.Center)
+            tint = accentColor,
+            modifier = Modifier.size(72.dp)
           )
         }
       }
+
+      // Subtle specular glass reflection sheen on top
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(48.dp)
+          .background(
+            Brush.verticalGradient(
+              listOf(Color(0x28FFFFFF), Color.Transparent)
+            )
+          )
+      )
     }
   }
 }

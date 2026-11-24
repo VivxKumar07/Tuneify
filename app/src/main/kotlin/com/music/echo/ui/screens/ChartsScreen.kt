@@ -72,6 +72,10 @@ import echo.music.iad1tya.ui.component.shimmer.GridItemPlaceHolder
 import echo.music.iad1tya.ui.component.shimmer.ShimmerHost
 import echo.music.iad1tya.ui.component.shimmer.TextPlaceholder
 import echo.music.iad1tya.ui.menu.YouTubeSongMenu
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.graphics.Color
+import echo.music.iad1tya.ui.component.glass.DynamicArtworkBackground
+import echo.music.iad1tya.ui.component.glass.LocalDynamicAccentColor
 import echo.music.iad1tya.ui.utils.SnapLayoutInfoProvider
 import echo.music.iad1tya.ui.utils.backToMain
 import echo.music.iad1tya.utils.listItemShape
@@ -101,24 +105,34 @@ fun ChartsScreen(
     }
   }
 
-  Scaffold(
-    topBar = {
-      TopAppBar(
-        title = { Text(stringResource(R.string.charts)) },
-        navigationIcon = {
-          IconButton(
-            onClick = { navController.navigateUp() },
-            onLongClick = { navController.backToMain() }
-          ) {
-            Icon(
-              painter = painterResource(R.drawable.arrow_back),
-              contentDescription = null,
-            )
-          }
-        },
-      )
-    }
-  ) { paddingValues ->
+  DynamicArtworkBackground(
+    accentColor = LocalDynamicAccentColor.current
+  ) {
+    Scaffold(
+      containerColor = Color.Transparent,
+      topBar = {
+        TopAppBar(
+          title = { Text(stringResource(R.string.charts), color = Color.White) },
+          navigationIcon = {
+            IconButton(
+              onClick = { navController.navigateUp() },
+              onLongClick = { navController.backToMain() }
+            ) {
+              Icon(
+                painter = painterResource(R.drawable.arrow_back),
+                contentDescription = null,
+                tint = Color.White
+              )
+            }
+          },
+          colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.Transparent,
+            titleContentColor = Color.White,
+            navigationIconContentColor = Color.White
+          )
+        )
+      }
+    ) { paddingValues ->
     BoxWithConstraints(
       modifier = Modifier.fillMaxSize().padding(paddingValues),
     ) {
@@ -185,10 +199,10 @@ fun ChartsScreen(
       } else {
         LazyColumn(
           state = lazyListState,
-          contentPadding =
-            LocalPlayerAwareWindowInsets.current
-              .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
-              .asPaddingValues(),
+          contentPadding = PaddingValues(
+            top = 8.dp,
+            bottom = 180.dp
+          ),
         ) {
           chartsPage
             ?.sections
@@ -351,4 +365,5 @@ fun ChartsScreen(
       }
     }
   }
+}
 }

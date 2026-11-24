@@ -51,6 +51,7 @@ import echo.music.iad1tya.ui.component.Material3SettingsItem
 import echo.music.iad1tya.ui.component.TextFieldDialog
 import echo.music.iad1tya.ui.theme.TuneifyTokens
 import echo.music.iad1tya.ui.component.glass.DynamicArtworkBackground
+import echo.music.iad1tya.ui.component.glass.LocalDynamicAccentColor
 import echo.music.iad1tya.ui.component.glass.TuneifyGlassTokens
 import echo.music.iad1tya.utils.onlinePlaylistIdFromUrl
 import echo.music.iad1tya.utils.onlinePlaylistRoute
@@ -117,7 +118,7 @@ fun LibraryScreen(navController: NavController) {
     }
 
   CompositionLocalProvider(LocalPlayerAwareWindowInsets provides newInsets) {
-    DynamicArtworkBackground(accentColor = TuneifyGlassTokens.VoltLime) {
+    DynamicArtworkBackground(accentColor = LocalDynamicAccentColor.current) {
       Box(
         modifier = Modifier.fillMaxSize(),
       ) {

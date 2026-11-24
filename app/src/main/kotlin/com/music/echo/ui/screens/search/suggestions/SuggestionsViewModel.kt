@@ -129,18 +129,37 @@ class SuggestionsViewModel @Inject constructor() : ViewModel() {
    * landing screen always has real, playable content.
    */
   private suspend fun fillFromYouTube() {
-    val home = YouTube.home().getOrNull() ?: return
+    val home = YouTube.home().getOrNull()
 
     val songs = LinkedHashMap<String, SongItem>()
     val albums = LinkedHashMap<String, AlbumItem>()
     val artists = LinkedHashMap<String, ArtistItem>()
-    home.sections.forEach { section ->
-      section.items.forEach { item ->
-        when (item) {
-          is SongItem -> songs.putIfAbsent(item.id, item)
-          is AlbumItem -> albums.putIfAbsent(item.id, item)
-          is ArtistItem -> artists.putIfAbsent(item.id, item)
-          else -> {}
+
+    if (home != null) {
+      home.sections.forEach { section ->
+        section.items.forEach { item ->
+          when (item) {
+            is SongItem -> songs.putIfAbsent(item.id, item)
+            is AlbumItem -> albums.putIfAbsent(item.id, item)
+            is ArtistItem -> artists.putIfAbsent(item.id, item)
+            else -> {}
+          }
+        }
+      }
+    } else {
+      val explore = YouTube.explore().getOrNull()
+      explore?.newReleaseAlbums?.forEach { album ->
+        albums.putIfAbsent(album.id, album)
+      }
+      val searchHits = YouTube.searchSummary("Top Hits").getOrNull()
+      searchHits?.summaries?.forEach { summary ->
+        summary.items.forEach { item ->
+          when (item) {
+            is SongItem -> songs.putIfAbsent(item.id, item)
+            is AlbumItem -> albums.putIfAbsent(item.id, item)
+            is ArtistItem -> artists.putIfAbsent(item.id, item)
+            else -> {}
+          }
         }
       }
     }

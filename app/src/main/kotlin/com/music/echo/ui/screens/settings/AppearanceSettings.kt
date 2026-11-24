@@ -1966,7 +1966,7 @@ fun AppearanceSettings(
           )
         )
     )
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(100.dp))
 
     Spacer(
       Modifier.windowInsetsPadding(

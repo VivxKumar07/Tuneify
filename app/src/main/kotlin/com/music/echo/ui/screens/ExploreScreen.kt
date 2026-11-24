@@ -89,6 +89,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import echo.music.iad1tya.ui.component.ChipsRow
 import echo.music.iad1tya.ui.component.glass.DynamicArtworkBackground
+import echo.music.iad1tya.ui.component.glass.LocalDynamicAccentColor
 import echo.music.iad1tya.ui.component.glass.ExploreFeaturedBanner
 import echo.music.iad1tya.ui.component.glass.ExpressiveSectionHeader
 import echo.music.iad1tya.ui.component.glass.GlassButton
@@ -136,7 +137,7 @@ fun ExploreScreen(
   }
 
   DynamicArtworkBackground(
-    accentColor = TuneifyGlassTokens.VoltLime
+    accentColor = LocalDynamicAccentColor.current
   ) {
     Box(
       modifier = Modifier.fillMaxSize(),
@@ -475,44 +476,6 @@ fun ExploreScreen(
             }
           }
 
-        explorePage?.newReleaseAlbums?.let { newReleaseAlbums ->
-          NavigationTitle(
-            title = stringResource(R.string.new_release_albums),
-            onClick = { navController.navigate("new_release") },
-          )
-          LazyRow(
-            contentPadding =
-              WindowInsets.systemBars.only(WindowInsetsSides.Horizontal).asPaddingValues(),
-          ) {
-            items(
-              items = newReleaseAlbums.distinctBy { it.id },
-              key = { it.id },
-            ) { album ->
-              YouTubeGridItem(
-                item = album,
-                isActive = mediaMetadata?.album?.id == album.id,
-                isPlaying = isPlaying,
-                coroutineScope = coroutineScope,
-                modifier =
-                  Modifier.combinedClickable(
-                      onClick = { navController.navigate("album/${album.id}") },
-                      onLongClick = {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        menuState.show {
-                          YouTubeAlbumMenu(
-                            albumItem = album,
-                            navController = navController,
-                            onDismiss = menuState::dismiss,
-                          )
-                        }
-                      },
-                    )
-                    .animateItem(),
-              )
-            }
-          }
-        }
-
         chartsPage
           ?.sections
           ?.find { it.title == "Top music videos" }
@@ -563,13 +526,13 @@ fun ExploreScreen(
               }
             }
           }
-      }
 
-      Spacer(
-        Modifier.height(
-          LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateBottomPadding()
+        Spacer(
+          Modifier.height(
+            LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateBottomPadding() + 80.dp
+          )
         )
-      )
+      }
     }
   }
 }

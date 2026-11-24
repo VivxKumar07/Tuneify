@@ -1018,8 +1018,6 @@ fun HomeScreen(
 
       homePage?.sections?.indices?.forEach { i -> list.add(HomeSection.HomePageSection(i)) }
 
-      if (explorePage?.moodAndGenres != null) list.add(HomeSection.MoodAndGenres)
-
       list
     }
 
@@ -1097,12 +1095,14 @@ fun HomeScreen(
         }
       }
 
+      val trendingSongs = remember(homeSongs) { homeSongs.drop(4).take(8) }
+
       LazyColumn(
         state = lazylistState,
         modifier = Modifier.hapticScrollEdge(lazylistState),
         contentPadding = PaddingValues(
           top = LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateTopPadding() + 8.dp,
-          bottom = 120.dp
+          bottom = 180.dp
         )
       ) {
         // 1. Header with Tuneify waveform logo, notification, profile
@@ -1176,26 +1176,51 @@ fun HomeScreen(
           )
         }
 
-        // 4. Music Category Selector Pills: Music, Top Charts, Trending (opens real YouTube Music charts)
-        item(key = "tuneify_category_selector") {
-          CategorySelectorRow(
-            selectedCategory = selectedMusicCategory,
-            onCategorySelected = { cat ->
-              when (cat) {
-                "Music" -> {
-                  selectedMusicCategory = "Music"
-                }
-                "Top Charts" -> {
-                  selectedMusicCategory = "Music"
-                  navController.navigate("charts_screen")
-                }
-                "Trending" -> {
-                  selectedMusicCategory = "Music"
-                  navController.navigate("charts_screen")
-                }
+        // 4. Mood & Genres Row at the top of Home (Horizontally scrollable glass pills)
+        item(key = "tuneify_mood_and_genres_top") {
+          val defaultMoods = remember {
+            listOf(
+              "Chill" to "FEmusic_moods_and_genres",
+              "Workout" to "FEmusic_moods_and_genres",
+              "Romance" to "FEmusic_moods_and_genres",
+              "Party" to "FEmusic_moods_and_genres",
+              "Focus" to "FEmusic_moods_and_genres",
+              "Feel Good" to "FEmusic_moods_and_genres",
+              "Sleep" to "FEmusic_moods_and_genres",
+              "Energize" to "FEmusic_moods_and_genres"
+            )
+          }
+          val moodItems = explorePage?.moodAndGenres?.take(10)
+
+          LazyRow(
+            contentPadding = PaddingValues(horizontal = 20.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.padding(bottom = 16.dp)
+          ) {
+            if (!moodItems.isNullOrEmpty()) {
+              items(moodItems.distinctBy { it.title }, key = { it.title }) { item ->
+                GlassPill(
+                  text = item.title,
+                  selected = false,
+                  onClick = {
+                    navController.navigate(
+                      "youtube_browse/${item.endpoint.browseId}?params=${item.endpoint.params}"
+                    )
+                  }
+                )
+              }
+            } else {
+              items(defaultMoods, key = { it.first }) { (title, _) ->
+                GlassPill(
+                  text = title,
+                  selected = false,
+                  onClick = {
+                    navController.navigate("mood_and_genres")
+                  }
+                )
               }
             }
-          )
+          }
         }
 
         // 5. Quick Picks / Song Mixes (The signature 4-track stack carousel from YouTube Music)
@@ -1221,40 +1246,18 @@ fun HomeScreen(
           )
         }
 
-        // 6. Speed Dial Section (Compact cards matching YouTube Music)
-        item(key = "tuneify_speed_dial_header") {
-          ExpressiveSectionHeader(
-            title = "Speed Dial",
-            onChevronClick = { navController.navigate("auto_playlist/top") }
-          )
-        }
-
-        item(key = "tuneify_speed_dial_row") {
-          TuneifySpeedDialRow(
-            items = songsForCarousel.take(8),
-            onSongClick = { song ->
-              playerConnection.playQueue(
-                YouTubeQueue(
-                  endpoint = song.endpoint ?: WatchEndpoint(videoId = song.id),
-                  preloadItem = song.toMediaMetadata()
-                )
-              )
-            },
-            modifier = Modifier.padding(bottom = 16.dp)
-          )
-        }
-
-        // 7. Promo Banner Card (Discover)
+        // 6. Discover Trending Charts & Essentials (Banner)
         item(key = "tuneify_promo_banner") {
           TuneifyPromoBannerCard(
             title = "Discover Trending Charts & Essentials",
-            artworkUrl = songsForCarousel.firstOrNull()?.thumbnail,
+            artworkUrl = songsForCarousel.firstOrNull()?.thumbnail
+              ?: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80",
             onClick = { navController.navigate("charts_screen") },
             modifier = Modifier.padding(bottom = 16.dp)
           )
         }
 
-        // 7. Made For You Section
+        // 7. Made For You Section (Standard cute 150.dp glass rounded square cards)
         item(key = "tuneify_made_for_you_header") {
           ExpressiveSectionHeader(
             title = "Made For You",
@@ -1269,10 +1272,10 @@ fun HomeScreen(
             modifier = Modifier.padding(bottom = 16.dp)
           ) {
             item {
-              MadeForYouCard(
+              GlassArtworkCard(
                 title = "Daily Mix 1",
-                gradientColors = listOf(Color(0xFF882035), Color(0xFF451020), Color(0xFF15080E)),
-                artworkUrl = "https://i.ytimg.com/vi/6FURuLYrR_Q/hqdefault.jpg",
+                subtitle = "Made for you",
+                thumbnailUrl = "https://i.ytimg.com/vi/6FURuLYrR_Q/hqdefault.jpg",
                 onClick = { navController.navigate("auto_playlist/top") },
                 onPlayClick = {
                   val playTarget = homeSongs.firstOrNull()?.toMediaMetadata()
@@ -1286,10 +1289,10 @@ fun HomeScreen(
               )
             }
             item {
-              MadeForYouCard(
+              GlassArtworkCard(
                 title = "Chill Beats",
-                gradientColors = listOf(Color(0xFF185542), Color(0xFF0F362A), Color(0xFF081A14)),
-                artworkUrl = "https://i.ytimg.com/vi/sAzlWScHTc4/hqdefault.jpg",
+                subtitle = "Relax & Focus",
+                thumbnailUrl = "https://i.ytimg.com/vi/sAzlWScHTc4/hqdefault.jpg",
                 onClick = { navController.navigate("mood_and_genres") },
                 onPlayClick = {
                   val playTarget = homeSongs.drop(1).firstOrNull()?.toMediaMetadata()
@@ -1303,10 +1306,10 @@ fun HomeScreen(
               )
             }
             item {
-              MadeForYouCard(
+              GlassArtworkCard(
                 title = "Discover Weekly",
-                gradientColors = listOf(Color(0xFF283A68), Color(0xFF16223E), Color(0xFF090E18)),
-                artworkUrl = "https://i.ytimg.com/vi/RLzC55ai0eo/hqdefault.jpg",
+                subtitle = "Fresh discoveries",
+                thumbnailUrl = "https://i.ytimg.com/vi/RLzC55ai0eo/hqdefault.jpg",
                 onClick = { navController.navigate("new_release") },
                 onPlayClick = {
                   val playTarget = homeSongs.drop(2).firstOrNull()?.toMediaMetadata()
@@ -1319,6 +1322,31 @@ fun HomeScreen(
                 }
               )
             }
+          }
+        }
+
+        // 8. Trending Hits 4-Track Stack (Second YouTube Music signature column stack)
+        if (trendingSongs.size >= 4) {
+          item(key = "tuneify_trending_hits_header") {
+            ExpressiveSectionHeader(
+              title = "Trending Hits",
+              onChevronClick = { navController.navigate("charts_screen") }
+            )
+          }
+
+          item(key = "tuneify_trending_hits_row") {
+            TuneifySongColumnGridCarousel(
+              songs = trendingSongs,
+              onSongClick = { song ->
+                playerConnection.playQueue(
+                  YouTubeQueue(
+                    endpoint = song.endpoint ?: WatchEndpoint(videoId = song.id),
+                    preloadItem = song.toMediaMetadata()
+                  )
+                )
+              },
+              modifier = Modifier.padding(bottom = 16.dp)
+            )
           }
         }
 
@@ -1809,7 +1837,7 @@ fun HomeScreen(
                       modifier = Modifier.animateItem()
                     ) {
                       items(
-                        items = accountPlaylists.distinctBy { it.id },
+                        items = accountPlaylists.distinctBy { it.title.trim().lowercase() },
                         key = { it.id },
                       ) { item ->
                         ytGridItem(item)
@@ -2003,69 +2031,13 @@ fun HomeScreen(
                       )
                     }
                   }
-                  // 2. If index % 3 == 1: YouTube Music Big Square Album / Release Carousel
-                  section.index % 3 == 1 -> {
-                    item(key = "home_section_square_${section.index}") {
-                      TuneifySquareAlbumCarousel(
-                        items = sectionData.items,
-                        onItemClick = { item ->
-                          when (item) {
-                            is SongItem -> playerConnection.playQueue(
-                              YouTubeQueue(
-                                item.endpoint ?: WatchEndpoint(videoId = item.id),
-                                item.toMediaMetadata()
-                              )
-                            )
-                            is AlbumItem -> navController.navigate("album/${item.id}")
-                            is PlaylistItem -> navController.navigate("online_playlist/${item.id}")
-                            is ArtistItem -> navController.navigate("artist/${item.id}")
-                          }
-                        },
-                        modifier = Modifier.padding(bottom = 12.dp).animateItem()
-                      )
-                    }
-                  }
-                  // 3. Otherwise: Tuneify detailed cards or grid items
-                  hasPlayableSongs -> {
-                    item(key = "home_section_detailed_${section.index}") {
-                      LazyRow(
-                        contentPadding = PaddingValues(horizontal = 20.dp),
-                        horizontalArrangement = Arrangement.spacedBy(14.dp),
-                        modifier = Modifier.padding(bottom = 12.dp).animateItem()
-                      ) {
-                        items(sectionSongs.distinctBy { it.id }, key = { it.id }) { song ->
-                          TuneifyDetailedSongCard(
-                            title = song.title,
-                            artist = song.artists.joinToString { it.name },
-                            albumOrViews = song.album?.name ?: "Popular",
-                            thumbnailUrl = song.thumbnail,
-                            onClick = {
-                              playerConnection.playQueue(
-                                YouTubeQueue(
-                                  song.endpoint ?: WatchEndpoint(videoId = song.id),
-                                  song.toMediaMetadata()
-                                )
-                              )
-                            },
-                            onPlayClick = {
-                              playerConnection.playQueue(
-                                YouTubeQueue(
-                                  song.endpoint ?: WatchEndpoint(videoId = song.id),
-                                  song.toMediaMetadata()
-                                )
-                              )
-                            }
-                          )
-                        }
-                      }
-                    }
-                  }
+                  // 2. Uniform cute 150.dp rounded square cards (ytGridItem)
                   else -> {
                     item(key = "home_section_list_${section.index}") {
                       LazyRow(
                         contentPadding = PaddingValues(horizontal = 20.dp),
                         horizontalArrangement = Arrangement.spacedBy(14.dp),
-                        modifier = Modifier.padding(bottom = 12.dp).animateItem()
+                        modifier = Modifier.padding(bottom = 14.dp).animateItem()
                       ) {
                         items(sectionData.items.distinctBy { it.id }, key = { it.id }) { item ->
                           ytGridItem(item)
@@ -2076,35 +2048,7 @@ fun HomeScreen(
                 }
               }
             }
-            HomeSection.MoodAndGenres -> {
-              explorePage?.moodAndGenres?.let { moodAndGenres ->
-                item(key = "mood_and_genres_title") {
-                  ExpressiveSectionHeader(
-                    title = stringResource(R.string.mood_and_genres),
-                    onChevronClick = { navController.navigate("mood_and_genres") }
-                  )
-                }
-                item(key = "mood_and_genres_list") {
-                  LazyRow(
-                    contentPadding = PaddingValues(horizontal = 20.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = Modifier.padding(bottom = 16.dp).animateItem()
-                  ) {
-                    items(moodAndGenres.distinctBy { it.title }, key = { it.title }) { item ->
-                      GlassPill(
-                        text = item.title,
-                        selected = false,
-                        onClick = {
-                          navController.navigate(
-                            "youtube_browse/${item.endpoint.browseId}?params=${item.endpoint.params}"
-                          )
-                        }
-                      )
-                    }
-                  }
-                }
-              }
-            }
+            HomeSection.MoodAndGenres -> {}
           }
         }
 
