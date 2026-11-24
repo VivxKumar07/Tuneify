@@ -394,17 +394,17 @@ fun ListeningSummaryScreen(
                             RoundedCornerShape(
                               topStart = 12.dp,
                               topEnd = 12.dp,
-                              bottomStart = 2.dp,
-                              bottomEnd = 2.dp
+                              bottomStart = 4.dp,
+                              bottomEnd = 4.dp
                             )
                           breakdownItems.size - 1 ->
                             RoundedCornerShape(
-                              topStart = 2.dp,
-                              topEnd = 2.dp,
+                              topStart = 4.dp,
+                              topEnd = 4.dp,
                               bottomStart = 12.dp,
                               bottomEnd = 12.dp
                             )
-                          else -> RoundedCornerShape(2.dp)
+                          else -> RoundedCornerShape(4.dp)
                         }
                       Surface(
                         modifier = Modifier.fillMaxWidth(),

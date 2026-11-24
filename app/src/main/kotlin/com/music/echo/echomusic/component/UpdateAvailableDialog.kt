@@ -56,7 +56,7 @@ fun UpdateAvailableDialog(
       modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
       shape = cardShape,
       color = MaterialTheme.colorScheme.surfaceContainerHigh,
-      tonalElevation = 8.dp,
+      tonalElevation = 0.dp,
     ) {
       Column(
         modifier = Modifier.padding(horizontal = 18.dp, vertical = 18.dp),

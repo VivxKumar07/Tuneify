@@ -98,6 +98,8 @@ import echo.music.iad1tya.ui.component.IconButton
 import echo.music.iad1tya.ui.component.LocalMenuState
 import echo.music.iad1tya.ui.component.SongListItem
 import echo.music.iad1tya.ui.component.SortHeader
+import echo.music.iad1tya.ui.component.TuneifyTriBar
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import echo.music.iad1tya.ui.menu.SelectionSongMenu
 import echo.music.iad1tya.ui.menu.SongMenu
 import echo.music.iad1tya.ui.menu.TopPlaylistMenu
@@ -513,50 +515,54 @@ private fun TopPlaylistHeader(
     modifier = modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    Spacer(Modifier.height(50.dp))
-
-    Box(
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 48.dp),
-      contentAlignment = Alignment.Center
-    ) {
-      AsyncImage(
-        model = songs[0].thumbnailUrl,
-        contentDescription = null,
-        modifier =
-          Modifier.then(
-              if (LocalConfiguration.current.screenWidthDp > 600) Modifier.size(300.dp)
-              else Modifier.fillMaxWidth().aspectRatio(1f)
-            )
-            .clip(RoundedCornerShape(8.dp)),
-        contentScale = ContentScale.Crop
-      )
-    }
-
-    Spacer(Modifier.height(32.dp))
+    Spacer(Modifier.height(40.dp))
 
     Column(
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp).padding(bottom = 16.dp),
-      horizontalAlignment = Alignment.CenterHorizontally
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 16.dp),
+      horizontalAlignment = Alignment.Start
     ) {
-      Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(
-          painter = painterResource(R.drawable.queue_music),
+      TuneifyTriBar(height = 20.dp, barWidth = 4.dp, gap = 3.dp)
+
+      Spacer(Modifier.height(12.dp))
+
+      Row(verticalAlignment = Alignment.Top) {
+        AsyncImage(
+          model = songs[0].thumbnailUrl,
           contentDescription = null,
-          modifier = Modifier.size(30.dp),
-          tint = MaterialTheme.colorScheme.onSurface
+          modifier = Modifier.size(96.dp).clip(RoundedCornerShape(TuneifyTokens.RadiusCard)),
+          contentScale = ContentScale.Crop
         )
-        Spacer(Modifier.width(8.dp))
-        Text(
-          text = name,
-          style = MaterialTheme.typography.headlineMedium,
-          fontWeight = FontWeight.Bold,
-          color = MaterialTheme.colorScheme.onSurface,
-          maxLines = 2,
-          overflow = TextOverflow.Ellipsis
-        )
+
+        Spacer(Modifier.width(14.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+          Text(
+            text = name,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Black,
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 3,
+            overflow = TextOverflow.Ellipsis
+          )
+
+          Spacer(Modifier.height(6.dp))
+
+          Text(
+            text =
+              buildString {
+                append(pluralStringResource(R.plurals.n_song, songs.size, songs.size))
+                if (likeLength > 0) {
+                  append(" \u00B7 ")
+                  append(makeTimeString(likeLength * 1000L))
+                }
+              },
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+          )
+        }
       }
 
-      Spacer(Modifier.height(24.dp))
+      Spacer(Modifier.height(20.dp))
 
       Row(
         modifier = Modifier.fillMaxWidth(),
@@ -572,7 +578,7 @@ private fun TopPlaylistHeader(
               )
             )
           },
-          shape = ButtonDefaults.shape,
+          shape = TuneifyTokens.ShapePill,
           colors =
             ButtonDefaults.buttonColors(
               containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -609,7 +615,7 @@ private fun TopPlaylistHeader(
               )
             )
           },
-          shape = ButtonDefaults.shape,
+          shape = TuneifyTokens.ShapePill,
           colors =
             ButtonDefaults.buttonColors(
               containerColor = MaterialTheme.colorScheme.primary,
@@ -673,8 +679,8 @@ private fun TopPlaylistHeader(
               )
             }
           },
-          shape = CircleShape,
-          color = MaterialTheme.colorScheme.surfaceVariant,
+          shape = androidx.compose.foundation.shape.CircleShape,
+          color = MaterialTheme.colorScheme.surfaceContainerHigh,
           modifier = Modifier.size(48.dp)
         ) {
           Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
@@ -690,28 +696,12 @@ private fun TopPlaylistHeader(
 
       Spacer(Modifier.height(16.dp))
 
-      Text(
-        text =
-          buildString {
-            append(pluralStringResource(R.plurals.n_song, songs.size, songs.size))
-            if (likeLength > 0) {
-              append(" • ")
-              append(makeTimeString(likeLength * 1000L))
-            }
-          },
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant
-      )
-
-      Spacer(Modifier.height(16.dp))
-
       Column(modifier = Modifier.fillMaxWidth()) {
         Text(
           text = stringResource(R.string.about_album),
-          style = MaterialTheme.typography.titleMedium,
-          fontWeight = FontWeight.Bold,
+          style = MaterialTheme.typography.titleSmall,
           color = MaterialTheme.colorScheme.onSurface,
-          modifier = Modifier.padding(bottom = 8.dp)
+          modifier = Modifier.padding(bottom = 6.dp)
         )
         ExpandableText(
           text =

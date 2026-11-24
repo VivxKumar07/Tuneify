@@ -43,9 +43,9 @@ fun WelcomeDialog(onDismissRequest: () -> Unit) {
   ) {
     Card(
       modifier = Modifier.padding(24.dp).fillMaxWidth(),
-      shape = RoundedCornerShape(28.dp),
+      shape = RoundedCornerShape(16.dp),
       colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-      elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+      elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
       Column(
         modifier =
@@ -158,7 +158,7 @@ fun WelcomeDialog(onDismissRequest: () -> Unit) {
 private fun WelcomeAppCard() {
   Card(
     modifier = Modifier.fillMaxWidth(),
-    shape = RoundedCornerShape(28.dp),
+    shape = RoundedCornerShape(16.dp),
     colors =
       CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
@@ -222,7 +222,7 @@ private fun WelcomeSectionCard(
     )
     Card(
       modifier = Modifier.fillMaxWidth(),
-      shape = RoundedCornerShape(28.dp),
+      shape = RoundedCornerShape(16.dp),
       colors =
         CardDefaults.cardColors(
           containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
@@ -262,7 +262,7 @@ private fun WelcomeActionRow(
           scaleX = scale
           scaleY = scale
         }
-        .clip(RoundedCornerShape(22.dp))
+        .clip(RoundedCornerShape(16.dp))
         .clickable(
           interactionSource = interactionSource,
           indication = ripple(),
@@ -276,7 +276,7 @@ private fun WelcomeActionRow(
     ) {
       Surface(
         modifier = Modifier.size(36.dp),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(8.dp),
         color = tint.copy(alpha = 0.10f),
       ) {
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {

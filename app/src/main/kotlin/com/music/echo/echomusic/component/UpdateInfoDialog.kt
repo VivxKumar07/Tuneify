@@ -47,7 +47,7 @@ fun UpdateInfoDialog(onDismiss: () -> Unit) {
       modifier = Modifier.padding(horizontal = 24.dp).widthIn(max = 320.dp),
       shape = cardShape,
       color = MaterialTheme.colorScheme.surfaceContainerHigh,
-      tonalElevation = 8.dp,
+      tonalElevation = 0.dp,
     ) {
       Column(
         modifier = Modifier.padding(horizontal = 18.dp, vertical = 18.dp),

@@ -1,0 +1,24 @@
+<!-- Tuneify brand mark in brand lime. In-app usage where a fixed colour is needed (About, headers). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <path
+        android:strokeColor="#FFC6F53D"
+        android:strokeWidth="5.67"
+        android:strokeLineCap="round"
+        android:pathData="M40.18,35.76 A20,20 0 1 1 40.18,12.24" />
+
+    <path
+        android:strokeColor="#FFC6F53D"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M35.87,32.62 A14.67,14.67 0 1 1 35.87,15.38" />
+
+    <path
+        android:fillColor="#FFC6F53D"
+        android:fillType="evenOdd"
+        android:pathData="M14.67,24 a9.33,9.33 0 1 0 18.66,0 a9.33,9.33 0 1 0 -18.66,0 Z M19.34,17.28 L19.34,30.72 L30.72,24 Z" />
+</vector>

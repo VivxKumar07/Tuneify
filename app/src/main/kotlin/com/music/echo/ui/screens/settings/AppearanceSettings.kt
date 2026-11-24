@@ -919,7 +919,7 @@ fun AppearanceSettings(
       Modifier.windowInsetsPadding(LocalPlayerAwareWindowInsets.current.only(WindowInsetsSides.Top))
     )
 
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(68.dp))
 
     Material3SettingsGroup(
       scrollState = scrollState,
@@ -928,7 +928,7 @@ fun AppearanceSettings(
         buildList {
           add(
             Material3SettingsItem(
-              isHighlighted = (highlightKey == stringResource(R.string.legacy_icon)),
+              isHighlighted = (highlightKey == "App Icon"),
               icon = painterResource(R.drawable.grid_view),
               title = { Text("App Icon") },
               description = { Text("Choose your launcher icon") },

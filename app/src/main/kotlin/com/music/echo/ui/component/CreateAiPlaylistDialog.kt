@@ -94,9 +94,9 @@ fun CreateAiPlaylistDialog(
   ) {
     Surface(
       modifier = Modifier.fillMaxWidth(0.9f).wrapContentHeight(),
-      shape = RoundedCornerShape(24.dp),
+      shape = RoundedCornerShape(16.dp),
       color = MaterialTheme.colorScheme.surface,
-      tonalElevation = 6.dp
+      tonalElevation = 0.dp
     ) {
       Column(
         modifier = Modifier.padding(24.dp),
@@ -223,7 +223,7 @@ fun CreateAiPlaylistDialog(
                     CardDefaults.cardColors(
                       containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                     ),
-                  shape = RoundedCornerShape(12.dp)
+                  shape = RoundedCornerShape(8.dp)
                 ) {
                   Row(
                     modifier = Modifier.padding(12.dp),
@@ -250,7 +250,7 @@ fun CreateAiPlaylistDialog(
                     CardDefaults.cardColors(
                       containerColor = MaterialTheme.colorScheme.secondaryContainer
                     ),
-                  shape = RoundedCornerShape(12.dp)
+                  shape = RoundedCornerShape(8.dp)
                 ) {
                   Row(
                     modifier = Modifier.padding(12.dp).fillMaxWidth(),
@@ -279,7 +279,7 @@ fun CreateAiPlaylistDialog(
                     CardDefaults.cardColors(
                       containerColor = MaterialTheme.colorScheme.errorContainer
                     ),
-                  shape = RoundedCornerShape(12.dp)
+                  shape = RoundedCornerShape(8.dp)
                 ) {
                   Column(
                     modifier = Modifier.padding(12.dp),
@@ -343,7 +343,7 @@ fun CreateAiPlaylistDialog(
             modifier = Modifier.fillMaxWidth(),
             singleLine = false,
             maxLines = 3,
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(8.dp)
           )
 
           // Song Count Slider
@@ -369,7 +369,7 @@ fun CreateAiPlaylistDialog(
           ) {
             OutlinedButton(
               onClick = { viewModel.generateFromTaste(onPlaylistCreated) },
-              shape = RoundedCornerShape(12.dp),
+              shape = RoundedCornerShape(8.dp),
               contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
             ) {
               Text("From Taste", style = MaterialTheme.typography.labelLarge)
@@ -392,7 +392,7 @@ fun CreateAiPlaylistDialog(
               Button(
                 onClick = { viewModel.generatePlaylist(context, onPlaylistCreated) },
                 enabled = canGenerate,
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(8.dp)
               ) {
                 Text("Generate")
               }

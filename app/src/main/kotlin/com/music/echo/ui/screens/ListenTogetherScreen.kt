@@ -12,10 +12,14 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.isSystemInDarkTheme
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -412,37 +416,48 @@ fun ListenTogetherScreen(navController: NavController, showTopBar: Boolean = fal
 
     if (!isInRoom) {
       item {
+        val shape = RoundedCornerShape(8.dp)
+        val isDark = isSystemInDarkTheme()
+        val shadowColor = if (isDark) Color(0xFF000000) else Color(0xFF111111).copy(alpha = 0.85f)
+        val borderColor = if (isDark) TuneifyTokens.Dark.Border else TuneifyTokens.Light.Border
         Card(
-          modifier = Modifier.fillMaxWidth(),
-          shape = RoundedCornerShape(24.dp),
+          modifier =
+            Modifier.fillMaxWidth()
+,
+          shape = shape,
+          border = BorderStroke(1.5.dp, borderColor),
           colors =
-            CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+            CardDefaults.cardColors(containerColor = TuneifyTokens.Purple),
           elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
           Column(
-            modifier = Modifier.fillMaxWidth().padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
           ) {
             Text(
-              text = "How it Works",
-              style = MaterialTheme.typography.titleLarge,
-              fontWeight = FontWeight.Bold,
-              color = MaterialTheme.colorScheme.onSurface
+              text = "HOW IT WORKS",
+              style = MaterialTheme.typography.titleMedium,
+              fontWeight = FontWeight.Black,
+              letterSpacing = 0.5.sp,
+              color = Color(0xFF111111)
             )
 
             InstructionStep(
               title = "1. Create a Room",
-              description = "Start a session and share the unique room code with your friends."
+              description = "Start a session and share the unique code.",
+              textColor = Color(0xFF111111)
             )
 
             InstructionStep(
               title = "2. Join a Friend",
-              description = "Enter their room code to join their session instantly."
+              description = "Enter their room code to join.",
+              textColor = Color(0xFF111111)
             )
 
             InstructionStep(
               title = "3. Sync Playback",
-              description = "The host controls the music. Everyone listens in perfect sync!"
+              description = "The host controls the music. Everyone listens together.",
+              textColor = Color(0xFF111111)
             )
           }
         }
@@ -483,19 +498,19 @@ fun ListenTogetherScreen(navController: NavController, showTopBar: Boolean = fal
 }
 
 @Composable
-private fun InstructionStep(title: String, description: String) {
-  Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+private fun InstructionStep(title: String, description: String, textColor: Color? = null) {
+  Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(2.dp)) {
     Text(
       text = title,
       style = MaterialTheme.typography.titleMedium,
       fontWeight = FontWeight.Bold,
-      color = MaterialTheme.colorScheme.onSurface
+      color = textColor ?: MaterialTheme.colorScheme.onSurface
     )
     Text(
       text = description,
       style = MaterialTheme.typography.bodyMedium,
-      color = MaterialTheme.colorScheme.onSurfaceVariant,
-      lineHeight = 20.sp
+      color = textColor?.copy(alpha = 0.85f) ?: MaterialTheme.colorScheme.onSurfaceVariant,
+      lineHeight = 18.sp
     )
   }
 }
@@ -542,7 +557,7 @@ private fun ConnectionStatusCard(
           animationSpec =
             spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow)
         ),
-    shape = RoundedCornerShape(24.dp),
+    shape = RoundedCornerShape(16.dp),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
   ) {
@@ -611,7 +626,7 @@ private fun ConnectionStatusCard(
           Button(
             onClick = onConnect,
             modifier = Modifier.weight(1f),
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(8.dp),
             colors =
               ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onSurface)
           ) {
@@ -627,7 +642,7 @@ private fun ConnectionStatusCard(
           Button(
             onClick = onDisconnect,
             modifier = Modifier.weight(1f),
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(8.dp),
             colors =
               ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onSurface)
           ) {
@@ -636,7 +651,7 @@ private fun ConnectionStatusCard(
           FilledTonalButton(
             onClick = onReconnect,
             modifier = Modifier.weight(1f),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(8.dp)
           ) {
             Text("Reconnect", fontWeight = FontWeight.SemiBold)
           }
@@ -657,7 +672,7 @@ private fun RoomStatusCard(
 ) {
   Card(
     modifier = Modifier.fillMaxWidth(),
-    shape = RoundedCornerShape(24.dp),
+    shape = RoundedCornerShape(16.dp),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
   ) {
@@ -710,7 +725,7 @@ private fun RoomStatusCard(
               clipboard.setPrimaryClip(clip)
               Toast.makeText(context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
             },
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(8.dp)
           ) {
             Icon(
               painter = painterResource(R.drawable.link),
@@ -730,7 +745,7 @@ private fun RoomStatusCard(
               clipboard.setPrimaryClip(clip)
               Toast.makeText(context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
             },
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(8.dp)
           ) {
             Icon(
               painter = painterResource(R.drawable.content_copy),
@@ -755,7 +770,7 @@ private fun ConnectedUsersSection(
 ) {
   Card(
     modifier = Modifier.fillMaxWidth(),
-    shape = RoundedCornerShape(24.dp),
+    shape = RoundedCornerShape(16.dp),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
   ) {
@@ -880,7 +895,7 @@ private fun PendingJoinRequestsSection(
 ) {
   Card(
     modifier = Modifier.fillMaxWidth(),
-    shape = RoundedCornerShape(24.dp),
+    shape = RoundedCornerShape(16.dp),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
   ) {
@@ -949,7 +964,7 @@ private fun PendingSuggestionsSection(
 ) {
   Card(
     modifier = Modifier.fillMaxWidth(),
-    shape = RoundedCornerShape(24.dp),
+    shape = RoundedCornerShape(16.dp),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
   ) {
@@ -1030,67 +1045,124 @@ private fun JoinCreateRoomSection(
 ) {
   var selectedTab by rememberSaveable { mutableStateOf(0) }
 
+  val shape = RoundedCornerShape(8.dp)
+  val isDark = isSystemInDarkTheme()
+  val shadowColor = if (isDark) Color(0xFF000000) else Color(0xFF111111).copy(alpha = 0.85f)
+  val borderColor = if (isDark) TuneifyTokens.Dark.Border else TuneifyTokens.Light.Border
+
   Card(
-    modifier = Modifier.fillMaxWidth(),
-    shape = RoundedCornerShape(24.dp),
-    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+    modifier =
+      Modifier.fillMaxWidth()
+,
+    shape = shape,
+    border = BorderStroke(1.5.dp, borderColor),
+    colors = CardDefaults.cardColors(
+      containerColor = if (isDark) TuneifyTokens.Dark.Surface else TuneifyTokens.Light.Surface
+    ),
     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
   ) {
     Column(
-      modifier = Modifier.fillMaxWidth().padding(20.dp),
-      verticalArrangement = Arrangement.spacedBy(16.dp),
+      modifier = Modifier.fillMaxWidth().padding(18.dp),
+      verticalArrangement = Arrangement.spacedBy(14.dp),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       Row(
         modifier =
           Modifier.fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainerLow),
+            .clip(RoundedCornerShape(8.dp))
+            .background(if (isDark) Color(0xFF1A1A1A) else Color(0xFFF2EFE6))
+            .border(BorderStroke(1.dp, borderColor.copy(alpha = 0.5f)), RoundedCornerShape(8.dp)),
         horizontalArrangement = Arrangement.spacedBy(0.dp)
       ) {
         Button(
           onClick = { selectedTab = 0 },
           modifier = Modifier.weight(1f),
-          shape = RoundedCornerShape(16.dp),
+          shape = RoundedCornerShape(8.dp),
           colors =
             ButtonDefaults.buttonColors(
               containerColor =
-                if (selectedTab == 0) MaterialTheme.colorScheme.onSurface else Color.Transparent,
+                if (selectedTab == 0) TuneifyTokens.Yellow else Color.Transparent,
               contentColor =
-                if (selectedTab == 0) MaterialTheme.colorScheme.surface
-                else MaterialTheme.colorScheme.onSurfaceVariant
+                if (selectedTab == 0) Color(0xFF111111)
+                else if (isDark) TuneifyTokens.Dark.TextSecondary else TuneifyTokens.Light.TextSecondary
             ),
           elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
         ) {
           Icon(
             painter = painterResource(R.drawable.add),
             contentDescription = null,
+            tint = if (selectedTab == 0) Color(0xFF111111) else if (isDark) TuneifyTokens.Dark.TextSecondary else TuneifyTokens.Light.TextSecondary,
             modifier = Modifier.size(18.dp)
           )
           Spacer(Modifier.width(6.dp))
-          Text(stringResource(R.string.create_room), fontWeight = FontWeight.SemiBold)
+          Text(stringResource(R.string.create_room), fontWeight = FontWeight.Bold)
         }
         Button(
           onClick = { selectedTab = 1 },
           modifier = Modifier.weight(1f),
-          shape = RoundedCornerShape(16.dp),
+          shape = RoundedCornerShape(8.dp),
           colors =
             ButtonDefaults.buttonColors(
               containerColor =
-                if (selectedTab == 1) MaterialTheme.colorScheme.onSurface else Color.Transparent,
+                if (selectedTab == 1) TuneifyTokens.Yellow else Color.Transparent,
               contentColor =
-                if (selectedTab == 1) MaterialTheme.colorScheme.surface
-                else MaterialTheme.colorScheme.onSurfaceVariant
+                if (selectedTab == 1) Color(0xFF111111)
+                else if (isDark) TuneifyTokens.Dark.TextSecondary else TuneifyTokens.Light.TextSecondary
             ),
           elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
         ) {
           Icon(
             painter = painterResource(R.drawable.login),
             contentDescription = null,
+            tint = if (selectedTab == 1) Color(0xFF111111) else if (isDark) TuneifyTokens.Dark.TextSecondary else TuneifyTokens.Light.TextSecondary,
             modifier = Modifier.size(18.dp)
           )
           Spacer(Modifier.width(6.dp))
-          Text(stringResource(R.string.join_room), fontWeight = FontWeight.SemiBold)
+          Text(stringResource(R.string.join_room), fontWeight = FontWeight.Bold)
+        }
+      }
+
+      // Retro Illustrated Banner: MUSIC SOUNDS BETTER TOGETHER
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .clip(RoundedCornerShape(8.dp))
+          .background(Color(0xFF171717))
+          .border(BorderStroke(1.dp, borderColor.copy(alpha = 0.4f)), RoundedCornerShape(8.dp))
+          .padding(horizontal = 16.dp, vertical = 12.dp)
+      ) {
+        Row(
+          modifier = Modifier.fillMaxWidth(),
+          horizontalArrangement = Arrangement.SpaceBetween,
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          Column(modifier = Modifier.weight(1f)) {
+            Text(
+              text = "MUSIC\nSOUNDS\nBETTER\nTOGETHER.",
+              style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Black,
+                letterSpacing = 0.8.sp,
+                lineHeight = 16.sp,
+                fontSize = 14.sp
+              ),
+              color = Color(0xFFF5F1E8)
+            )
+          }
+          Box(
+            modifier = Modifier
+              .size(52.dp)
+              .clip(RoundedCornerShape(8.dp))
+              .background(TuneifyTokens.Yellow)
+              .border(1.dp, Color(0xFF111111), RoundedCornerShape(8.dp)),
+            contentAlignment = Alignment.Center
+          ) {
+            Icon(
+              painter = painterResource(R.drawable.group),
+              contentDescription = null,
+              tint = Color(0xFF111111),
+              modifier = Modifier.size(30.dp)
+            )
+          }
         }
       }
 
@@ -1110,13 +1182,13 @@ private fun JoinCreateRoomSection(
           }
         },
         singleLine = true,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(8.dp),
         colors =
           OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.onSurface,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow
+            focusedBorderColor = borderColor,
+            unfocusedBorderColor = borderColor.copy(alpha = 0.5f),
+            focusedContainerColor = if (isDark) TuneifyTokens.Dark.Elevated else Color(0xFFFBF8F1),
+            unfocusedContainerColor = if (isDark) TuneifyTokens.Dark.Elevated else Color(0xFFFBF8F1)
           ),
         modifier = Modifier.fillMaxWidth().onFocusChanged { if (it.isFocused) onFieldFocused() }
       )
@@ -1146,13 +1218,13 @@ private fun JoinCreateRoomSection(
             }
           },
           singleLine = true,
-          shape = RoundedCornerShape(16.dp),
+          shape = RoundedCornerShape(8.dp),
           colors =
             OutlinedTextFieldDefaults.colors(
-              focusedBorderColor = MaterialTheme.colorScheme.onSurface,
-              unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-              focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-              unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow
+              focusedBorderColor = borderColor,
+              unfocusedBorderColor = borderColor.copy(alpha = 0.5f),
+              focusedContainerColor = if (isDark) TuneifyTokens.Dark.Elevated else Color(0xFFFBF8F1),
+              unfocusedContainerColor = if (isDark) TuneifyTokens.Dark.Elevated else Color(0xFFFBF8F1)
             ),
           modifier =
             Modifier.fillMaxWidth().bringIntoViewRequester(bringIntoViewRequester).onFocusChanged {
@@ -1168,7 +1240,7 @@ private fun JoinCreateRoomSection(
       ) {
         Surface(
           modifier = Modifier.fillMaxWidth(),
-          shape = RoundedCornerShape(12.dp),
+          shape = RoundedCornerShape(8.dp),
           color = MaterialTheme.colorScheme.surfaceContainerHigh
         ) {
           Row(
@@ -1200,7 +1272,7 @@ private fun JoinCreateRoomSection(
       ) {
         Surface(
           modifier = Modifier.fillMaxWidth(),
-          shape = RoundedCornerShape(12.dp),
+          shape = RoundedCornerShape(8.dp),
           color = MaterialTheme.colorScheme.errorContainer
         ) {
           Row(
@@ -1230,36 +1302,66 @@ private fun JoinCreateRoomSection(
       val hasRoomCode = roomCodeInput.length == 8
 
       if (selectedTab == 0) {
+        val btnShape = RoundedCornerShape(8.dp)
         Button(
           onClick = onCreateRoom,
-          modifier = Modifier.fillMaxWidth(),
+          modifier =
+            Modifier.fillMaxWidth()
+,
           enabled = hasUsername && !isCreatingRoom && !isJoiningRoom,
-          shape = RoundedCornerShape(16.dp),
-          colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onSurface)
+          shape = btnShape,
+          border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+          colors =
+            ButtonDefaults.buttonColors(
+              containerColor = TuneifyTokens.SignatureYellow,
+              contentColor = Color(0xFF111111),
+              disabledContainerColor = TuneifyTokens.SignatureYellow.copy(alpha = 0.5f),
+              disabledContentColor = Color(0xFF111111).copy(alpha = 0.5f)
+            )
         ) {
           Icon(
             painter = painterResource(R.drawable.add),
             contentDescription = null,
+            tint = Color(0xFF111111),
             modifier = Modifier.size(20.dp)
           )
           Spacer(Modifier.width(8.dp))
-          Text(stringResource(R.string.create_room), fontWeight = FontWeight.SemiBold)
+          Text(
+            stringResource(R.string.create_room),
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF111111)
+          )
         }
       } else {
+        val btnShape = RoundedCornerShape(8.dp)
         Button(
           onClick = onJoinRoom,
-          modifier = Modifier.fillMaxWidth(),
+          modifier =
+            Modifier.fillMaxWidth()
+,
           enabled = hasUsername && hasRoomCode && !isCreatingRoom && !isJoiningRoom,
-          shape = RoundedCornerShape(16.dp),
-          colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
+          shape = btnShape,
+          border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+          colors =
+            ButtonDefaults.buttonColors(
+              containerColor = TuneifyTokens.SignatureYellow,
+              contentColor = Color(0xFF111111),
+              disabledContainerColor = TuneifyTokens.SignatureYellow.copy(alpha = 0.5f),
+              disabledContentColor = Color(0xFF111111).copy(alpha = 0.5f)
+            )
         ) {
           Icon(
             painter = painterResource(R.drawable.login),
             contentDescription = null,
+            tint = Color(0xFF111111),
             modifier = Modifier.size(20.dp)
           )
           Spacer(Modifier.width(8.dp))
-          Text(stringResource(R.string.join_room), fontWeight = FontWeight.SemiBold)
+          Text(
+            stringResource(R.string.join_room),
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF111111)
+          )
         }
       }
     }
@@ -1339,7 +1441,7 @@ private fun UserActionDialog(
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
       Surface(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onKick),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(8.dp),
         color = MaterialTheme.colorScheme.errorContainer
       ) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)) {
@@ -1368,7 +1470,7 @@ private fun UserActionDialog(
 
       Surface(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onPermanentKick),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(8.dp),
         color = MaterialTheme.colorScheme.surfaceVariant
       ) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)) {
@@ -1396,7 +1498,7 @@ private fun UserActionDialog(
 
       Surface(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onTransferOwnership),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(8.dp),
         color = MaterialTheme.colorScheme.surfaceContainerHigh
       ) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)) {

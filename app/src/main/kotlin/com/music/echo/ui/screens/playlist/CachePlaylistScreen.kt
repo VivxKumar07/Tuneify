@@ -468,7 +468,7 @@ private fun CachePlaylistHeader(
               if (LocalConfiguration.current.screenWidthDp > 600) Modifier.size(300.dp)
               else Modifier.fillMaxWidth().padding(horizontal = 48.dp).aspectRatio(1f)
             )
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(16.dp))
       ) {
         AsyncImage(
           model = songs.firstOrNull()?.thumbnailUrl,

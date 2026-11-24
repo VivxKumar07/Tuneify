@@ -272,7 +272,7 @@ fun LyricsMenu(
 
             Surface(
               color = MaterialTheme.colorScheme.secondaryContainer,
-              shape = RoundedCornerShape(6.dp),
+              shape = RoundedCornerShape(8.dp),
               modifier = Modifier.padding(top = 4.dp)
             ) {
               Row(

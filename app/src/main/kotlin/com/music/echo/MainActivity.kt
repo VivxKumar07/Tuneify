@@ -98,6 +98,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import echo.music.iad1tya.ui.component.glass.LocalDynamicAccentColor
+import echo.music.iad1tya.ui.component.glass.TuneifyGlassTokens
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -185,12 +187,9 @@ import echo.music.iad1tya.playback.queues.YouTubeQueue
 import echo.music.iad1tya.ui.component.*
 import echo.music.iad1tya.ui.component.AppFloatingNavBar
 import echo.music.iad1tya.ui.component.GlassEffectConfig
-import echo.music.iad1tya.ui.component.LocalAppBackdrop
 import echo.music.iad1tya.ui.component.LocalGlassEffectConfig
 import echo.music.iad1tya.ui.component.RingtoneProgressDialog
 import echo.music.iad1tya.ui.component.RingtoneTrimmerDialog
-import echo.music.iad1tya.ui.component.backdrop.backdrops.layerBackdrop
-import echo.music.iad1tya.ui.component.backdrop.backdrops.rememberLayerBackdrop
 import echo.music.iad1tya.ui.component.floatingtabbar.rememberFloatingTabBarScrollConnection
 import echo.music.iad1tya.ui.component.shimmer.getShimmerTheme
 import echo.music.iad1tya.ui.menu.YouTubeSongMenu
@@ -559,36 +558,7 @@ class MainActivity : ComponentActivity() {
     }
 
     LaunchedEffect(Unit) {
-      val prefs = context.dataStore.data.first()
-
-      if (getAutoUpdateCheckSetting(context)) {
-
-        delay(2000L)
-        checkForUpdate(
-          context = context,
-          onSuccess = { latestVersion, isAvailable, changelog, _, _, description, _, _ ->
-            val currentVersion = BuildConfig.VERSION_NAME
-            Log.d(
-              "UpdateCheck",
-              "Startup check success. Latest: $latestVersion, Current: $currentVersion, isAvailable: $isAvailable"
-            )
-            saveUpdateAvailableState(context, isAvailable)
-
-            if (isAvailable) {
-              availableUpdateVersion = latestVersion
-              availableUpdateChangelog = changelog
-              availableUpdateDescription = description
-              showUpdateDialog = true
-            }
-
-            if (isAvailable && getUpdateNotificationsSetting(context)) {
-              Log.d("UpdateCheck", "Posting update notification for $latestVersion")
-              UpdateNotificationHelper.showUpdateNotification(context, latestVersion)
-            }
-          },
-          onError = { Log.e("UpdateCheck", "Startup check failed") }
-        )
-      }
+      saveUpdateAvailableState(context, false)
     }
 
     val HasShownBirthdayNotificationKey = remember {
@@ -814,15 +784,8 @@ class MainActivity : ComponentActivity() {
         val (previousTab, setPreviousTab) = rememberSaveable { mutableStateOf("home") }
 
         val (listenTogetherInTopBar) =
-          rememberPreference(ListenTogetherInTopBarKey, defaultValue = true)
-        val navigationItems =
-          remember(listenTogetherInTopBar) {
-            if (listenTogetherInTopBar) {
-              Screens.MainScreens.filter { it != Screens.ListenTogether }
-            } else {
-              Screens.MainScreens
-            }
-          }
+          rememberPreference(ListenTogetherInTopBarKey, defaultValue = false)
+        val navigationItems = remember { Screens.MainScreens }
         val (useNewMiniPlayerDesign) =
           rememberPreference(UseNewMiniPlayerDesignKey, defaultValue = true)
         val defaultOpenTab = remember {
@@ -839,7 +802,9 @@ class MainActivity : ComponentActivity() {
         val topLevelScreens = remember {
           listOf(
             Screens.Home.route,
+            Screens.Explore.route,
             Screens.Library.route,
+            Screens.Search.route,
             Screens.ListenTogether.route,
             "settings",
           )
@@ -899,7 +864,7 @@ class MainActivity : ComponentActivity() {
             label = "navBarHeight",
           )
 
-        val (useFloatingNavBar) = rememberPreference(UseFloatingNavBarKey, defaultValue = false)
+        val useFloatingNavBar = false // forced off: floating nav bar never rendered AppFloatingNavBar, hiding the mini player entirely
         val floatingNavBarScrollConnection = rememberFloatingTabBarScrollConnection()
 
         val playerBottomSheetState =
@@ -1009,7 +974,7 @@ class MainActivity : ComponentActivity() {
               bottom += MiniPlayerHeight
             windowsInsets
               .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
-              .add(WindowInsets(top = AppBarHeight, bottom = bottom))
+              .add(WindowInsets(bottom = bottom))
           }
         appBarScrollBehavior(
           canScroll = {
@@ -1085,16 +1050,6 @@ class MainActivity : ComponentActivity() {
         val snackbarHostState = remember { SnackbarHostState() }
         var showSettingDialoge by remember { mutableStateOf(false) }
 
-        var showWelcomeDialog by remember { mutableStateOf(false) }
-
-        LaunchedEffect(Unit) {
-          val prefs = context.dataStore.data.first()
-          val lastOpened = prefs[echo.music.iad1tya.constants.LastOpenedVersionCodeKey] ?: -1
-          if (lastOpened < BuildConfig.VERSION_CODE) {
-            showWelcomeDialog = true
-          }
-        }
-
         LaunchedEffect(Unit) {
           val activeIntent = pendingIntent ?: intent
           if (activeIntent != null) {
@@ -1120,6 +1075,8 @@ class MainActivity : ComponentActivity() {
           }
         }
 
+        var showPartyBomb by remember { mutableStateOf(false) }
+
         DisposableEffect(Unit) {
           val listener =
             Consumer<Intent> { newIntent ->
@@ -1141,7 +1098,8 @@ class MainActivity : ComponentActivity() {
 
         val currentTitle =
           when (navBackStackEntry?.destination?.route) {
-            Screens.Home.route -> "Echo Music"
+            Screens.Home.route -> "Tuneify"
+            Screens.Explore.route -> stringResource(R.string.explore)
             Screens.Search.route -> stringResource(R.string.search)
             Screens.Library.route -> stringResource(R.string.filter_library)
             Screens.ListenTogether.route -> stringResource(R.string.together)
@@ -1199,7 +1157,10 @@ class MainActivity : ComponentActivity() {
             liquidGlassNavBarEnabled,
           ) {
             GlassEffectConfig(
-              globalEnabled = liquidGlassGlobalEnabled,
+              // Tuneify: backdrop blur is retired in favour of the flat Swiss-Bauhaus surfaces.
+              // Forced off here so no leftover preference or per-component flag can re-enable the
+              // RenderEffect pipeline. The preference keys stay readable for migration.
+              globalEnabled = false,
               vibrancy = liquidGlassVibrancy,
               blurRadius = liquidGlassBlurRadius,
               lensHeight = liquidGlassLensHeight,
@@ -1218,11 +1179,6 @@ class MainActivity : ComponentActivity() {
               navBarEnabled = liquidGlassNavBarEnabled,
             )
           }
-
-        val appBackdrop = rememberLayerBackdrop {
-          drawRect(baseBg)
-          drawContent()
-        }
 
         val ringtoneViewModel: RingtoneViewModel = viewModel()
         val ringtoneUiState by ringtoneViewModel.uiState.collectAsState()
@@ -1248,7 +1204,6 @@ class MainActivity : ComponentActivity() {
         CompositionLocalProvider(
           LocalHapticFeedback provides customHapticFeedback,
           LocalGlassEffectConfig provides glassEffectConfig,
-          LocalAppBackdrop provides appBackdrop,
           LocalRingtoneViewModel provides ringtoneViewModel,
           LocalDatabase provides database,
           LocalContentColor provides
@@ -1259,93 +1214,11 @@ class MainActivity : ComponentActivity() {
           LocalShimmerTheme provides getShimmerTheme(),
           LocalSyncUtils provides syncUtils,
           LocalListenTogetherManager provides listenTogetherManager,
+          LocalDynamicAccentColor provides (themeColor.takeIf { it != Color.Unspecified } ?: TuneifyGlassTokens.VoltLime),
         ) {
           Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
-            topBar = {
-              AnimatedVisibility(
-                visible = shouldShowTopBar,
-                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                exit = fadeOut(animationSpec = tween(durationMillis = 200))
-              ) {
-                Row {
-                  TopAppBar(
-                    title = {
-                      Text(
-                        text = currentTitle,
-                        style =
-                          MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp
-                          ),
-                      )
-                    },
-                    actions = {
-                      if (showHistoryButton) {
-                        IconButton(onClick = { navController.navigate("history") }) {
-                          Icon(
-                            painter = painterResource(R.drawable.music_history),
-                            contentDescription = stringResource(R.string.history)
-                          )
-                        }
-                      }
-                      IconButton(onClick = { navController.navigate("stats") }) {
-                        Icon(
-                          painter = painterResource(R.drawable.stats),
-                          contentDescription = stringResource(R.string.stats)
-                        )
-                      }
-                      if (listenTogetherInTopBar) {
-                        IconButton(
-                          onClick = { navController.navigate("listen_together_from_topbar") }
-                        ) {
-                          Icon(
-                            painter = painterResource(R.drawable.group_outlined),
-                            contentDescription = stringResource(R.string.together)
-                          )
-                        }
-                      }
-                      IconButton(onClick = { showSettingDialoge = true }) {
-                        BadgedBox(badge = {}) {
-                          if (accountImageUrl != null) {
-                            AsyncImage(
-                              model = accountImageUrl,
-                              contentDescription = stringResource(R.string.account),
-                              modifier = Modifier.size(24.dp).clip(CircleShape)
-                            )
-                          } else {
-                            Icon(
-                              painter = painterResource(R.drawable.settings),
-                              contentDescription = stringResource(R.string.account),
-                              modifier = Modifier.size(24.dp)
-                            )
-                          }
-                        }
-                      }
-                    },
-                    scrollBehavior = topAppBarScrollBehavior,
-                    colors =
-                      TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                        actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                      ),
-                    windowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Top),
-                    modifier =
-                      Modifier.windowInsetsPadding(
-                        if (showRail) {
-                          WindowInsets(left = NavigationBarHeight)
-                            .add(cutoutInsets.only(WindowInsetsSides.Start))
-                        } else {
-                          cutoutInsets.only(WindowInsetsSides.Start + WindowInsetsSides.End)
-                        }
-                      )
-                  )
-                }
-              }
-            },
+            topBar = {},
             bottomBar = {
               val onNavItemClick: (Screens, Boolean) -> Unit =
                 remember(
@@ -1359,7 +1232,9 @@ class MainActivity : ComponentActivity() {
                       playerBottomSheetState.collapseSoft()
                     }
 
-                    if (isSelected) {
+                    if (screen == Screens.Profile) {
+                      showSettingDialoge = true
+                    } else if (isSelected) {
                       navController.currentBackStackEntry
                         ?.savedStateHandle
                         ?.set("scrollToTop", true)
@@ -1412,74 +1287,33 @@ class MainActivity : ComponentActivity() {
                       slideOffset + hideOffset
                     }
 
-                  if (useFloatingNavBar) {
-                    AppFloatingNavBar(
-                      navigationItems = navigationItems,
-                      currentRoute = currentRoute,
-                      onItemClick = onNavItemClick,
-                      scrollConnection = floatingNavBarScrollConnection,
-                      pureBlack = pureBlack,
-                      showPlayerAccessory = hasDockedPlayerAccessory,
-                      onAccessoryClick = { playerBottomSheetState.expandSoft() },
-                      onMusicRecognitionClick = onMusicRecognitionClick,
-                      musicRecognitionContentDescription = stringResource(R.string.recognition),
-                      onSearchLongClick = onRailSearchLongClick,
-                      modifier =
-                        Modifier.align(Alignment.BottomCenter)
-                          .padding(horizontal = 16.dp)
-                          .padding(bottom = bottomInset + 8.dp)
-                          .graphicsLayer {
-                            val hiddenOffset = size.height + (bottomInset + 8.dp).toPx()
-                            val navBarHeightPx = navigationBarHeight.toPx()
-                            translationY =
-                              if (navBarHeightPx == 0f) {
-                                hiddenOffset
-                              } else {
-                                val progress = playerBottomSheetState.progress.coerceIn(0f, 1f)
-                                val slideOffset = hiddenOffset * progress
-                                val hideOffset =
-                                  hiddenOffset * (1 - navBarHeightPx / NavigationBarHeight.toPx())
-                                slideOffset + hideOffset
-                              }
-                          }
-                    )
-                  } else {
-                    Box(
-                      modifier =
-                        Modifier.align(Alignment.BottomCenter)
-                          .height(navSlideDistance)
-                          .offset(y = navOffsetY),
-                    ) {
-                      FloatingNavigationToolbar(
-                        items = navigationItems,
-                        pureBlack = pureBlack,
-                        onShuffleClick = onShuffleClick,
-                        shuffleEnabled = shuffleEnabled,
-                        shuffleIconRes = R.drawable.shuffle,
-                        shuffleContentDescription = stringResource(R.string.shuffle),
-                        onMusicRecognitionClick = onMusicRecognitionClick,
-                        musicRecognitionContentDescription = stringResource(R.string.recognition),
-                        onAiHubClick = {
-                          navController.navigate("settings/ai") { launchSingleTop = true }
-                        },
-                        aiHubIconRes = R.drawable.ai_pfp,
-                        aiHubContentDescription = stringResource(R.string.ai_lyrics_translation),
-                        onSearchLongClick = onRailSearchLongClick,
-                        isSelected = { screen ->
-                          currentRoute == screen.route ||
-                            currentRoute?.startsWith("${screen.route}/") == true
-                        },
-                        onItemClick = onNavItemClick,
-                        modifier =
-                          Modifier.align(Alignment.BottomCenter)
-                            .padding(
-                              start = FloatingToolbarHorizontalPadding,
-                              end = FloatingToolbarHorizontalPadding,
-                              bottom = bottomInset + FloatingToolbarBottomPadding,
-                            )
-                            .height(NavigationBarHeight)
-                      )
-                    }
+                  ExpressiveBottomNavBar(
+                    navigationItems = navigationItems,
+                    currentRoute = currentRoute,
+                    onItemClick = onNavItemClick,
+                    pureBlack = pureBlack,
+                    accountImageUrl = accountImageUrl,
+                    isProfileActive = showSettingDialoge,
+                    accentColor = (themeColor.takeIf { it != Color.Unspecified } ?: TuneifyGlassTokens.VoltLime),
+                    modifier =
+                      Modifier.align(Alignment.BottomCenter)
+                        .padding(bottom = bottomInset + 8.dp)
+                        .graphicsLayer {
+                          val hiddenOffset = size.height + (bottomInset + 16.dp).toPx()
+                          val navBarHeightPx = navigationBarHeight.toPx()
+                          translationY =
+                            if (navBarHeightPx == 0f || playerBottomSheetState.progress >= 0.95f) {
+                              hiddenOffset
+                            } else {
+                              val progress = playerBottomSheetState.progress.coerceIn(0f, 1f)
+                              val slideOffset = hiddenOffset * progress
+                              val hideOffset =
+                                hiddenOffset * (1 - navBarHeightPx / NavigationBarHeight.toPx())
+                              slideOffset + hideOffset
+                            }
+                        }
+                  )
+
 
                     Box(
                       modifier =
@@ -1496,11 +1330,10 @@ class MainActivity : ComponentActivity() {
                                 0f
                               else 1f
                           }
-                          .background(baseBg)
+                          .background(if (pureBlack) Color.Black else Color.Transparent)
                     )
                   }
-                }
-              } else {
+                } else {
                 if (
                   currentRoute != "update" &&
                     currentRoute != "listen_together/chat" &&
@@ -1533,7 +1366,7 @@ class MainActivity : ComponentActivity() {
                             0f
                           else 1f
                       }
-                      .background(baseBg)
+                      .background(if (pureBlack) Color.Black else Color.Transparent)
                 )
               }
             },
@@ -1666,7 +1499,7 @@ class MainActivity : ComponentActivity() {
                       } + fadeOut(tween(400, easing = EmphasizedEasing))
                   },
                   modifier =
-                    Modifier.layerBackdrop(appBackdrop)
+                    Modifier
                       .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
                 ) {
                   navigationBuilder(
@@ -1754,20 +1587,6 @@ class MainActivity : ComponentActivity() {
                 navController.navigate(route)
               },
               homeViewModel = homeViewModel
-            )
-          }
-
-          if (showWelcomeDialog) {
-            WelcomeDialog(
-              onDismissRequest = {
-                showWelcomeDialog = false
-                coroutineScope.launch {
-                  context.dataStore.edit {
-                    it[echo.music.iad1tya.constants.LastOpenedVersionCodeKey] =
-                      BuildConfig.VERSION_CODE
-                  }
-                }
-              }
             )
           }
 

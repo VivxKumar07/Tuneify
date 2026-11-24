@@ -16,7 +16,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -64,6 +63,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
@@ -138,6 +138,7 @@ import kotlin.math.sin
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 
 private data class PolygonCookieShape(val sides: Int, val indent: Float) : Shape {
   override fun createOutline(
@@ -230,10 +231,10 @@ fun MiniPlayer(
       if (useGlass) {
         Modifier.liquidGlass(
           config = glassConfig,
-          shape = RoundedCornerShape(percent = 50),
+          shape = TuneifyTokens.ShapeSheet,
         )
       } else {
-        Modifier.clip(RoundedCornerShape(percent = 50)).background(bgTint)
+        Modifier.clip(TuneifyTokens.ShapeSheet).background(bgTint)
       }
 
     Box(
@@ -370,12 +371,12 @@ private fun NewMiniPlayer(progressState: ProgressState, modifier: Modifier = Mod
     if (useGlass && glassConfig.textColor != androidx.compose.ui.graphics.Color.Unspecified)
       glassConfig.textColor
     else if (isDynamicBackground && !useGlass) androidx.compose.ui.graphics.Color.White
-    else androidx.compose.material3.MaterialTheme.colorScheme.onSurface
+    else MaterialTheme.colorScheme.primary
   val onPrimaryColor =
     if (useGlass && glassConfig.textColor != androidx.compose.ui.graphics.Color.Unspecified)
       glassConfig.textColor
     else if (isDynamicBackground && !useGlass) androidx.compose.ui.graphics.Color.Black
-    else androidx.compose.material3.MaterialTheme.colorScheme.surface
+    else MaterialTheme.colorScheme.onPrimary
   val outlineColor =
     if (useGlass && glassConfig.textColor != androidx.compose.ui.graphics.Color.Unspecified)
       glassConfig.textColor.copy(alpha = 0.5f)
@@ -465,13 +466,19 @@ private fun NewMiniPlayer(progressState: ProgressState, modifier: Modifier = Mod
           .height(MiniPlayerHeight)
           .offset { IntOffset(offsetXAnimatable.value.roundToInt(), 0) }
           .let { m ->
-            val shape = RoundedCornerShape(percent = 50)
-            if (useGlass) {
-                m.clip(shape).liquidGlass(config = glassConfig, shape = shape)
-              } else {
-                m.clip(shape).background(bgTint)
-              }
-              .border(1.dp, outlineColor.copy(alpha = 0.3f), shape)
+            // Tuneify chrome: a floating tonal surface with a soft lift and a barely-there edge.
+            // The hard offset shadow and the bright 1.5dp outline were removed — at night they read
+            // as a black smear plus a bright frame around the player.
+            val shape = TuneifyTokens.ShapeSheet
+            m.shadow(
+                elevation = TuneifyTokens.ElevationHigh,
+                shape = shape,
+                clip = false,
+                ambientColor = androidx.compose.ui.graphics.Color.Black,
+                spotColor = androidx.compose.ui.graphics.Color.Black,
+              )
+              .clip(shape)
+              .background(bgTint)
           }
     ) {
       MiniPlayerBackgroundLayer(
@@ -586,19 +593,17 @@ private fun NewMiniPlayerThumbnail(
         )
       }
   ) {
+    val thumbShape = RoundedCornerShape(TuneifyTokens.RadiusMedium)
     Box(
       contentAlignment = Alignment.Center,
-      modifier =
-        Modifier.size(40.dp)
-          .clip(CircleShape)
-          .border(1.dp, outlineColor.copy(alpha = 0.3f), CircleShape)
+      modifier = Modifier.size(40.dp).clip(thumbShape)
     ) {
       mediaMetadata?.let { metadata ->
         AsyncImage(
           model = ImageRequest.Builder(LocalContext.current).data(metadata.thumbnailUrl).build(),
           contentDescription = null,
           contentScale = ContentScale.Crop,
-          modifier = Modifier.fillMaxSize().clip(CircleShape)
+          modifier = Modifier.fillMaxSize().clip(thumbShape)
         )
       }
     }
@@ -744,10 +749,10 @@ private fun LegacyMiniPlayer(progressState: ProgressState, modifier: Modifier = 
         .widthIn(max = 340.dp)
         .height(MiniPlayerHeight)
         .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
-        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+        .clip(TuneifyTokens.ShapeSheet)
         .background(
           if (pureBlack && isSystemInDarkTheme()) Color.Black
-          else MaterialTheme.colorScheme.surfaceContainer
+          else MaterialTheme.colorScheme.surfaceContainerHigh
         )
         .let { baseModifier ->
           if (swipeThumbnail) {
@@ -986,7 +991,7 @@ private fun LegacyMiniMediaInfo(
       if (mediaMetadata.artists.any { it.name.isNotBlank() }) {
         Text(
           text = mediaMetadata.artists.joinToString { it.name },
-          color = MaterialTheme.colorScheme.secondary,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
           fontSize = 12.sp,
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
@@ -1013,13 +1018,8 @@ private fun FavoriteButton(
     modifier =
       Modifier.size(40.dp)
         .clip(CircleShape)
-        .border(
-          width = 1.dp,
-          color = if (isLiked) errorColor.copy(alpha = 0.5f) else outlineColor.copy(alpha = 0.3f),
-          shape = CircleShape
-        )
         .background(
-          color = if (isLiked) errorColor.copy(alpha = 0.1f) else Color.Transparent,
+          color = if (isLiked) errorColor.copy(alpha = 0.14f) else Color.Transparent,
           shape = CircleShape
         )
         .clickable { playerConnection.service.toggleLike() }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Backgrounds for the Tuneify launcher-icon variants (all on the deep-forest brand). -->
+    <color name="ic_launcher_light_background">#F4F8F0</color>
+    <color name="ic_launcher_yellow_background">#C6F53D</color>
+    <color name="ic_launcher_blue_background">#1E5B3A</color>
+    <color name="ic_launcher_red_background">#12261A</color>
+</resources>

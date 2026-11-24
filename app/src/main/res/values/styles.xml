@@ -6,10 +6,21 @@
         <item name="android:windowMinWidthMinor">100%</item>
         <item name="android:windowMinWidthMajor">100%</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">#ffffff</item>
+        <!-- Brand near-black: kills the white cold-start flash before Compose draws. -->
+        <item name="android:windowBackground">#07120C</item>
         <item name="android:enforceNavigationBarContrast" tools:ignore="NewApi">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <!--
+      Splash / cold-start theme. The system (or the androidx core-splashscreen compat path on older
+      releases) shows the brand mark on the near-black canvas, then hands over to Theme.echomusic.
+    -->
+    <style name="Theme.echomusic.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#07120C</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_tuneify_launcher_fg</item>
+        <item name="postSplashScreenTheme">@style/Theme.echomusic</item>
     </style>
 
     <!-- Widget Theme with Material 3 colors fallback for API < 31 -->

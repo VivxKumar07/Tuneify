@@ -24,6 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -107,7 +108,7 @@ fun LibraryArtistsScreen(
           colors =
             FilterChipDefaults.filterChipColors(containerColor = MaterialTheme.colorScheme.surface),
           onClick = onDeselect,
-          shape = RoundedCornerShape(16.dp),
+          shape = TuneifyTokens.ShapeMedium,
           leadingIcon = {
             Icon(painter = painterResource(R.drawable.close), contentDescription = "")
           },
@@ -176,7 +177,7 @@ fun LibraryArtistsScreen(
         Text(
           text = pluralStringResource(R.plurals.n_artist, artists.size, artists.size),
           style = MaterialTheme.typography.titleSmall,
-          color = MaterialTheme.colorScheme.secondary,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         FlowRow(

@@ -1,10 +1,14 @@
 {
   "features": [
-    "Local Taste Engine: Offline, account-free algorithmic recommendation engine with skip tracking and taste mix generation",
-    "Local Taste Engine (Slice 2): Multi-source Last.fm recommendation pipeline (similar tracks, similar artists, top genres) with 1-hour taste snapshot caching and additive scoring bonuses",
-    "Local Taste Engine (Slice 3): Genre awareness with additive scoring bonus (+1.0), YouTube taste signals extraction, cross-screen generation status synchronization, and 'From Taste' quick action"
+    "Tuneify Complete UI Redesign: Organic Glassmorphism + Material Expressive + Dynamic Artwork specification",
+    "Home Screen: Distinctive Tuneify 5-bar waveform mark, expressive greeting, organic-shaped glass hero card with carousel indicators, category pills, Quick Picks and Made For You collections",
+    "Now Playing Screen: Organic asymmetric fluid artwork wave container with glowing radiant aura, interactive audio-reactive waveform progress scrubber, circular Volt Lime play/pause controls, and frosted glass shortcut pills (Lyrics, Queue, Equalizer)",
+    "Explore Screen: Expressive heading, glass search button, filter pills (For You, Moods, Genres, Decades), featured music banner, and vertical glass Trending Now song rows",
+    "Floating translucent glass bottom navigation bar with active Volt Lime capsule indicator across Home, Explore, Library, and Search"
   ],
   "bug_fixes": [
+    "Offset shadows (neoShadow) now follow the shape's corner radius instead of always drawing a square black box",
+    "Dark mode no longer paints a near-white outline around every card; borders are hairlines and only interactive elements get a strong outline",
     "Prevent missing song-ID map crashes in Quick Picks and Forgotten Favorites by keeping randomized Room relation queries stable across statement resets"
   ],
   "contributors": []

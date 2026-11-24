@@ -642,6 +642,82 @@ fun PlayerMenu(
       )
     }
 
+    // Usability hierarchy: Prominent Download option at the very top of menu
+    item {
+      Material3MenuGroup(
+        items =
+          listOf(
+            when (download?.state) {
+              Download.STATE_COMPLETED -> {
+                Material3MenuItemData(
+                  title = { Text(text = stringResource(R.string.remove_download)) },
+                  icon = {
+                    Icon(
+                      painter = painterResource(R.drawable.offline),
+                      contentDescription = null,
+                      modifier = Modifier.size(24.dp)
+                    )
+                  },
+                  onClick = {
+                    DownloadService.sendRemoveDownload(
+                      context,
+                      ExoDownloadService::class.java,
+                      mediaMetadata.id,
+                      false,
+                    )
+                  }
+                )
+              }
+              Download.STATE_QUEUED,
+              Download.STATE_DOWNLOADING -> {
+                Material3MenuItemData(
+                  title = { Text(text = stringResource(R.string.downloading)) },
+                  icon = {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
+                  },
+                  onClick = {
+                    DownloadService.sendRemoveDownload(
+                      context,
+                      ExoDownloadService::class.java,
+                      mediaMetadata.id,
+                      false,
+                    )
+                  }
+                )
+              }
+              else -> {
+                Material3MenuItemData(
+                  title = { Text(text = stringResource(R.string.action_download)) },
+                  icon = {
+                    Icon(
+                      painter = painterResource(R.drawable.download),
+                      contentDescription = null,
+                      modifier = Modifier.size(24.dp)
+                    )
+                  },
+                  onClick = {
+                    database.transaction { insert(mediaMetadata) }
+                    val downloadRequest =
+                      DownloadRequest.Builder(mediaMetadata.id, mediaMetadata.id.toUri())
+                        .setCustomCacheKey(mediaMetadata.id)
+                        .setData(mediaMetadata.title.toByteArray())
+                        .build()
+                    DownloadService.sendAddDownload(
+                      context,
+                      ExoDownloadService::class.java,
+                      downloadRequest,
+                      false,
+                    )
+                  }
+                )
+              }
+            }
+          )
+      )
+    }
+
+    item { Spacer(modifier = Modifier.height(12.dp)) }
+
     item {
       Material3MenuGroup(
         items =
@@ -834,81 +910,6 @@ fun PlayerMenu(
               )
             }
           }
-      )
-    }
-
-    item { Spacer(modifier = Modifier.height(12.dp)) }
-
-    item {
-      Material3MenuGroup(
-        items =
-          listOf(
-            when (download?.state) {
-              Download.STATE_COMPLETED -> {
-                Material3MenuItemData(
-                  title = { Text(text = stringResource(R.string.remove_download)) },
-                  icon = {
-                    Icon(
-                      painter = painterResource(R.drawable.offline),
-                      contentDescription = null,
-                      modifier = Modifier.size(24.dp)
-                    )
-                  },
-                  onClick = {
-                    DownloadService.sendRemoveDownload(
-                      context,
-                      ExoDownloadService::class.java,
-                      mediaMetadata.id,
-                      false,
-                    )
-                  }
-                )
-              }
-              Download.STATE_QUEUED,
-              Download.STATE_DOWNLOADING -> {
-                Material3MenuItemData(
-                  title = { Text(text = stringResource(R.string.downloading)) },
-                  icon = {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
-                  },
-                  onClick = {
-                    DownloadService.sendRemoveDownload(
-                      context,
-                      ExoDownloadService::class.java,
-                      mediaMetadata.id,
-                      false,
-                    )
-                  }
-                )
-              }
-              else -> {
-                Material3MenuItemData(
-                  title = { Text(text = stringResource(R.string.action_download)) },
-                  icon = {
-                    Icon(
-                      painter = painterResource(R.drawable.download),
-                      contentDescription = null,
-                      modifier = Modifier.size(24.dp)
-                    )
-                  },
-                  onClick = {
-                    database.transaction { insert(mediaMetadata) }
-                    val downloadRequest =
-                      DownloadRequest.Builder(mediaMetadata.id, mediaMetadata.id.toUri())
-                        .setCustomCacheKey(mediaMetadata.id)
-                        .setData(mediaMetadata.title.toByteArray())
-                        .build()
-                    DownloadService.sendAddDownload(
-                      context,
-                      ExoDownloadService::class.java,
-                      downloadRequest,
-                      false,
-                    )
-                  }
-                )
-              }
-            }
-          )
       )
     }
 

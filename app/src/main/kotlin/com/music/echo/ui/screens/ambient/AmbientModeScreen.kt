@@ -307,8 +307,8 @@ fun AmbientModeScreen(navController: NavController) {
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
               ) {}, // consume clicks so they don't dismiss
-            shape = RoundedCornerShape(24.dp),
-            tonalElevation = 3.dp
+            shape = RoundedCornerShape(16.dp),
+            tonalElevation = 0.dp
           ) {
             echo.music.iad1tya.ui.screens.settings.AmbientSettingsContent(
               modifier = Modifier.padding(8.dp)

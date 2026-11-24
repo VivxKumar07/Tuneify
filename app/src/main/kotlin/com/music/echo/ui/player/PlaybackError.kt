@@ -104,7 +104,7 @@ fun PlaybackError(
 
     Button(
       onClick = retry,
-      shape = RoundedCornerShape(20.dp),
+      shape = RoundedCornerShape(16.dp),
       colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
     ) {
       Icon(

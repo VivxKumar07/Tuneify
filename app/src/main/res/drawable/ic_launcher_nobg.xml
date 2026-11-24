@@ -1,0 +1,28 @@
+<!--
+  Tuneify brand mark, full-bleed, transparent background.
+  Used as the in-app artwork placeholder (album / playlist / player fallback art) and as the
+  media-notification small icon.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:strokeColor="#FFC6F53D"
+        android:strokeWidth="12.47"
+        android:strokeLineCap="round"
+        android:pathData="M89.6,79.86 A44,44 0 1 1 89.6,28.14" />
+
+    <path
+        android:strokeColor="#FFC6F53D"
+        android:strokeWidth="4.4"
+        android:strokeLineCap="round"
+        android:pathData="M80.11,72.97 A32.27,32.27 0 1 1 80.11,35.03" />
+
+    <path
+        android:fillColor="#FFC6F53D"
+        android:fillType="evenOdd"
+        android:pathData="M33.47,54 a20.53,20.53 0 1 0 41.06,0 a20.53,20.53 0 1 0 -41.06,0 Z M43.74,39.22 L43.74,68.78 L68.78,54 Z" />
+</vector>

@@ -64,6 +64,7 @@ import echo.music.iad1tya.models.toMediaMetadata
 import echo.music.iad1tya.playback.queues.YouTubeQueue
 import echo.music.iad1tya.ui.component.LocalMenuState
 import echo.music.iad1tya.ui.component.NavigationTitle
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import echo.music.iad1tya.ui.component.YouTubeGridItem
 import echo.music.iad1tya.ui.component.YouTubeListItem
 import echo.music.iad1tya.ui.component.shimmer.GridItemPlaceHolder
@@ -73,6 +74,27 @@ import echo.music.iad1tya.ui.menu.YouTubeAlbumMenu
 import echo.music.iad1tya.ui.menu.YouTubeSongMenu
 import echo.music.iad1tya.ui.utils.SnapLayoutInfoProvider
 import echo.music.iad1tya.utils.listItemShape
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import echo.music.iad1tya.ui.component.ChipsRow
+import echo.music.iad1tya.ui.component.glass.DynamicArtworkBackground
+import echo.music.iad1tya.ui.component.glass.ExploreFeaturedBanner
+import echo.music.iad1tya.ui.component.glass.ExpressiveSectionHeader
+import echo.music.iad1tya.ui.component.glass.GlassButton
+import echo.music.iad1tya.ui.component.glass.GlassPill
+import echo.music.iad1tya.ui.component.glass.GlassSongRow
+import echo.music.iad1tya.ui.component.glass.TuneifyGlassTokens
 import echo.music.iad1tya.viewmodels.ChartsViewModel
 import echo.music.iad1tya.viewmodels.ExploreViewModel
 
@@ -113,100 +135,254 @@ fun ExploreScreen(
     }
   }
 
-  Box(
-    modifier = Modifier.fillMaxSize(),
+  DynamicArtworkBackground(
+    accentColor = TuneifyGlassTokens.VoltLime
   ) {
-    Column(
-      modifier = Modifier.verticalScroll(scrollState),
+    Box(
+      modifier = Modifier.fillMaxSize(),
     ) {
-      Spacer(
-        Modifier.height(
-          LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateTopPadding(),
-        ),
-      )
+      Column(
+        modifier = Modifier.verticalScroll(scrollState),
+      ) {
+        Spacer(
+          Modifier.height(
+            LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateTopPadding(),
+          ),
+        )
 
-      if (isChartsLoading || chartsPage == null || explorePage == null) {
-        ShimmerHost {
-          TextPlaceholder(
-            height = 36.dp,
-            modifier = Modifier.padding(12.dp).fillMaxWidth(0.5f),
+        // 1. Explore Header with Search Glass Button
+        Row(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 12.dp),
+          horizontalArrangement = Arrangement.SpaceBetween,
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          Text(
+            text = "Explore",
+            style = MaterialTheme.typography.headlineLarge.copy(
+              fontWeight = FontWeight.Bold,
+              color = Color.White
+            )
           )
-          BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-            val horizontalLazyGridItemWidthFactor =
-              if (maxWidth * 0.475f >= 320.dp) 0.475f else 0.9f
-            val horizontalLazyGridItemWidth = maxWidth * horizontalLazyGridItemWidthFactor
 
-            LazyHorizontalGrid(
-              rows = GridCells.Fixed(4),
-              contentPadding = PaddingValues(start = 4.dp),
-              modifier = Modifier.fillMaxWidth().height(ListItemHeight * 4),
-            ) {
-              items(4) {
-                Row(
-                  modifier = Modifier.width(horizontalLazyGridItemWidth).padding(8.dp),
-                  verticalAlignment = Alignment.CenterVertically,
-                ) {
-                  Box(
-                    modifier =
-                      Modifier.size(ListItemHeight - 16.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(MaterialTheme.colorScheme.onSurface),
-                  )
-                  Spacer(modifier = Modifier.width(8.dp))
-                  Column(
-                    modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.Center,
-                  ) {
-                    Box(
-                      modifier =
-                        Modifier.height(16.dp)
-                          .width(120.dp)
-                          .background(MaterialTheme.colorScheme.onSurface),
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Box(
-                      modifier =
-                        Modifier.height(12.dp)
-                          .width(80.dp)
-                          .background(MaterialTheme.colorScheme.onSurface),
-                    )
-                  }
-                }
-              }
-            }
-          }
-
-          TextPlaceholder(
-            height = 36.dp,
-            modifier = Modifier.padding(vertical = 12.dp, horizontal = 12.dp).width(250.dp),
-          )
-          Row { repeat(2) { GridItemPlaceHolder() } }
-
-          TextPlaceholder(
-            height = 36.dp,
-            modifier = Modifier.padding(vertical = 12.dp, horizontal = 12.dp).width(250.dp),
-          )
-          Row { repeat(2) { GridItemPlaceHolder() } }
-
-          TextPlaceholder(
-            height = 36.dp,
-            modifier = Modifier.padding(vertical = 12.dp, horizontal = 12.dp).width(250.dp),
-          )
-          repeat(4) {
-            Row {
-              repeat(2) {
-                TextPlaceholder(
-                  height = MoodAndGenresButtonHeight,
-                  modifier = Modifier.padding(horizontal = 6.dp).width(200.dp),
-                )
-              }
-            }
+          GlassButton(
+            onClick = { navController.navigate("search_input") },
+            size = 42.dp,
+            backgroundColor = TuneifyGlassTokens.GlassBgElevated
+          ) {
+            Icon(
+              painter = painterResource(R.drawable.search),
+              contentDescription = "Search",
+              tint = Color.White,
+              modifier = Modifier.size(20.dp)
+            )
           }
         }
-      } else {
+
+        // 2. Filter Pills: For You, Moods, Genres, Decades (smoothly horizontally scrollable)
+        var selectedFilter by rememberSaveable { mutableStateOf("For You") }
+        Row(
+          modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState())
+            .padding(horizontal = 20.dp, vertical = 6.dp),
+          horizontalArrangement = Arrangement.spacedBy(8.dp),
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          GlassPill(
+            text = "For You",
+            selected = selectedFilter == "For You",
+            onClick = { selectedFilter = "For You" },
+            icon = {
+              Icon(
+                painter = painterResource(R.drawable.sparks),
+                contentDescription = null,
+                modifier = Modifier.size(15.dp)
+              )
+            }
+          )
+          GlassPill(
+            text = "Moods",
+            selected = selectedFilter == "Moods",
+            onClick = {
+              selectedFilter = "Moods"
+              navController.navigate("mood_and_genres")
+            },
+            icon = {
+              Icon(
+                painter = painterResource(R.drawable.tune),
+                contentDescription = null,
+                modifier = Modifier.size(15.dp)
+              )
+            }
+          )
+          GlassPill(
+            text = "Genres",
+            selected = selectedFilter == "Genres",
+            onClick = {
+              selectedFilter = "Genres"
+              navController.navigate("mood_and_genres")
+            },
+            icon = {
+              Icon(
+                painter = painterResource(R.drawable.grid_view),
+                contentDescription = null,
+                modifier = Modifier.size(15.dp)
+              )
+            }
+          )
+          GlassPill(
+            text = "Decades",
+            selected = selectedFilter == "Decades",
+            onClick = {
+              selectedFilter = "Decades"
+            },
+            icon = {
+              Icon(
+                painter = painterResource(R.drawable.ic_calendar_month),
+                contentDescription = null,
+                modifier = Modifier.size(15.dp)
+              )
+            }
+          )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // 3. Featured Banner: Bollywood Top Hits (matching reference Screen 3)
+        val featuredSong = chartsPage?.sections?.firstOrNull()?.items?.filterIsInstance<SongItem>()?.firstOrNull()
+        ExploreFeaturedBanner(
+          title = "Bollywood\nTop Hits",
+          thumbnailUrl = featuredSong?.thumbnail ?: "https://i.ytimg.com/vi/NX5yDs_TLqA/hqdefault.jpg",
+          onPlayClick = {
+            if (featuredSong != null) {
+              if (featuredSong.id == mediaMetadata?.id) {
+                playerConnection.togglePlayPause()
+              } else {
+                playerConnection.playQueue(
+                  YouTubeQueue(
+                    endpoint = WatchEndpoint(videoId = featuredSong.id),
+                    preloadItem = featuredSong.toMediaMetadata(),
+                  ),
+                )
+              }
+            } else {
+              playerConnection.playQueue(
+                YouTubeQueue(
+                  endpoint = WatchEndpoint(videoId = "sAzlWScHTc4"),
+                )
+              )
+            }
+          },
+          onClick = {
+            if (featuredSong != null) {
+              playerConnection.playQueue(
+                YouTubeQueue(
+                  endpoint = WatchEndpoint(videoId = featuredSong.id),
+                  preloadItem = featuredSong.toMediaMetadata(),
+                ),
+              )
+            } else {
+              playerConnection.playQueue(
+                YouTubeQueue(
+                  endpoint = WatchEndpoint(videoId = "sAzlWScHTc4"),
+                )
+              )
+            }
+          }
+        )
+
+        Spacer(Modifier.height(12.dp))
+
+        // 4. Trending Now section with Glass Song Rows matching reference Screen 3
+        ExpressiveSectionHeader(
+          title = "Trending Now",
+          onChevronClick = { navController.navigate("charts_screen") }
+        )
+
+        val trendingSongs = chartsPage
+          ?.sections
+          ?.find { it.title == "Trending" }
+          ?.items
+          ?.filterIsInstance<SongItem>()
+          ?.distinctBy { it.id }
+          ?: chartsPage?.sections?.firstOrNull()?.items?.filterIsInstance<SongItem>()?.distinctBy { it.id }
+          ?: emptyList()
+
+        if (trendingSongs.isNotEmpty()) {
+          trendingSongs.take(8).forEach { song ->
+            GlassSongRow(
+              title = song.title,
+              subtitle = song.artists.joinToString { it.name },
+              thumbnailUrl = song.thumbnail ?: "https://i.ytimg.com/vi/${song.id}/hqdefault.jpg",
+              isActive = song.id == mediaMetadata?.id,
+              isPlaying = isPlaying,
+              onPlayClick = {
+                if (song.id == mediaMetadata?.id) {
+                  playerConnection.togglePlayPause()
+                } else {
+                  playerConnection.playQueue(
+                    YouTubeQueue(
+                      endpoint = WatchEndpoint(videoId = song.id),
+                      preloadItem = song.toMediaMetadata(),
+                    ),
+                  )
+                }
+              },
+              onClick = {
+                if (song.id == mediaMetadata?.id) {
+                  playerConnection.togglePlayPause()
+                } else {
+                  playerConnection.playQueue(
+                    YouTubeQueue(
+                      endpoint = WatchEndpoint(videoId = song.id),
+                      preloadItem = song.toMediaMetadata(),
+                    ),
+                  )
+                }
+              }
+            )
+          }
+        } else {
+          // Canonical trending reference tracks matching design specification Screen 3 with real artwork
+          val canonicalTrending = listOf(
+            Triple("Agar Tum Saath Ho", "Tamasha", "https://i.ytimg.com/vi/xRb8hxwN5zc/hqdefault.jpg" to "xRb8hxwN5zc"),
+            Triple("Satranga", "Animal", "https://i.ytimg.com/vi/HrnrqYxYrbk/hqdefault.jpg" to "HrnrqYxYrbk"),
+            Triple("Heeriye", "Jasleen Royal, Arijit Singh", "https://i.ytimg.com/vi/RLzC55ai0eo/hqdefault.jpg" to "RLzC55ai0eo")
+          )
+          canonicalTrending.forEach { (trackTitle, trackArtist, artAndId) ->
+            GlassSongRow(
+              title = trackTitle,
+              subtitle = trackArtist,
+              thumbnailUrl = artAndId.first,
+              isActive = mediaMetadata?.title == trackTitle,
+              isPlaying = isPlaying && mediaMetadata?.title == trackTitle,
+              onPlayClick = {
+                playerConnection.playQueue(
+                  YouTubeQueue(
+                    endpoint = WatchEndpoint(videoId = artAndId.second),
+                  )
+                )
+              },
+              onClick = {
+                playerConnection.playQueue(
+                  YouTubeQueue(
+                    endpoint = WatchEndpoint(videoId = artAndId.second),
+                  )
+                )
+              }
+            )
+          }
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        Spacer(Modifier.height(14.dp))
+
         chartsPage
           ?.sections
-          ?.filter { it.title != "Top music videos" }
+          ?.filter { it.title != "Top music videos" && it.title != "Trending" }
           ?.forEach { section ->
             NavigationTitle(
               title =
@@ -387,36 +563,61 @@ fun ExploreScreen(
               }
             }
           }
-
-        explorePage?.moodAndGenres?.let { moodAndGenres ->
-          NavigationTitle(
-            title = stringResource(R.string.mood_and_genres),
-            onClick = { navController.navigate("mood_and_genres") },
-          )
-          LazyHorizontalGrid(
-            rows = GridCells.Fixed(4),
-            contentPadding = PaddingValues(6.dp),
-            modifier = Modifier.height((MoodAndGenresButtonHeight + 12.dp) * 4 + 12.dp),
-          ) {
-            items(moodAndGenres) {
-              MoodAndGenresButton(
-                title = it.title,
-                onClick = {
-                  navController.navigate(
-                    "youtube_browse/${it.endpoint.browseId}?params=${it.endpoint.params}"
-                  )
-                },
-                modifier = Modifier.padding(6.dp).width(180.dp),
-              )
-            }
-          }
-        }
       }
 
       Spacer(
         Modifier.height(
           LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateBottomPadding()
         )
+      )
+    }
+  }
+}
+
+@Composable
+private fun ExploreCategoryTile(
+  title: String,
+  subtitle: String,
+  icon: Int,
+  accentColor: Color,
+  modifier: Modifier = Modifier,
+  onClick: () -> Unit,
+) {
+  Surface(
+    shape = TuneifyTokens.ShapeMedium,
+    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+    modifier = modifier.clickable(onClick = onClick)
+  ) {
+    Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 14.dp)) {
+      Box(
+        modifier =
+          Modifier.size(36.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(accentColor.copy(alpha = 0.16f)),
+        contentAlignment = Alignment.Center,
+      ) {
+        Icon(
+          painter = painterResource(icon),
+          contentDescription = null,
+          tint = accentColor,
+          modifier = Modifier.size(20.dp),
+        )
+      }
+      Spacer(modifier = Modifier.height(10.dp))
+      Text(
+        text = title,
+        style = MaterialTheme.typography.titleSmall,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onSurface,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+      )
+      Text(
+        text = subtitle,
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
       )
     }
   }

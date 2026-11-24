@@ -180,6 +180,7 @@ import echo.music.iad1tya.lyrics.LyricsUtils.romanizeKorean
 import echo.music.iad1tya.lyrics.LyricsUtils.romanizePunjabi
 import echo.music.iad1tya.ui.component.shimmer.ShimmerHost
 import echo.music.iad1tya.ui.component.shimmer.TextPlaceholder
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import echo.music.iad1tya.ui.screens.settings.DarkMode
 import echo.music.iad1tya.ui.screens.settings.LyricsPosition
 import echo.music.iad1tya.ui.utils.fadingEdge
@@ -715,8 +716,8 @@ fun Lyrics(
                 CardDefaults.cardColors(
                   containerColor = MaterialTheme.colorScheme.primaryContainer
                 ),
-              shape = RoundedCornerShape(16.dp),
-              elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+              shape = TuneifyTokens.ShapeCard,
+              elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
               Row(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
@@ -742,8 +743,8 @@ fun Lyrics(
             Card(
               colors =
                 CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
-              shape = RoundedCornerShape(16.dp),
-              elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+              shape = TuneifyTokens.ShapeCard,
+              elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
               Row(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
@@ -770,8 +771,8 @@ fun Lyrics(
                 CardDefaults.cardColors(
                   containerColor = MaterialTheme.colorScheme.tertiaryContainer
                 ),
-              shape = RoundedCornerShape(16.dp),
-              elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+              shape = TuneifyTokens.ShapeCard,
+              elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
               Row(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
@@ -802,7 +803,7 @@ fun Lyrics(
         Text(
           text = stringResource(R.string.lyrics_not_found),
           fontSize = 20.sp,
-          color = MaterialTheme.colorScheme.secondary,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
           textAlign = TextAlign.Center,
           fontWeight = FontWeight.Bold,
           modifier = Modifier.alpha(0.5f)
@@ -1081,7 +1082,7 @@ fun Lyrics(
                   bottomEnd = if (isNextSelected) 0.dp else 16.dp
                 )
               } else {
-                androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+                TuneifyTokens.ShapeCard
               }
 
             val itemModifier =
@@ -2107,7 +2108,7 @@ fun Lyrics(
         Card(
           shape = MaterialTheme.shapes.medium,
           colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-          elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+          elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
           Box(modifier = Modifier.padding(32.dp)) {
             Text(
@@ -2126,7 +2127,7 @@ fun Lyrics(
       val (lyricsText, songTitle, artists) = shareDialogData!!
       BasicAlertDialog(onDismissRequest = { showShareDialog = false }) {
         Card(
-          shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp),
+          shape = TuneifyTokens.ShapeCard,
           elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
           colors =
             CardDefaults.cardColors(
@@ -2283,12 +2284,12 @@ fun Lyrics(
           contentAlignment = Alignment.Center
         ) {
           Card(
-            shape = RoundedCornerShape(28.dp),
+            shape = TuneifyTokens.ShapeCard,
             colors =
               CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
               ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             modifier =
               Modifier.fillMaxWidth()
                 // Ensure the card is constrained so the inner column can scroll
@@ -2341,7 +2342,7 @@ fun Lyrics(
                   Modifier.fillMaxWidth()
                     .aspectRatio(1f)
                     .padding(8.dp)
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(8.dp))
               ) {
                 LyricsImageCard(
                   lyricText = lyricsText,

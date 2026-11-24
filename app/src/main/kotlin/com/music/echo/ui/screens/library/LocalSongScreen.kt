@@ -403,7 +403,7 @@ fun LocalSongScreen(
             },
             colors =
               TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.88f)
+                containerColor = MaterialTheme.colorScheme.surface
               ),
             windowInsets = if (isEmbedded) WindowInsets(0.dp) else TopAppBarDefaults.windowInsets
           )
@@ -487,7 +487,7 @@ fun LocalSongScreen(
             },
             colors =
               TopAppBarDefaults.largeTopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.88f),
+                containerColor = MaterialTheme.colorScheme.surface,
                 scrolledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
               ),
             scrollBehavior = scrollBehavior,
@@ -680,7 +680,7 @@ private fun LocalSongControlsCard(
     Text(
       text = pluralStringResource(R.plurals.n_song, visibleSongCount, visibleSongCount),
       style = MaterialTheme.typography.titleSmall,
-      color = MaterialTheme.colorScheme.secondary,
+      color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
   }
 }
@@ -846,7 +846,7 @@ private fun LocalSongScanSheet(
         smoothnessAsPercentBL = 0,
         smoothnessAsPercentBR = 0,
       ),
-    tonalElevation = 2.dp,
+    tonalElevation = 0.dp,
   ) {
     Column(
       horizontalAlignment = Alignment.CenterHorizontally,
@@ -991,7 +991,7 @@ private fun LocalSongScanSheet(
               text = durationLabel,
               style = MaterialTheme.typography.titleSmall,
               fontWeight = FontWeight.SemiBold,
-              color = MaterialTheme.colorScheme.secondary,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Slider(
               value = minimumDurationSeconds.toFloat(),

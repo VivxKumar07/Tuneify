@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
@@ -27,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
@@ -35,11 +38,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.graphics.Brush
+import echo.music.iad1tya.ui.component.glass.DynamicArtworkBackground
+import echo.music.iad1tya.ui.component.glass.TuneifyGlassTokens
 import echo.music.iad1tya.LocalPlayerAwareWindowInsets
 import echo.music.iad1tya.R
 import echo.music.iad1tya.echomusic.updater.getUpdateAvailableState
 import echo.music.iad1tya.ui.component.IconButton
 import echo.music.iad1tya.ui.component.Material3SettingsGroup
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import echo.music.iad1tya.ui.component.Material3SettingsItem
 import echo.music.iad1tya.ui.screens.Screens
 import echo.music.iad1tya.ui.utils.backToMain
@@ -86,49 +96,93 @@ fun SettingsScreen(
   val aboutDesc = stringResource(R.string.setting_desc_about)
 
   val scrollState = rememberScrollState()
-  Column(
-    Modifier.windowInsetsPadding(
-        LocalPlayerAwareWindowInsets.current.only(WindowInsetsSides.Horizontal)
-      )
-      .verticalScroll(scrollState)
-      .padding(horizontal = 16.dp)
-  ) {
-    Spacer(
-      Modifier.windowInsetsPadding(LocalPlayerAwareWindowInsets.current.only(WindowInsetsSides.Top))
-    )
-    Text(
-      text = stringResource(R.string.settings),
-      style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.SemiBold),
-      color = MaterialTheme.colorScheme.onBackground,
-      modifier = Modifier.padding(start = 8.dp, top = 24.dp, bottom = 16.dp)
-    )
 
-    TextField(
-      value = searchQuery,
-      onValueChange = { searchQuery = it },
-      placeholder = { Text(stringResource(R.string.search)) },
-      leadingIcon = {
-        Icon(
-          imageVector = Icons.Rounded.Search,
-          contentDescription = stringResource(R.string.search)
+  DynamicArtworkBackground {
+    Box(modifier = Modifier.fillMaxSize()) {
+      Column(
+        Modifier.windowInsetsPadding(
+            LocalPlayerAwareWindowInsets.current.only(WindowInsetsSides.Horizontal)
+          )
+          .verticalScroll(scrollState)
+          .padding(horizontal = 16.dp)
+      ) {
+        Spacer(
+          Modifier.windowInsetsPadding(LocalPlayerAwareWindowInsets.current.only(WindowInsetsSides.Top))
         )
-      },
-      trailingIcon = {
-        if (searchQuery.isNotEmpty()) {
-          IconButton(onClick = { searchQuery = "" }) {
-            Icon(imageVector = Icons.Rounded.Clear, contentDescription = "Clear")
-          }
-        }
-      },
-      shape = RoundedCornerShape(28.dp),
-      colors =
-        TextFieldDefaults.colors(
-          focusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent,
-          unfocusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent,
-          disabledIndicatorColor = androidx.compose.ui.graphics.Color.Transparent
-        ),
-      modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp, bottom = 16.dp)
-    )
+        // Reserve the TopAppBar's height.
+        Spacer(Modifier.height(64.dp))
+        Text(
+          text = stringResource(R.string.settings),
+          style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold),
+          color = Color.White,
+          modifier = Modifier.padding(start = 8.dp, top = 8.dp)
+        )
+        Text(
+          text = stringResource(R.string.settings_tagline),
+          style = MaterialTheme.typography.bodyMedium,
+          color = TuneifyGlassTokens.TextSecondary,
+          modifier = Modifier.padding(start = 8.dp, top = 2.dp, bottom = 16.dp)
+        )
+
+        TextField(
+          value = searchQuery,
+          onValueChange = { searchQuery = it },
+          singleLine = true,
+          maxLines = 1,
+          textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.White),
+          placeholder = {
+            Text(
+              text = stringResource(R.string.search),
+              style = MaterialTheme.typography.bodyLarge,
+              color = Color.White.copy(alpha = 0.6f)
+            )
+          },
+          leadingIcon = {
+            Icon(
+              imageVector = Icons.Rounded.Search,
+              contentDescription = stringResource(R.string.search),
+              tint = TuneifyGlassTokens.VoltLime,
+              modifier = Modifier.size(22.dp)
+            )
+          },
+          trailingIcon = {
+            if (searchQuery.isNotEmpty()) {
+              IconButton(onClick = { searchQuery = "" }) {
+                Icon(
+                  imageVector = Icons.Rounded.Clear,
+                  contentDescription = "Clear",
+                  tint = Color.White.copy(alpha = 0.7f)
+                )
+              }
+            }
+          },
+          shape = CircleShape,
+          colors =
+            TextFieldDefaults.colors(
+              focusedContainerColor = Color(0x3514261B),
+              unfocusedContainerColor = Color(0x28102015),
+              focusedIndicatorColor = Color.Transparent,
+              unfocusedIndicatorColor = Color.Transparent,
+              disabledIndicatorColor = Color.Transparent,
+              focusedTextColor = Color.White,
+              unfocusedTextColor = Color.White,
+              cursorColor = TuneifyGlassTokens.VoltLime
+            ),
+          modifier =
+            Modifier.fillMaxWidth()
+              .padding(bottom = 16.dp)
+              .border(
+                width = 1.dp,
+                brush = Brush.linearGradient(
+                  listOf(
+                    Color(0x55FFFFFF),
+                    Color(0x18FFFFFF),
+                    TuneifyGlassTokens.VoltLime.copy(alpha = 0.35f)
+                  )
+                ),
+                shape = CircleShape
+              )
+        )
 
     val itemsList = buildList {
       if (
@@ -139,6 +193,7 @@ fun SettingsScreen(
           Material3SettingsItem(
             isHighlighted = (highlightKey == accountText),
             icon = painterResource(R.drawable.account),
+            iconBackgroundColor = TuneifyTokens.Lime,
             title = { Text(accountText) },
             description = { Text(accountDesc) },
             onClick = { navController.navigate("settings/account") }
@@ -153,32 +208,18 @@ fun SettingsScreen(
         add(
           Material3SettingsItem(
             isHighlighted = (highlightKey == aiLyricsText),
+            iconBackgroundColor = TuneifyTokens.Violet,
             customIcon = {
               Text(
                 text = "Ai",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                color =
-                  if (highlightKey == aiLyricsText) MaterialTheme.colorScheme.onSurface
-                  else MaterialTheme.colorScheme.onSurfaceVariant
+                color = TuneifyTokens.onAccent(TuneifyTokens.Violet)
               )
             },
             title = { Text(aiLyricsText) },
             description = { Text(aiLyricsDesc) },
             onClick = { navController.navigate("settings/ai") }
-          )
-        )
-      }
-
-      if ("listening summary".contains(searchLower)) {
-        add(
-          Material3SettingsItem(
-            icon = painterResource(echo.music.iad1tya.R.drawable.history),
-            title = { Text(stringResource(echo.music.iad1tya.R.string.listening_summary)) },
-            description = {
-              Text(stringResource(echo.music.iad1tya.R.string.listening_summary_desc))
-            },
-            onClick = { navController.navigate("settings/listening_summary") }
           )
         )
       }
@@ -191,6 +232,7 @@ fun SettingsScreen(
           Material3SettingsItem(
             isHighlighted = (highlightKey == appearanceText),
             icon = painterResource(R.drawable.palette),
+            iconBackgroundColor = TuneifyTokens.Magenta,
             title = { Text(appearanceText) },
             description = { Text(appearanceDesc) },
             onClick = { navController.navigate("settings/appearance") }
@@ -204,6 +246,7 @@ fun SettingsScreen(
           Material3SettingsItem(
             isHighlighted = (highlightKey == playerText),
             icon = painterResource(R.drawable.play),
+            iconBackgroundColor = TuneifyTokens.Sky,
             title = { Text(playerText) },
             description = { Text(playerDesc) },
             onClick = { navController.navigate("settings/player") }
@@ -218,12 +261,28 @@ fun SettingsScreen(
           Material3SettingsItem(
             isHighlighted = (highlightKey == listenTogetherText),
             icon = painterResource(R.drawable.group),
+            iconBackgroundColor = TuneifyTokens.Coral,
             title = { Text(listenTogetherText) },
             description = { Text(listenTogetherDesc) },
             onClick = { navController.navigate(Screens.ListenTogether.route) }
           )
         )
       }
+
+      if ("listening summary".contains(searchLower)) {
+        add(
+          Material3SettingsItem(
+            icon = painterResource(echo.music.iad1tya.R.drawable.history),
+            iconBackgroundColor = TuneifyTokens.Pink,
+            title = { Text(stringResource(echo.music.iad1tya.R.string.listening_summary)) },
+            description = {
+              Text(stringResource(echo.music.iad1tya.R.string.listening_summary_desc))
+            },
+            onClick = { navController.navigate("settings/listening_summary") }
+          )
+        )
+      }
+
       if (
         contentText.lowercase().contains(searchLower) ||
           contentDesc.lowercase().contains(searchLower)
@@ -232,6 +291,7 @@ fun SettingsScreen(
           Material3SettingsItem(
             isHighlighted = (highlightKey == contentText),
             icon = painterResource(R.drawable.language),
+            iconBackgroundColor = TuneifyTokens.Mint,
             title = { Text(contentText) },
             description = { Text(contentDesc) },
             onClick = { navController.navigate("settings/content") }
@@ -239,7 +299,36 @@ fun SettingsScreen(
         )
       }
 
+      if (
+        storageText.lowercase().contains(searchLower) ||
+          storageDesc.lowercase().contains(searchLower)
+      ) {
+        add(
+          Material3SettingsItem(
+            isHighlighted = (highlightKey == storageText),
+            icon = painterResource(R.drawable.storage),
+            iconBackgroundColor = TuneifyTokens.Teal,
+            title = { Text(storageText) },
+            description = { Text(storageDesc) },
+            onClick = { navController.navigate("settings/storage") }
+          )
+        )
+      }
 
+      if (
+        backupText.lowercase().contains(searchLower) || backupDesc.lowercase().contains(searchLower)
+      ) {
+        add(
+          Material3SettingsItem(
+            isHighlighted = (highlightKey == backupText),
+            icon = painterResource(R.drawable.restore),
+            iconBackgroundColor = TuneifyTokens.Amber,
+            title = { Text(backupText) },
+            description = { Text(backupDesc) },
+            onClick = { navController.navigate("settings/backup_restore") }
+          )
+        )
+      }
 
       if (
         privacyText.lowercase().contains(searchLower) ||
@@ -249,38 +338,10 @@ fun SettingsScreen(
           Material3SettingsItem(
             isHighlighted = (highlightKey == privacyText),
             icon = painterResource(R.drawable.security),
+            iconBackgroundColor = TuneifyTokens.Forest,
             title = { Text(privacyText) },
             description = { Text(privacyDesc) },
             onClick = { navController.navigate("settings/privacy") }
-          )
-        )
-      }
-      if (
-        storageText.lowercase().contains(searchLower) ||
-          storageDesc.lowercase().contains(searchLower)
-      ) {
-        add(
-          Material3SettingsItem(
-            isHighlighted = (highlightKey == storageText),
-            icon = painterResource(R.drawable.storage),
-            title = { Text(storageText) },
-            description = { Text(storageDesc) },
-            onClick = { navController.navigate("settings/storage") }
-          )
-        )
-      }
-
-
-      if (
-        backupText.lowercase().contains(searchLower) || backupDesc.lowercase().contains(searchLower)
-      ) {
-        add(
-          Material3SettingsItem(
-            isHighlighted = (highlightKey == backupText),
-            icon = painterResource(R.drawable.restore),
-            title = { Text(backupText) },
-            description = { Text(backupDesc) },
-            onClick = { navController.navigate("settings/backup_restore") }
           )
         )
       }
@@ -295,6 +356,7 @@ fun SettingsScreen(
               painterResource(
                 if (isUpdateAvailable) R.drawable.ic_launcher_nobg else R.drawable.update
               ),
+            iconBackgroundColor = TuneifyTokens.Olive,
             title = { Text(systemUpdateText) },
             description =
               if (isUpdateAvailable) {
@@ -317,6 +379,7 @@ fun SettingsScreen(
             Material3SettingsItem(
               isHighlighted = (highlightKey == "supported links"),
               icon = painterResource(R.drawable.link),
+              iconBackgroundColor = TuneifyTokens.Sky,
               title = { Text("Supported Links") },
               description = { Text("App linking settings") },
               onClick = {
@@ -351,6 +414,8 @@ fun SettingsScreen(
           Material3SettingsItem(
             isHighlighted = (highlightKey == aboutText),
             icon = painterResource(R.drawable.info),
+            iconBackgroundColor = Color(0xFF242424),
+            tintIcon = false,
             title = { Text(aboutText) },
             description = { Text(aboutDesc) },
             onClick = { navController.navigate("settings/about") }
@@ -410,31 +475,53 @@ fun SettingsScreen(
     } else {
       Spacer(modifier = Modifier.height(16.dp))
 
-      // Let's just create groups manually using itemsList which preserves order
-      val accountGroup = itemsList.take(2) // Account, AI
-      val listeningSummaryGroup = itemsList.drop(2).take(1) // Listening Summary
-      val playerGroup = itemsList.drop(3).take(3) // Appearance, Player, Listen Together
-      val dataGroup = itemsList.drop(6).take(4) // Content, Privacy, Storage, Backup
-      val systemGroup = itemsList.drop(10) // Update, Links, About
+      // Groups mirror the reference layout: Account / Appearance / Playback / Library / Other.
+      // Slicing by index is safe because every row above is added unconditionally when the query is
+      // empty; the only variable-length tail is the "Other" group, which is why it takes the rest.
+      val accountGroup = itemsList.take(2) // Account, AI Lyrics
+      val appearanceGroup = itemsList.drop(2).take(1) // Appearance
+      val playbackGroup = itemsList.drop(3).take(2) // Player, Listen Together
+      val libraryGroup = itemsList.drop(5).take(4) // Listening Summary, Content, Storage, Backup
+      val otherGroup = itemsList.drop(9) // Privacy, Update, [Supported Links], About
 
       if (accountGroup.isNotEmpty()) {
-        Material3SettingsGroup(scrollState = scrollState, items = accountGroup)
-        Spacer(modifier = Modifier.height(16.dp))
+        Material3SettingsGroup(
+          title = stringResource(R.string.settings_group_account),
+          scrollState = scrollState,
+          items = accountGroup
+        )
+        Spacer(modifier = Modifier.height(20.dp))
       }
-      if (listeningSummaryGroup.isNotEmpty()) {
-        Material3SettingsGroup(scrollState = scrollState, items = listeningSummaryGroup)
-        Spacer(modifier = Modifier.height(16.dp))
+      if (appearanceGroup.isNotEmpty()) {
+        Material3SettingsGroup(
+          title = stringResource(R.string.settings_group_appearance),
+          scrollState = scrollState,
+          items = appearanceGroup
+        )
+        Spacer(modifier = Modifier.height(20.dp))
       }
-      if (playerGroup.isNotEmpty()) {
-        Material3SettingsGroup(scrollState = scrollState, items = playerGroup)
-        Spacer(modifier = Modifier.height(16.dp))
+      if (playbackGroup.isNotEmpty()) {
+        Material3SettingsGroup(
+          title = stringResource(R.string.settings_group_playback),
+          scrollState = scrollState,
+          items = playbackGroup
+        )
+        Spacer(modifier = Modifier.height(20.dp))
       }
-      if (dataGroup.isNotEmpty()) {
-        Material3SettingsGroup(scrollState = scrollState, items = dataGroup)
-        Spacer(modifier = Modifier.height(16.dp))
+      if (libraryGroup.isNotEmpty()) {
+        Material3SettingsGroup(
+          title = stringResource(R.string.settings_group_library),
+          scrollState = scrollState,
+          items = libraryGroup
+        )
+        Spacer(modifier = Modifier.height(20.dp))
       }
-      if (systemGroup.isNotEmpty()) {
-        Material3SettingsGroup(scrollState = scrollState, items = systemGroup)
+      if (otherGroup.isNotEmpty()) {
+        Material3SettingsGroup(
+          title = stringResource(R.string.settings_group_other),
+          scrollState = scrollState,
+          items = otherGroup
+        )
       }
     }
 
@@ -446,20 +533,35 @@ fun SettingsScreen(
     )
   }
 
-  TopAppBar(
-    title = {
-      androidx.compose.animation.AnimatedVisibility(
-        visible = scrollState.value > 100,
-        enter = androidx.compose.animation.fadeIn(),
-        exit = androidx.compose.animation.fadeOut()
-      ) {
-        Text(text = stringResource(R.string.settings), style = MaterialTheme.typography.titleLarge)
-      }
-    },
-    navigationIcon = {
-      IconButton(onClick = navController::navigateUp, onLongClick = navController::backToMain) {
-        Icon(painterResource(R.drawable.arrow_back), contentDescription = null)
-      }
+      TopAppBar(
+        title = {
+          androidx.compose.animation.AnimatedVisibility(
+            visible = scrollState.value > 100,
+            enter = androidx.compose.animation.fadeIn(),
+            exit = androidx.compose.animation.fadeOut()
+          ) {
+            Text(
+              text = stringResource(R.string.settings),
+              style = MaterialTheme.typography.titleLarge,
+              color = Color.White,
+              fontWeight = FontWeight.Bold
+            )
+          }
+        },
+        navigationIcon = {
+          IconButton(onClick = navController::navigateUp, onLongClick = navController::backToMain) {
+            Icon(
+              painterResource(R.drawable.arrow_back),
+              contentDescription = null,
+              tint = TuneifyGlassTokens.VoltLime
+            )
+          }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+          containerColor = Color.Transparent,
+          scrolledContainerColor = Color(0xD906140A)
+        )
+      )
     }
-  )
+  }
 }

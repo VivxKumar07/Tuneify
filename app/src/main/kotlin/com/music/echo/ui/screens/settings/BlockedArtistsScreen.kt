@@ -64,11 +64,11 @@ fun BlockedArtistsScreen(navController: NavController) {
 
           val shape =
             when {
-              blockedArtists.size == 1 -> RoundedCornerShape(24.dp)
+              blockedArtists.size == 1 -> RoundedCornerShape(16.dp)
               index == 0 ->
                 RoundedCornerShape(
-                  topStart = 24.dp,
-                  topEnd = 24.dp,
+                  topStart = 16.dp,
+                  topEnd = 16.dp,
                   bottomStart = 4.dp,
                   bottomEnd = 4.dp
                 )
@@ -76,8 +76,8 @@ fun BlockedArtistsScreen(navController: NavController) {
                 RoundedCornerShape(
                   topStart = 4.dp,
                   topEnd = 4.dp,
-                  bottomStart = 24.dp,
-                  bottomEnd = 24.dp
+                  bottomStart = 16.dp,
+                  bottomEnd = 16.dp
                 )
               else -> RoundedCornerShape(4.dp)
             }

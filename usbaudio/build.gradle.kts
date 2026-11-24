@@ -5,7 +5,7 @@ plugins {
 android {
   namespace = "echo.music.usbaudio"
   compileSdk = 37
-  ndkVersion = "28.2.13676358"
+  ndkVersion = "25.2.9519653"
 
   defaultConfig {
     minSdk = 26

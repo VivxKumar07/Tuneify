@@ -25,6 +25,7 @@ import echo.music.iad1tya.ui.component.floatingtabbar.FloatingTabBarDefaults
 import echo.music.iad1tya.ui.component.floatingtabbar.FloatingTabBarScrollConnection
 import echo.music.iad1tya.ui.player.FloatingMiniPlayer
 import echo.music.iad1tya.ui.screens.Screens
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 
 /**
  * The iOS 26 style floating navigation bar, an alternative to [AppNavigationBar].
@@ -89,7 +90,7 @@ fun AppFloatingNavBar(
     if (useGlass) {
       Modifier.liquidGlass(
         config = glassConfig,
-        shape = RoundedCornerShape(percent = 50),
+        shape = TuneifyTokens.ShapeSheet,
       )
     } else {
       Modifier

@@ -105,7 +105,7 @@ fun CommentTogetherScreen(navController: NavController) {
             Surface(
               modifier = Modifier.padding(bottom = 8.dp).fillMaxWidth(),
               color = MaterialTheme.colorScheme.surfaceVariant,
-              shape = RoundedCornerShape(12.dp)
+              shape = RoundedCornerShape(8.dp)
             ) {
               Row(
                 modifier = Modifier.padding(8.dp).height(IntrinsicSize.Min),
@@ -115,7 +115,7 @@ fun CommentTogetherScreen(navController: NavController) {
                   modifier =
                     Modifier.fillMaxHeight()
                       .width(4.dp)
-                      .clip(RoundedCornerShape(2.dp))
+                      .clip(RoundedCornerShape(4.dp))
                       .background(MaterialTheme.colorScheme.primary)
                 )
                 Column(modifier = Modifier.weight(1f).padding(horizontal = 12.dp)) {
@@ -224,7 +224,7 @@ private fun MessageItem(
           bottomStart = if (isMe) 16.dp else 4.dp,
           bottomEnd = if (isMe) 4.dp else 16.dp
         ),
-      tonalElevation = 2.dp,
+      tonalElevation = 0.dp,
       modifier =
         Modifier.widthIn(max = 280.dp)
           .combinedClickable(onClick = {}, onLongClick = { onReply(message) })
@@ -293,7 +293,7 @@ private fun ChatInputArea(
 ) {
   Surface(
     color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-    shape = RoundedCornerShape(28.dp),
+    shape = RoundedCornerShape(16.dp),
     modifier = modifier.fillMaxWidth()
   ) {
     Row(

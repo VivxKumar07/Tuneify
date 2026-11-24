@@ -120,6 +120,7 @@ import echo.music.iad1tya.ui.component.IconButton
 import echo.music.iad1tya.ui.component.LinkSegment
 import echo.music.iad1tya.ui.component.LocalMenuState
 import echo.music.iad1tya.ui.component.NavigationTitle
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import echo.music.iad1tya.ui.component.SongListItem
 import echo.music.iad1tya.ui.component.YouTubeGridItem
 import echo.music.iad1tya.ui.component.YouTubeListItem
@@ -250,7 +251,7 @@ fun ArtistScreen(
                     modifier =
                       Modifier.size(52.dp)
                         .shimmer()
-                        .background(MaterialTheme.colorScheme.onSurface, RoundedCornerShape(26.dp))
+                        .background(MaterialTheme.colorScheme.onSurface, TuneifyTokens.ShapeCard)
                   )
                 }
               }
@@ -394,7 +395,7 @@ fun ArtistScreen(
                         Row(
                           verticalAlignment = Alignment.CenterVertically,
                           modifier =
-                            Modifier.clip(RoundedCornerShape(12.dp))
+                            Modifier.clip(TuneifyTokens.ShapeCard)
                               .background(MaterialTheme.colorScheme.secondaryContainer)
                               .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
@@ -425,7 +426,7 @@ fun ArtistScreen(
                         Row(
                           verticalAlignment = Alignment.CenterVertically,
                           modifier =
-                            Modifier.clip(RoundedCornerShape(12.dp))
+                            Modifier.clip(TuneifyTokens.ShapeCard)
                               .background(MaterialTheme.colorScheme.tertiaryContainer)
                               .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {

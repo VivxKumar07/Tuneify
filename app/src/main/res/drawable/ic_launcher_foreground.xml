@@ -1,0 +1,44 @@
+<!--
+  Tuneify Foreground Silhouette: 5-capsule Volt Lime waveform mark.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Bar 1 (Left) -->
+    <path
+        android:strokeColor="#FFC6F53D"
+        android:strokeWidth="6.5"
+        android:strokeLineCap="round"
+        android:pathData="M 32,46 L 32,62" />
+
+    <!-- Bar 2 -->
+    <path
+        android:strokeColor="#FFC6F53D"
+        android:strokeWidth="6.5"
+        android:strokeLineCap="round"
+        android:pathData="M 43,37 L 43,71" />
+
+    <!-- Bar 3 (Center) -->
+    <path
+        android:strokeColor="#FFC6F53D"
+        android:strokeWidth="6.5"
+        android:strokeLineCap="round"
+        android:pathData="M 54,28 L 54,80" />
+
+    <!-- Bar 4 -->
+    <path
+        android:strokeColor="#FFC6F53D"
+        android:strokeWidth="6.5"
+        android:strokeLineCap="round"
+        android:pathData="M 65,37 L 65,71" />
+
+    <!-- Bar 5 (Right) -->
+    <path
+        android:strokeColor="#FFC6F53D"
+        android:strokeWidth="6.5"
+        android:strokeLineCap="round"
+        android:pathData="M 76,46 L 76,62" />
+</vector>

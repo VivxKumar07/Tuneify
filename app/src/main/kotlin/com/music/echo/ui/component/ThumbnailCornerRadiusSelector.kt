@@ -64,10 +64,10 @@ fun ThumbnailCornerRadiusModal(
 
       Surface(
         modifier =
-          Modifier.fillMaxWidth(dialogWidth).wrapContentHeight().clip(RoundedCornerShape(30.dp)),
+          Modifier.fillMaxWidth(dialogWidth).wrapContentHeight().clip(RoundedCornerShape(16.dp)),
         shape = MaterialTheme.shapes.large,
         color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 6.dp
+        tonalElevation = 0.dp
       ) {
         Column(
           modifier = Modifier.fillMaxWidth().padding(24.dp),
@@ -102,7 +102,7 @@ fun ThumbnailCornerRadiusModal(
                 modifier =
                   Modifier.align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(8.dp))
                     .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f))
                     .padding(vertical = 8.dp),
                 contentAlignment = Alignment.Center

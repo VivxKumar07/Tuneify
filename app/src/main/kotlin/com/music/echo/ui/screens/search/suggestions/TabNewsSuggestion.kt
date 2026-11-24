@@ -4,7 +4,9 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import echo.music.iad1tya.ui.component.glass.TuneifyGlassTokens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -49,6 +51,8 @@ import com.valentinilk.shimmer.shimmer
 import echo.music.iad1tya.R
 import echo.music.iad1tya.constants.SuggestionRegionKey
 import echo.music.iad1tya.constants.SuggestionRegionSlugToName
+import echo.music.iad1tya.ui.component.TuneifySectionHeader
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import echo.music.iad1tya.utils.rememberPreference
 import kotlin.math.abs
 import kotlinx.coroutines.launch
@@ -239,7 +243,7 @@ fun SuggestionsTabContent(
               color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
             )
             Text(
-              text = "echo-music",
+              text = "Tuneify",
               style = MaterialTheme.typography.labelSmall,
               color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
               fontWeight = FontWeight.Bold
@@ -266,16 +270,15 @@ fun TrendingAppleMusicSection(
   val coroutineScope = rememberCoroutineScope()
 
   Column(modifier = Modifier.fillMaxWidth()) {
-    Text(
-      text = "Apple Music Top 100",
-      style = MaterialTheme.typography.titleLarge,
-      modifier = Modifier.padding(horizontal = 16.dp).padding(top = 32.dp)
-    )
-    Text(
-      text = SuggestionRegionSlugToName[countryCode] ?: "Global Charts",
-      style = MaterialTheme.typography.bodyMedium,
-      modifier = Modifier.padding(horizontal = 16.dp)
-    )
+    Column(modifier = Modifier.padding(horizontal = 16.dp).padding(top = 32.dp)) {
+      TuneifySectionHeader(title = "Apple Music Top 100")
+      Spacer(Modifier.height(2.dp))
+      Text(
+        text = SuggestionRegionSlugToName[countryCode] ?: "Global Charts",
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+      )
+    }
     HorizontalPager(
       state = pagerState,
       verticalAlignment = Alignment.Top,
@@ -294,29 +297,30 @@ fun TrendingAppleMusicSection(
           val isBottom = i == endIdx - 1
           val shape =
             when {
-              isTop && isBottom -> RoundedCornerShape(24.dp)
+              isTop && isBottom -> RoundedCornerShape(16.dp)
               isTop ->
                 RoundedCornerShape(
-                  topStart = 24.dp,
-                  topEnd = 24.dp,
-                  bottomStart = 2.dp,
-                  bottomEnd = 2.dp
+                  topStart = 16.dp,
+                  topEnd = 16.dp,
+                  bottomStart = 4.dp,
+                  bottomEnd = 4.dp
                 )
               isBottom ->
                 RoundedCornerShape(
-                  topStart = 2.dp,
-                  topEnd = 2.dp,
-                  bottomStart = 24.dp,
-                  bottomEnd = 24.dp
+                  topStart = 4.dp,
+                  topEnd = 4.dp,
+                  bottomStart = 16.dp,
+                  bottomEnd = 16.dp
                 )
-              else -> RoundedCornerShape(2.dp)
+              else -> RoundedCornerShape(4.dp)
             }
           if (isMoreCard) {
             Row(
               modifier =
                 Modifier.fillMaxWidth()
                   .clip(RoundedCornerShape(12.dp))
-                  .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                  .background(TuneifyGlassTokens.GlassBgElevated)
+                  .border(0.75.dp, TuneifyGlassTokens.GlassBorderSubtle, RoundedCornerShape(12.dp))
                   .clickable { onMoreClick() }
                   .padding(16.dp),
               verticalAlignment = Alignment.CenterVertically,
@@ -325,14 +329,14 @@ fun TrendingAppleMusicSection(
               Icon(
                 painterResource(R.drawable.globe_search),
                 null,
-                tint = MaterialTheme.colorScheme.onSurface,
+                tint = TuneifyGlassTokens.VoltLime,
                 modifier = Modifier.size(24.dp)
               )
               Spacer(Modifier.width(12.dp))
               Text(
                 "View more on Apple Music",
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = Color.White,
                 fontWeight = FontWeight.Bold
               )
             }
@@ -341,9 +345,10 @@ fun TrendingAppleMusicSection(
             Row(
               modifier =
                 Modifier.fillMaxWidth()
-                  .padding(vertical = 1.dp)
+                  .padding(vertical = 2.dp)
                   .clip(shape)
-                  .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                  .background(TuneifyGlassTokens.GlassBgElevated)
+                  .border(0.75.dp, TuneifyGlassTokens.GlassBorderSubtle, shape)
                   .clickable { onTrackClick(track) }
                   .padding(horizontal = 8.dp, vertical = 8.dp),
               verticalAlignment = Alignment.CenterVertically
@@ -351,7 +356,7 @@ fun TrendingAppleMusicSection(
               Text(
                 text = "${track.rank}",
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = TuneifyGlassTokens.VoltLime,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.width(36.dp),
                 textAlign = TextAlign.Center
@@ -366,14 +371,14 @@ fun TrendingAppleMusicSection(
                       LoadingIndicator()
                     }
                   },
-                  modifier = Modifier.clip(RoundedCornerShape(12.dp)).size(52.dp)
+                  modifier = Modifier.clip(RoundedCornerShape(8.dp)).size(52.dp)
                 )
               }
               Column(Modifier.weight(1f).padding(start = 14.dp)) {
                 Text(
                   track.title,
                   style = MaterialTheme.typography.titleMedium,
-                  color = MaterialTheme.colorScheme.onSurface,
+                  color = Color.White,
                   maxLines = 1,
                   overflow = TextOverflow.Ellipsis
                 )
@@ -384,9 +389,10 @@ fun TrendingAppleMusicSection(
                   Text(
                     track.artist,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = TuneifyGlassTokens.TextSecondary,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
                   )
                   Spacer(Modifier.width(6.dp))
                   val playCount =
@@ -398,7 +404,8 @@ fun TrendingAppleMusicSection(
                   Text(
                     "• $playCount",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    color = TuneifyGlassTokens.TextTertiary,
+                    maxLines = 1
                   )
                 }
               }
@@ -411,8 +418,10 @@ fun TrendingAppleMusicSection(
       Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier =
-          Modifier.clip(MaterialTheme.shapes.large)
-            .background(MaterialTheme.colorScheme.surfaceContainer)
+          Modifier.clip(RoundedCornerShape(999.dp))
+            .background(TuneifyGlassTokens.GlassBgElevated)
+            .border(0.75.dp, TuneifyGlassTokens.GlassBorderSubtle, RoundedCornerShape(999.dp))
+            .padding(horizontal = 8.dp, vertical = 2.dp)
       ) {
         IconButton(
           onClick = {
@@ -444,9 +453,8 @@ fun TrendingAppleMusicSection(
 fun TopArtistsSection(artists: List<SuggestionArtist>, onArtistClick: (SuggestionArtist) -> Unit) {
   if (artists.isEmpty()) return
   Column(modifier = Modifier.fillMaxWidth()) {
-    Text(
-      text = "Trending Artists",
-      style = MaterialTheme.typography.titleLarge,
+    TuneifySectionHeader(
+      title = "Trending Artists",
       modifier = Modifier.padding(horizontal = 16.dp).padding(top = 16.dp)
     )
     LazyRow(
@@ -468,34 +476,36 @@ fun TopArtistsSection(artists: List<SuggestionArtist>, onArtistClick: (Suggestio
                 Box(
                   Modifier.fillMaxSize()
                     .shimmer()
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .background(Color(0x35183022))
                 )
               },
               modifier =
                 Modifier.size(120.dp)
-                  .clip(RoundedCornerShape(12.dp))
-                  .background(MaterialTheme.colorScheme.surfaceVariant)
+                  .clip(CircleShape)
+                  .border(1.dp, TuneifyGlassTokens.GlassBorderSubtle, CircleShape)
+                  .background(Color(0x35183022))
             )
-            Surface(
-              modifier = Modifier.size(28.dp).offset((-4).dp, (-4).dp),
-              shape = CircleShape,
-              color = MaterialTheme.colorScheme.onSurface,
-              tonalElevation = 4.dp
+            Box(
+              modifier =
+                Modifier.padding(4.dp)
+                  .size(24.dp)
+                  .clip(CircleShape)
+                  .background(TuneifyGlassTokens.VoltLime),
+              contentAlignment = Alignment.Center
             ) {
-              Box(contentAlignment = Alignment.Center) {
-                Text(
-                  artist.rank.toString(),
-                  style = MaterialTheme.typography.labelSmall,
-                  color = MaterialTheme.colorScheme.surface,
-                  fontWeight = FontWeight.Bold
-                )
-              }
+              Text(
+                artist.rank.toString(),
+                style = MaterialTheme.typography.labelSmall,
+                color = TuneifyGlassTokens.OnVoltLime,
+                fontWeight = FontWeight.Bold
+              )
             }
           }
           Spacer(Modifier.height(8.dp))
           Text(
             artist.name,
             style = MaterialTheme.typography.bodyMedium,
+            color = Color.White,
             textAlign = TextAlign.Center,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -510,7 +520,7 @@ fun TopArtistsSection(artists: List<SuggestionArtist>, onArtistClick: (Suggestio
           Text(
             playCount,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+            color = TuneifyGlassTokens.TextTertiary,
             textAlign = TextAlign.Center
           )
         }
@@ -527,10 +537,17 @@ fun TrendingAlbumsSection(
 ) {
   if (albums.isEmpty()) return
   Column(modifier = Modifier.fillMaxWidth()) {
-    Text(
-      text = "Trending Albums",
-      style = MaterialTheme.typography.titleLarge,
-      modifier = Modifier.padding(horizontal = 16.dp).padding(top = 16.dp)
+    TuneifySectionHeader(
+      title = "Trending Albums",
+      modifier = Modifier.padding(horizontal = 16.dp).padding(top = 16.dp),
+      trailing = {
+        Text(
+          text = "More",
+          style = MaterialTheme.typography.labelLarge,
+          color = MaterialTheme.colorScheme.onSurface,
+          modifier = Modifier.clickable { onMoreClick() }
+        )
+      }
     )
     LazyRow(
       contentPadding = PaddingValues(horizontal = 16.dp),
@@ -551,34 +568,36 @@ fun TrendingAlbumsSection(
                 Box(
                   Modifier.fillMaxSize()
                     .shimmer()
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .background(Color(0x35183022))
                 )
               },
               modifier =
                 Modifier.size(120.dp)
-                  .clip(RoundedCornerShape(12.dp))
-                  .background(MaterialTheme.colorScheme.surfaceVariant)
+                  .clip(RoundedCornerShape(16.dp))
+                  .border(1.dp, TuneifyGlassTokens.GlassBorderSubtle, RoundedCornerShape(16.dp))
+                  .background(Color(0x35183022))
             )
-            Surface(
-              modifier = Modifier.size(28.dp).offset((-4).dp, (-4).dp),
-              shape = CircleShape,
-              color = MaterialTheme.colorScheme.onSurface,
-              tonalElevation = 4.dp
+            Box(
+              modifier =
+                Modifier.padding(6.dp)
+                  .size(24.dp)
+                  .clip(CircleShape)
+                  .background(TuneifyGlassTokens.VoltLime),
+              contentAlignment = Alignment.Center
             ) {
-              Box(contentAlignment = Alignment.Center) {
-                Text(
-                  album.rank.toString(),
-                  style = MaterialTheme.typography.labelSmall,
-                  color = MaterialTheme.colorScheme.surface,
-                  fontWeight = FontWeight.Bold
-                )
-              }
+              Text(
+                album.rank.toString(),
+                style = MaterialTheme.typography.labelSmall,
+                color = TuneifyGlassTokens.OnVoltLime,
+                fontWeight = FontWeight.Bold
+              )
             }
           }
           Spacer(Modifier.height(8.dp))
           Text(
             album.title,
             style = MaterialTheme.typography.titleSmall,
+            color = Color.White,
             textAlign = TextAlign.Center,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -587,7 +606,7 @@ fun TrendingAlbumsSection(
           Text(
             album.artist,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = TuneifyGlassTokens.TextSecondary,
             textAlign = TextAlign.Center,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -605,13 +624,14 @@ fun TrendingAlbumsSection(
             contentAlignment = Alignment.Center,
             modifier =
               Modifier.size(120.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(MaterialTheme.colorScheme.primaryContainer)
+                .clip(RoundedCornerShape(16.dp))
+                .background(TuneifyGlassTokens.GlassBgElevated)
+                .border(1.dp, TuneifyGlassTokens.GlassBorderSubtle, RoundedCornerShape(16.dp))
           ) {
             Icon(
               painter = painterResource(R.drawable.globe_search),
               contentDescription = null,
-              tint = MaterialTheme.colorScheme.primary,
+              tint = TuneifyGlassTokens.VoltLime,
               modifier = Modifier.size(32.dp)
             )
           }
@@ -619,7 +639,7 @@ fun TrendingAlbumsSection(
           Text(
             text = "More",
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = Color.White,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
           )
@@ -642,24 +662,18 @@ fun TrendingVideosSection(
   val context = LocalContext.current
 
   Column(modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)) {
-    Row(
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-      horizontalArrangement = Arrangement.SpaceBetween,
-      verticalAlignment = Alignment.CenterVertically
-    ) {
-      Text(
-        text = "Trending Music Videos",
-        style = MaterialTheme.typography.titleLarge,
-        fontWeight = FontWeight.Bold
-      )
-
-      Text(
-        text = "More",
-        style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.clickable { onMoreClick() }
-      )
-    }
+    TuneifySectionHeader(
+      title = "Trending Music Videos",
+      modifier = Modifier.padding(horizontal = 16.dp),
+      trailing = {
+        Text(
+          text = "More",
+          style = MaterialTheme.typography.labelLarge,
+          color = MaterialTheme.colorScheme.onSurface,
+          modifier = Modifier.clickable { onMoreClick() }
+        )
+      }
+    )
 
     Spacer(modifier = Modifier.height(16.dp))
 

@@ -20,7 +20,6 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -339,21 +338,9 @@ fun Queue(
         ) {
           val buttonSize = 42.dp
           val iconSize = 24.dp
-          val queueShape =
-            RoundedCornerShape(
-              topStart = 50.dp,
-              bottomStart = 50.dp,
-              topEnd = 3.dp,
-              bottomEnd = 3.dp
-            )
-          val middleShape = RoundedCornerShape(3.dp)
-          val repeatShape =
-            RoundedCornerShape(
-              topStart = 3.dp,
-              bottomStart = 3.dp,
-              topEnd = 50.dp,
-              bottomEnd = 50.dp
-            )
+          val queueShape = CircleShape
+          val middleShape = CircleShape
+          val repeatShape = CircleShape
 
           PlayerQueueButton(
             icon = R.drawable.queue_music,
@@ -770,7 +757,7 @@ fun Queue(
             Text(
               text = mediaMetadata?.artists?.joinToString { it.name }.orEmpty(),
               style = MaterialTheme.typography.bodyMedium,
-              color = MaterialTheme.colorScheme.secondary,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
               maxLines = 1,
               overflow = TextOverflow.Ellipsis,
             )
@@ -1434,7 +1421,7 @@ private fun PlayerQueueButton(
   onClick: () -> Unit,
   isActive: Boolean,
   enabled: Boolean = true,
-  shape: RoundedCornerShape,
+  shape: androidx.compose.ui.graphics.Shape,
   modifier: Modifier = Modifier,
   text: String? = null,
   textButtonColor: Color,
@@ -1447,18 +1434,14 @@ private fun PlayerQueueButton(
 
   val alphaFactor = if (enabled) 1f else 0.35f
 
+  // Material 3 Expressive: no outline. The active state is a filled accent circle, the resting
+  // state a soft translucent disc — which reads correctly on any player background.
   val appliedModifier =
     if (isActive) {
       modifier.then(buttonModifier.background(textButtonColor)).alpha(alphaFactor)
     } else {
       modifier
-        .then(
-          buttonModifier.border(
-            width = 1.dp,
-            color = textButtonColor.copy(alpha = 0.3f),
-            shape = shape
-          )
-        )
+        .then(buttonModifier.background(textButtonColor.copy(alpha = 0.12f)))
         .alpha(alphaFactor)
     }
 

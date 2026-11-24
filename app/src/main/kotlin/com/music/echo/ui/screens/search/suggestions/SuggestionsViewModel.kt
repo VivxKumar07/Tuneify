@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.music.innertube.YouTube
+import com.music.innertube.models.AlbumItem
 import com.music.innertube.models.ArtistItem
 import com.music.innertube.models.SongItem
 import com.music.innertube.models.WatchEndpoint
@@ -100,12 +101,79 @@ class SuggestionsViewModel @Inject constructor() : ViewModel() {
         }
 
         currentLoadedRegion = resolvedCode
+
+        // Apple Music scraping is best-effort and breaks whenever their markup changes. If a rail
+        // came back empty, top it up from the YouTube Music home feed so the search landing screen
+        // is never reduced to a single lonely section.
+        if (_suggestionTracks.value.isNullOrEmpty() ||
+          _suggestionArtists.value.isNullOrEmpty() ||
+          _suggestionAlbums.value.isNullOrEmpty()
+        ) {
+          try {
+            fillFromYouTube()
+          } catch (e: Exception) {
+            Log.e("SuggestionsViewModel", "YouTube fallback failed", e)
+          }
+        }
       } catch (e: Exception) {
         Log.e("SuggestionsViewModel", "Failed to fetch suggestions", e)
       } finally {
         _isLoading.value = false
         _isManualLoading.value = false
       }
+    }
+  }
+
+  /**
+   * Builds the trending rails from the YouTube Music home feed. Used as a fallback so the search
+   * landing screen always has real, playable content.
+   */
+  private suspend fun fillFromYouTube() {
+    val home = YouTube.home().getOrNull() ?: return
+
+    val songs = LinkedHashMap<String, SongItem>()
+    val albums = LinkedHashMap<String, AlbumItem>()
+    val artists = LinkedHashMap<String, ArtistItem>()
+    home.sections.forEach { section ->
+      section.items.forEach { item ->
+        when (item) {
+          is SongItem -> songs.putIfAbsent(item.id, item)
+          is AlbumItem -> albums.putIfAbsent(item.id, item)
+          is ArtistItem -> artists.putIfAbsent(item.id, item)
+          else -> {}
+        }
+      }
+    }
+
+    if (_suggestionTracks.value.isNullOrEmpty() && songs.isNotEmpty()) {
+      _suggestionTracks.value =
+        songs.values.take(30).mapIndexed { index, song ->
+          SuggestionTrack(
+            rank = index + 1,
+            title = song.title,
+            artist = song.artists.joinToString(", ") { it.name },
+            thumbnailUrl = song.thumbnail,
+          )
+        }
+    }
+
+    if (_suggestionArtists.value.isNullOrEmpty() && artists.isNotEmpty()) {
+      _suggestionArtists.value =
+        artists.values.take(12).mapIndexed { index, artist ->
+          SuggestionArtist(rank = index + 1, name = artist.title, thumbnailUrl = artist.thumbnail)
+        }
+    }
+
+    if (_suggestionAlbums.value.isNullOrEmpty() && albums.isNotEmpty()) {
+      _suggestionAlbums.value =
+        albums.values.take(12).mapIndexed { index, album ->
+          SuggestionAlbum(
+            rank = index + 1,
+            title = album.title,
+            artist = album.artists?.joinToString(", ") { it.name } ?: "",
+            thumbnailUrl = album.thumbnail,
+          )
+        }
     }
   }
 

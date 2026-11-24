@@ -75,6 +75,10 @@ fun NavGraphBuilder.navigationBuilder(
     HomeScreen(navController = navController, snackbarHostState = snackbarHostState)
   }
 
+  composable(Screens.Explore.route) {
+    ExploreScreen(navController = navController)
+  }
+
   composable(Screens.Search.route) {
     val pureBlackEnabled by rememberPreference(PureBlackKey, defaultValue = false)
     val darkTheme by rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)

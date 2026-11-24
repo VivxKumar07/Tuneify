@@ -107,53 +107,42 @@ fun AppIconSettingsScreen(
   ) { innerPadding ->
     val icons =
       listOf(
-        AppIconOption(AppIconType.CRAFT, "Craft", "Craft icon by CR3TO_", R.mipmap.ic_launcher_craft),
-        AppIconOption(AppIconType.SADIE, "Sadie Sink", "Sadie Sink on community demand", R.mipmap.ic_launcher_sadie),
-        AppIconOption(
-          AppIconType.BILLIE_EILISH,
-          "Billie Eilish",
-          "billie eilish suggested by Lalo salamanca",
-          R.mipmap.billie_eilish_icon
-        ),
-        AppIconOption(AppIconType.CAT, "Cat Icon", "A Pinkish cat-themed icon", R.mipmap.cat_icon),
-        AppIconOption(
-          AppIconType.CRAZY_BLUE,
-          "Crazy Blue Icon",
-          "A vibrant crazy blue icon",
-          R.mipmap.crazy_blue_icon
-        ),
-        AppIconOption(
-          AppIconType.ECHO_CAT,
-          "Echo Cat",
-          "A playful cat by Alarp_Svc",
-          R.mipmap.echo_cat_icon
-        ),
-        AppIconOption(
-          AppIconType.LEGACY,
-          "Legacy Icon",
-          "The OG Monochrome Icon",
-          R.mipmap.legacy_icon
-        ),
         AppIconOption(
           AppIconType.DEFAULT,
-          "New Icon",
-          "The standard vibrant icon",
+          "Midnight",
+          "Lime mark on near-black",
           R.mipmap.ic_launcher
         ),
-        AppIconOption(AppIconType.POOKIE, "Pookie Icon", "A Cute Pink icon", R.mipmap.pookie_icon),
         AppIconOption(
-          AppIconType.SABRINA_CARPENTER,
-          "Sabrina Carpenter",
-          "Suggested by notdieinganymore",
-          R.mipmap.ic_launcher_sabrina
+          AppIconType.LIGHT,
+          "Paper",
+          "Ink mark on off-white",
+          R.mipmap.ic_launcher_light
         ),
         AppIconOption(
-          AppIconType.SABRINA_CARPENTER_2,
-          "Sabrina Carpenter 2",
-          "Suggested by Falvik",
-          R.mipmap.ic_launcher_sabrina2
+          AppIconType.YELLOW,
+          "Volt Lime",
+          "Ink mark on volt lime",
+          R.mipmap.ic_launcher_yellow
         ),
-        AppIconOption(AppIconType.SKY, "Sky Icon", "A beautiful sky-themed icon", R.mipmap.sky_icon)
+        AppIconOption(
+          AppIconType.BLUE,
+          "Forest",
+          "Light mark on deep forest",
+          R.mipmap.ic_launcher_blue
+        ),
+        AppIconOption(
+          AppIconType.RED,
+          "Deep Forest",
+          "Lime mark on deep forest",
+          R.mipmap.ic_launcher_red
+        ),
+        AppIconOption(
+          AppIconType.MONO,
+          "Mono",
+          "White mark on near-black",
+          R.mipmap.ic_launcher_mono
+        )
       ).sortedBy { it.title.lowercase() }
 
     Column(
@@ -181,11 +170,11 @@ fun AppIconSettingsScreen(
         icons.forEachIndexed { index, option ->
           val shape =
             when {
-              icons.size == 1 -> RoundedCornerShape(24.dp)
+              icons.size == 1 -> RoundedCornerShape(16.dp)
               index == 0 ->
                 RoundedCornerShape(
-                  topStart = 24.dp,
-                  topEnd = 24.dp,
+                  topStart = 16.dp,
+                  topEnd = 16.dp,
                   bottomStart = 4.dp,
                   bottomEnd = 4.dp
                 )
@@ -193,8 +182,8 @@ fun AppIconSettingsScreen(
                 RoundedCornerShape(
                   topStart = 4.dp,
                   topEnd = 4.dp,
-                  bottomStart = 24.dp,
-                  bottomEnd = 24.dp
+                  bottomStart = 16.dp,
+                  bottomEnd = 16.dp
                 )
               else -> RoundedCornerShape(4.dp)
             }
@@ -259,14 +248,14 @@ fun AppIconRow(option: AppIconOption, isSelected: Boolean, onClick: () -> Unit) 
       }
 
     Box(
-      modifier = Modifier.size(40.dp).clip(RoundedCornerShape(12.dp)),
+      modifier = Modifier.size(40.dp).clip(RoundedCornerShape(8.dp)),
       contentAlignment = Alignment.Center
     ) {
       if (bitmap != null) {
         Image(
           bitmap = bitmap,
           contentDescription = null,
-          modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(12.dp))
+          modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(8.dp))
         )
       }
     }

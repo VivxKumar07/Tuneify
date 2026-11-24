@@ -131,7 +131,7 @@ fun PrivacySettings(
       Modifier.windowInsetsPadding(LocalPlayerAwareWindowInsets.current.only(WindowInsetsSides.Top))
     )
 
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(68.dp))
 
     Material3SettingsGroup(
       scrollState = scrollState,

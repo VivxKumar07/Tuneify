@@ -1,6 +1,7 @@
 package echo.music.iad1tya.ui.screens.library
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,6 +49,9 @@ import echo.music.iad1tya.ui.component.DefaultDialog
 import echo.music.iad1tya.ui.component.Material3SettingsGroup
 import echo.music.iad1tya.ui.component.Material3SettingsItem
 import echo.music.iad1tya.ui.component.TextFieldDialog
+import echo.music.iad1tya.ui.theme.TuneifyTokens
+import echo.music.iad1tya.ui.component.glass.DynamicArtworkBackground
+import echo.music.iad1tya.ui.component.glass.TuneifyGlassTokens
 import echo.music.iad1tya.utils.onlinePlaylistIdFromUrl
 import echo.music.iad1tya.utils.onlinePlaylistRoute
 import echo.music.iad1tya.utils.rememberEnumPreference
@@ -113,32 +117,45 @@ fun LibraryScreen(navController: NavController) {
     }
 
   CompositionLocalProvider(LocalPlayerAwareWindowInsets provides newInsets) {
-    Box(
-      modifier = Modifier.fillMaxSize(),
-    ) {
-      when (filterType) {
-        LibraryFilter.LIBRARY -> LibraryMixScreen(navController, filterContent)
-        LibraryFilter.PLAYLISTS -> LibraryPlaylistsScreen(navController, filterContent)
-        LibraryFilter.SONGS ->
-          LibrarySongsScreen(navController, { filterType = LibraryFilter.LIBRARY })
-        LibraryFilter.ALBUMS ->
-          LibraryAlbumsScreen(navController, { filterType = LibraryFilter.LIBRARY })
-        LibraryFilter.ARTISTS ->
-          LibraryArtistsScreen(navController, { filterType = LibraryFilter.LIBRARY })
-        LibraryFilter.LOCAL ->
-          LocalSongScreen(navController, { filterType = LibraryFilter.LIBRARY }, isEmbedded = true)
-      }
+    DynamicArtworkBackground(accentColor = TuneifyGlassTokens.VoltLime) {
+      Box(
+        modifier = Modifier.fillMaxSize(),
+      ) {
+        when (filterType) {
+          LibraryFilter.LIBRARY -> LibraryMixScreen(navController, filterContent)
+          LibraryFilter.PLAYLISTS -> LibraryPlaylistsScreen(navController, filterContent)
+          LibraryFilter.SONGS ->
+            LibrarySongsScreen(navController, { filterType = LibraryFilter.LIBRARY })
+          LibraryFilter.ALBUMS ->
+            LibraryAlbumsScreen(navController, { filterType = LibraryFilter.LIBRARY })
+          LibraryFilter.ARTISTS ->
+            LibraryArtistsScreen(navController, { filterType = LibraryFilter.LIBRARY })
+          LibraryFilter.LOCAL ->
+            LocalSongScreen(navController, { filterType = LibraryFilter.LIBRARY }, isEmbedded = true)
+        }
 
-      val bottomPadding = with(density) { currentInsets.getBottom(density).toDp() }
-      Box(modifier = Modifier.fillMaxSize().padding(end = 16.dp, bottom = bottomPadding + 20.dp)) {
-        Box(modifier = Modifier.align(Alignment.BottomEnd)) {
-          androidx.compose.material3.FloatingActionButton(
-            onClick = { showFabMenu = true },
-            shape = CircleShape,
-            containerColor = MaterialTheme.colorScheme.onSurface,
-            contentColor = MaterialTheme.colorScheme.surface
-          ) {
-            Icon(painter = painterResource(R.drawable.add), contentDescription = "Add")
+        val bottomPadding = with(density) { currentInsets.getBottom(density).toDp() }
+        Box(modifier = Modifier.fillMaxSize().padding(end = 16.dp, bottom = bottomPadding + 20.dp)) {
+          Box(modifier = Modifier.align(Alignment.BottomEnd)) {
+            androidx.compose.material3.FloatingActionButton(
+              onClick = { showFabMenu = true },
+              shape = CircleShape,
+              containerColor = TuneifyGlassTokens.VoltLime,
+              contentColor = TuneifyGlassTokens.OnVoltLime,
+              elevation =
+                androidx.compose.material3.FloatingActionButtonDefaults.elevation(
+                  defaultElevation = TuneifyTokens.ElevationMedium,
+                  pressedElevation = TuneifyTokens.ElevationLow,
+                  focusedElevation = TuneifyTokens.ElevationMedium,
+                  hoveredElevation = TuneifyTokens.ElevationMedium
+                ),
+              modifier = Modifier
+            ) {
+              Icon(
+                painter = painterResource(R.drawable.add),
+                contentDescription = "Add"
+              )
+            }
           }
         }
       }
@@ -277,8 +294,8 @@ fun LibraryScreen(navController: NavController) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
       ) {
         androidx.compose.material3.Surface(
-          shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-          color = MaterialTheme.colorScheme.surfaceContainerHighest,
+          shape = TuneifyTokens.ShapeCard,
+          color = MaterialTheme.colorScheme.surfaceContainerLow,
           modifier = Modifier.fillMaxWidth()
         ) {
           echo.music.iad1tya.ui.component.PreferenceEntry(
@@ -293,8 +310,8 @@ fun LibraryScreen(navController: NavController) {
         }
 
         androidx.compose.material3.Surface(
-          shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-          color = MaterialTheme.colorScheme.surfaceContainerHighest,
+          shape = TuneifyTokens.ShapeCard,
+          color = MaterialTheme.colorScheme.surfaceContainerLow,
           modifier = Modifier.fillMaxWidth()
         ) {
           echo.music.iad1tya.ui.component.PreferenceEntry(

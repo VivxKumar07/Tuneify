@@ -123,85 +123,88 @@ val PlusJakartaSansFontFamily =
 @OptIn(ExperimentalTextApi::class)
 fun getTypography(brandFont: FontFamily, plainFont: FontFamily = FontFamily.Default): Typography =
   Typography(
+    // Display + headline: the brand face carries the identity. Large sizes with tight negative
+    // tracking is what makes geometric type read as "editorial" instead of default.
     displayLarge =
       TextStyle(
         fontFamily = brandFont,
-        fontWeight = FontWeight.Normal,
-        fontSize = 57.sp,
-        lineHeight = 64.sp,
-        letterSpacing = (-0.25).sp
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 54.sp,
+        lineHeight = 58.sp,
+        letterSpacing = (-1.8).sp
       ),
     displayMedium =
       TextStyle(
         fontFamily = brandFont,
-        fontWeight = FontWeight.Normal,
-        fontSize = 45.sp,
-        lineHeight = 52.sp,
-        letterSpacing = 0.sp
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 44.sp,
+        lineHeight = 48.sp,
+        letterSpacing = (-1.4).sp
       ),
     displaySmall =
       TextStyle(
         fontFamily = brandFont,
-        fontWeight = FontWeight.Normal,
-        fontSize = 36.sp,
-        lineHeight = 44.sp,
-        letterSpacing = 0.sp
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 35.sp,
+        lineHeight = 41.sp,
+        letterSpacing = (-1.0).sp
       ),
     headlineLarge =
       TextStyle(
         fontFamily = brandFont,
-        fontWeight = FontWeight.Normal,
-        fontSize = 32.sp,
-        lineHeight = 40.sp,
-        letterSpacing = 0.sp
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 31.sp,
+        lineHeight = 37.sp,
+        letterSpacing = (-0.9).sp
       ),
     headlineMedium =
       TextStyle(
         fontFamily = brandFont,
-        fontWeight = FontWeight.Normal,
-        fontSize = 28.sp,
-        lineHeight = 36.sp,
-        letterSpacing = 0.sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 26.sp,
+        lineHeight = 32.sp,
+        letterSpacing = (-0.7).sp
       ),
     headlineSmall =
       TextStyle(
         fontFamily = brandFont,
-        fontWeight = FontWeight.Normal,
-        fontSize = 24.sp,
-        lineHeight = 32.sp,
-        letterSpacing = 0.sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 22.sp,
+        lineHeight = 28.sp,
+        letterSpacing = (-0.5).sp
       ),
     titleLarge =
       TextStyle(
         fontFamily = brandFont,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 21.sp,
+        lineHeight = 27.sp,
+        letterSpacing = (-0.4).sp
       ),
     titleMedium =
       TextStyle(
         fontFamily = brandFont,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.15.sp
+        lineHeight = 22.sp,
+        letterSpacing = (-0.15).sp
       ),
     titleSmall =
       TextStyle(
         fontFamily = brandFont,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp,
         lineHeight = 20.sp,
-        letterSpacing = 0.1.sp
+        letterSpacing = 0.sp
       ),
+    // Body: neutral face, near-zero tracking so dense lists stay quiet.
     bodyLarge =
       TextStyle(
         fontFamily = plainFont,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.1.sp
       ),
     bodyMedium =
       TextStyle(
@@ -209,7 +212,7 @@ fun getTypography(brandFont: FontFamily, plainFont: FontFamily = FontFamily.Defa
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 20.sp,
-        letterSpacing = 0.25.sp
+        letterSpacing = 0.1.sp
       ),
     bodySmall =
       TextStyle(
@@ -217,15 +220,17 @@ fun getTypography(brandFont: FontFamily, plainFont: FontFamily = FontFamily.Defa
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.4.sp
+        letterSpacing = 0.15.sp
       ),
+    // Labels: wide tracking exists ONLY here, and it is dialled back so eyebrows read as calm
+    // metadata rather than shouting.
     labelLarge =
       TextStyle(
         fontFamily = plainFont,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp,
         lineHeight = 20.sp,
-        letterSpacing = 0.1.sp
+        letterSpacing = 0.3.sp
       ),
     labelMedium =
       TextStyle(
@@ -238,13 +243,12 @@ fun getTypography(brandFont: FontFamily, plainFont: FontFamily = FontFamily.Defa
     labelSmall =
       TextStyle(
         fontFamily = plainFont,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 11.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.7.sp
       )
   )
-
 val AppTypography =
   Typography(
     displayLarge =

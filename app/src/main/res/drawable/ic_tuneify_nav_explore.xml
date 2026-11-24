@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Modern Compass Discovery icon matching reference image -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.9"
+        android:strokeLineCap="round"
+        android:pathData="M12,2 C6.48,2 2,6.48 2,12 C2,17.52 6.48,22 12,22 C17.52,22 22,17.52 22,12 C22,6.48 17.52,2 12,2 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M14.5,9.5 L10.2,10.8 L8.9,15.1 C8.78,15.5 9.15,15.87 9.55,15.75 L13.8,14.45 L15.1,10.15 C15.22,9.75 14.85,9.38 14.45,9.5 Z" />
+</vector>

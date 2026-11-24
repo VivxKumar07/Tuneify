@@ -55,7 +55,7 @@ fun ActivityHistoryBottomSheet(
     sheetState = sheetState,
     dragHandle = { BottomSheetDefaults.DragHandle() },
     containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-    shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
+    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
   ) {
     Column(
       modifier =
@@ -103,7 +103,7 @@ fun ActivityHistoryBottomSheet(
       // Total Listening Time Hero Card (Pixel Settings banner style)
       Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceContainerHigh
       ) {
         Row(
@@ -173,10 +173,10 @@ fun ActivityHistoryBottomSheet(
                 color = segmentBgColor,
                 shape =
                   RoundedCornerShape(
-                    topStart = 20.dp,
-                    bottomStart = 20.dp,
-                    topEnd = 6.dp,
-                    bottomEnd = 6.dp
+                    topStart = 16.dp,
+                    bottomStart = 16.dp,
+                    topEnd = 8.dp,
+                    bottomEnd = 8.dp
                   )
               ),
           contentAlignment = Alignment.Center
@@ -230,7 +230,7 @@ fun ActivityHistoryBottomSheet(
           modifier =
             Modifier.weight(1f)
               .height(112.dp)
-              .background(color = segmentBgColor, shape = RoundedCornerShape(6.dp)),
+              .background(color = segmentBgColor, shape = RoundedCornerShape(8.dp)),
           contentAlignment = Alignment.Center
         ) {
           Column(
@@ -286,10 +286,10 @@ fun ActivityHistoryBottomSheet(
                 color = segmentBgColor,
                 shape =
                   RoundedCornerShape(
-                    topEnd = 20.dp,
-                    bottomEnd = 20.dp,
-                    topStart = 6.dp,
-                    bottomStart = 6.dp
+                    topEnd = 16.dp,
+                    bottomEnd = 16.dp,
+                    topStart = 8.dp,
+                    bottomStart = 8.dp
                   )
               ),
           contentAlignment = Alignment.Center
@@ -342,7 +342,7 @@ fun ActivityHistoryBottomSheet(
       // All-Time Total Play Time Card (Clean Wide rounded settings-style row)
       Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceContainerHigh
       ) {
         Row(

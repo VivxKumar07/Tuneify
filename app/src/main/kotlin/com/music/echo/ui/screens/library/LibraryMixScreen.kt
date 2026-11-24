@@ -42,8 +42,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.compose.ui.graphics.Color
+import echo.music.iad1tya.LocalDatabase
+import echo.music.iad1tya.LocalDownloadUtil
 import echo.music.iad1tya.LocalPlayerAwareWindowInsets
 import echo.music.iad1tya.LocalPlayerConnection
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import echo.music.iad1tya.R
 import echo.music.iad1tya.constants.AlbumViewTypeKey
 import echo.music.iad1tya.constants.CONTENT_TYPE_HEADER
@@ -241,6 +245,93 @@ fun LibraryMixScreen(
     }
   }
 
+  val database = LocalDatabase.current
+  val downloadUtil = LocalDownloadUtil.current
+  val likedCount by database.likedSongsCount().collectAsState(initial = 0)
+  val downloads by downloadUtil.downloads.collectAsState()
+  val downloadedCount = downloads.values.count { it.state == androidx.media3.exoplayer.offline.Download.STATE_COMPLETED }
+  val localSongsList by database.localSongs().collectAsState(initial = emptyList())
+
+  val autoPlaylistsContent =
+    @Composable {
+      FlowRow(
+        maxItemsInEachRow = 2,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)
+      ) {
+        val itemModifier = Modifier.weight(1f)
+        if (showLiked) {
+          AutoPlaylistButton(
+            title = stringResource(R.string.liked),
+            icon = R.drawable.favorite,
+            subtitle = if (likedCount > 0) "$likedCount ${if (likedCount == 1) "song" else "songs"}" else "Favorite tracks",
+            backgroundColor = TuneifyTokens.Pink,
+            onClick = { navController.navigate("auto_playlist/liked") },
+            modifier = itemModifier
+          )
+        }
+        if (showDownloaded) {
+          AutoPlaylistButton(
+            title = stringResource(R.string.offline),
+            icon = R.drawable.offline,
+            subtitle = if (downloadedCount > 0) "$downloadedCount ${if (downloadedCount == 1) "song" else "songs"}" else "Offline storage",
+            backgroundColor = TuneifyTokens.Green,
+            onClick = { navController.navigate("auto_playlist/downloaded") },
+            modifier = itemModifier
+          )
+        }
+        AutoPlaylistButton(
+          title = stringResource(R.string.filter_local),
+          icon = R.drawable.snippet_folder,
+          subtitle = if (localSongsList.isNotEmpty()) "${localSongsList.size} ${if (localSongsList.size == 1) "song" else "songs"}" else "On this device",
+          backgroundColor = TuneifyTokens.Blue,
+          onClick = { navController.navigate("local_songs") },
+          modifier = itemModifier
+        )
+        if (showCached) {
+          AutoPlaylistButton(
+            title = stringResource(R.string.cached_playlist),
+            icon = R.drawable.cached,
+            subtitle = "Playback cache",
+            backgroundColor = TuneifyTokens.Purple,
+            onClick = { navController.navigate("cache_playlist/cached") },
+            modifier = itemModifier
+          )
+        }
+        if (showTop) {
+          AutoPlaylistButton(
+            title = stringResource(R.string.my_top) + " $topSize",
+            icon = R.drawable.trending_up,
+            subtitle = "Most played",
+            backgroundColor = TuneifyTokens.Red,
+            onClick = { navController.navigate("top_playlist/$topSize") },
+            modifier = itemModifier
+          )
+        }
+        if (showBottom) {
+          AutoPlaylistButton(
+            title = stringResource(R.string.my_bottom) + " 50",
+            icon = R.drawable.trending_down,
+            subtitle = "Least played",
+            backgroundColor = TuneifyTokens.Yellow,
+            onClick = { navController.navigate("bottom_playlist/50") },
+            modifier = itemModifier
+          )
+        }
+        if (showExported) {
+          AutoPlaylistButton(
+            title = stringResource(R.string.action_exported),
+            icon = R.drawable.download,
+            subtitle = "Saved mixes",
+            backgroundColor = TuneifyTokens.Cyan,
+            onClick = { navController.navigate("auto_playlist/exported") },
+            modifier = itemModifier
+          )
+        }
+      }
+    }
+
   val headerContent =
     @Composable {
       Row(
@@ -288,6 +379,15 @@ fun LibraryMixScreen(
           state = lazyListState,
           contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues(),
         ) {
+          item(key = "library_title", contentType = CONTENT_TYPE_HEADER) {
+            androidx.compose.material3.Text(
+              text = stringResource(R.string.your_library),
+              style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
+              fontWeight = FontWeight.ExtraBold,
+              modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 4.dp)
+            )
+          }
+
           item(
             key = "filter",
             contentType = CONTENT_TYPE_HEADER,
@@ -306,76 +406,7 @@ fun LibraryMixScreen(
             key = "auto_playlists_grid",
             contentType = CONTENT_TYPE_HEADER,
           ) {
-            FlowRow(
-              maxItemsInEachRow = 2,
-              horizontalArrangement = Arrangement.spacedBy(8.dp),
-              verticalArrangement = Arrangement.spacedBy(8.dp),
-              modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-              val itemModifier = Modifier.weight(1f)
-              if (showLiked) {
-                AutoPlaylistButton(
-                  title = stringResource(R.string.liked),
-                  icon = R.drawable.favorite,
-                  iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                  onClick = { navController.navigate("auto_playlist/liked") },
-                  modifier = itemModifier
-                )
-              }
-              if (showDownloaded) {
-                AutoPlaylistButton(
-                  title = stringResource(R.string.offline),
-                  icon = R.drawable.offline,
-                  iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                  onClick = { navController.navigate("auto_playlist/downloaded") },
-                  modifier = itemModifier
-                )
-              }
-              if (showExported) {
-                AutoPlaylistButton(
-                  title = stringResource(R.string.action_exported),
-                  icon = R.drawable.download,
-                  iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                  onClick = { navController.navigate("auto_playlist/exported") },
-                  modifier = itemModifier
-                )
-              }
-              if (showCached) {
-                AutoPlaylistButton(
-                  title = stringResource(R.string.cached_playlist),
-                  icon = R.drawable.cached,
-                  iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                  onClick = { navController.navigate("cache_playlist/cached") },
-                  modifier = itemModifier
-                )
-              }
-
-              if (showTop) {
-                AutoPlaylistButton(
-                  title = stringResource(R.string.my_top) + " $topSize",
-                  icon = R.drawable.trending_up,
-                  iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                  onClick = { navController.navigate("top_playlist/$topSize") },
-                  modifier = itemModifier
-                )
-              }
-              if (showBottom) {
-                AutoPlaylistButton(
-                  title = stringResource(R.string.my_bottom) + " 50",
-                  icon = R.drawable.trending_down,
-                  iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                  onClick = { navController.navigate("bottom_playlist/50") },
-                  modifier = itemModifier
-                )
-              }
-              AutoPlaylistButton(
-                title = stringResource(R.string.filter_local),
-                icon = R.drawable.snippet_folder,
-                iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                onClick = { navController.navigate("local_songs") },
-                modifier = Modifier.fillMaxWidth(0.5f).padding(end = 4.dp)
-              )
-            }
+            autoPlaylistsContent()
           }
 
           item(
@@ -564,6 +595,19 @@ fun LibraryMixScreen(
           contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues(),
         ) {
           item(
+            key = "library_title",
+            span = { GridItemSpan(maxLineSpan) },
+            contentType = CONTENT_TYPE_HEADER,
+          ) {
+            androidx.compose.material3.Text(
+              text = stringResource(R.string.your_library),
+              style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
+              fontWeight = FontWeight.ExtraBold,
+              modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 4.dp)
+            )
+          }
+
+          item(
             key = "filter",
             span = { GridItemSpan(maxLineSpan) },
             contentType = CONTENT_TYPE_HEADER,
@@ -584,76 +628,7 @@ fun LibraryMixScreen(
             span = { GridItemSpan(maxLineSpan) },
             contentType = CONTENT_TYPE_HEADER,
           ) {
-            FlowRow(
-              maxItemsInEachRow = 2,
-              horizontalArrangement = Arrangement.spacedBy(8.dp),
-              verticalArrangement = Arrangement.spacedBy(8.dp),
-              modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-              val itemModifier = Modifier.weight(1f)
-              if (showLiked) {
-                AutoPlaylistButton(
-                  title = stringResource(R.string.liked),
-                  icon = R.drawable.favorite,
-                  iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                  onClick = { navController.navigate("auto_playlist/liked") },
-                  modifier = itemModifier
-                )
-              }
-              if (showDownloaded) {
-                AutoPlaylistButton(
-                  title = stringResource(R.string.offline),
-                  icon = R.drawable.offline,
-                  iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                  onClick = { navController.navigate("auto_playlist/downloaded") },
-                  modifier = itemModifier
-                )
-              }
-              if (showExported) {
-                AutoPlaylistButton(
-                  title = stringResource(R.string.action_exported),
-                  icon = R.drawable.download,
-                  iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                  onClick = { navController.navigate("auto_playlist/exported") },
-                  modifier = itemModifier
-                )
-              }
-              if (showCached) {
-                AutoPlaylistButton(
-                  title = stringResource(R.string.cached_playlist),
-                  icon = R.drawable.cached,
-                  iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                  onClick = { navController.navigate("cache_playlist/cached") },
-                  modifier = itemModifier
-                )
-              }
-
-              if (showTop) {
-                AutoPlaylistButton(
-                  title = stringResource(R.string.my_top) + " $topSize",
-                  icon = R.drawable.trending_up,
-                  iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                  onClick = { navController.navigate("top_playlist/$topSize") },
-                  modifier = itemModifier
-                )
-              }
-              if (showBottom) {
-                AutoPlaylistButton(
-                  title = stringResource(R.string.my_bottom) + " 50",
-                  icon = R.drawable.trending_down,
-                  iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                  onClick = { navController.navigate("bottom_playlist/50") },
-                  modifier = itemModifier
-                )
-              }
-              AutoPlaylistButton(
-                title = stringResource(R.string.filter_local),
-                icon = R.drawable.snippet_folder,
-                iconTint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                onClick = { navController.navigate("local_songs") },
-                modifier = Modifier.fillMaxWidth(0.5f).padding(end = 4.dp)
-              )
-            }
+            autoPlaylistsContent()
           }
 
           item(

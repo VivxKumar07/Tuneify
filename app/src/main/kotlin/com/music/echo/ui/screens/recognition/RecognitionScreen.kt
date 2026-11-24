@@ -447,8 +447,8 @@ private fun SuccessState(
         modifier =
           Modifier.fillMaxWidth(0.8f)
             .aspectRatio(1f)
-            .shadow(elevation = 32.dp, shape = RoundedCornerShape(24.dp))
-            .clip(RoundedCornerShape(24.dp)),
+            .shadow(elevation = 0.dp, shape = RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(16.dp)),
         contentScale = ContentScale.Crop
       )
     }

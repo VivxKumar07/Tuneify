@@ -341,7 +341,7 @@ fun UpdateScreen(navController: NavHostController) {
                     } else {
                       val urlToDownload =
                         currentStatus.apkUrl
-                          ?: "https://github.com/EchoMusicApp/Echo-Music/releases/download/${currentStatus.version}/echomusic.apk"
+                          ?: "https://github.com/VivxKumar07/Tuneify/releases/download/${currentStatus.version}/tuneify.apk"
 
                       val constraints =
                         Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
@@ -471,7 +471,7 @@ fun UpdateScreen(navController: NavHostController) {
                       model = currentStatus.imageUrl,
                       contentDescription = null,
                       modifier =
-                        Modifier.fillMaxWidth().height(200.dp).clip(RoundedCornerShape(24.dp)),
+                        Modifier.fillMaxWidth().height(200.dp).clip(RoundedCornerShape(16.dp)),
                       contentScale = ContentScale.Crop
                     )
                     Spacer(modifier = Modifier.height(24.dp))
@@ -672,108 +672,11 @@ suspend fun checkForUpdate(
     ) -> Unit,
   onError: () -> Unit,
 ) {
-  withContext(Dispatchers.IO) {
-    try {
-      val url = URL("https://api.github.com/repos/EchoMusicApp/Echo-Music/releases/latest")
-      val json = url.openStream().bufferedReader().use { it.readText() }
-      val targetRelease = JSONObject(json)
-
-      val currentVersion = BuildConfig.VERSION_NAME
-      val targetTagName = targetRelease.getString("tag_name")
-      val currentClean = currentVersion.removePrefix("b").removePrefix("v").trim()
-      val targetClean = targetTagName.removePrefix("b").removePrefix("v").trim()
-      val shouldShow = currentClean != targetClean
-
-      if (shouldShow) {
-        val tagWithPrefix = targetRelease.getString("tag_name")
-        val displayTag = tagWithPrefix
-
-        val changelogList = mutableListOf<ChangelogSection>()
-        var description: String? = null
-        var imageUrl: String? = null
-        try {
-          val changelogUrl =
-            URL(
-              "https://github.com/EchoMusicApp/Echo-Music/releases/download/$tagWithPrefix/changelog.json"
-            )
-          val changelogJson = changelogUrl.openStream().bufferedReader().use { it.readText() }
-          val changelogData = JSONObject(changelogJson)
-
-          description = changelogData.optString("description").takeIf { it.isNotEmpty() }
-          imageUrl = changelogData.optString("image").takeIf { it.isNotEmpty() }
-
-          val changelogArray = changelogData.getJSONArray("changelog")
-          for (j in 0 until changelogArray.length()) {
-            val sectionObj = changelogArray.getJSONObject(j)
-            val title = sectionObj.getString("title")
-            val itemsArray = sectionObj.getJSONArray("items")
-            val itemsList = mutableListOf<String>()
-            for (k in 0 until itemsArray.length()) {
-              itemsList.add(itemsArray.getString(k))
-            }
-            changelogList.add(ChangelogSection(title, itemsList))
-          }
-        } catch (e: Exception) {
-          var body =
-            targetRelease.optString("body", context.getString(R.string.no_changelog_available))
-
-          val imageRegex = Regex("!\\[(.*?)\\]\\((.*?)\\)")
-          val match = imageRegex.find(body)
-          if (match != null) {
-            imageUrl = match.groupValues[2]
-            body = body.replace(match.value, "").trim()
-          }
-          val (parsedDesc, parsedSections) = parseMarkdownToSections(body)
-          description = parsedDesc ?: body.takeIf { parsedSections.isEmpty() }
-          changelogList.addAll(parsedSections)
-        }
-
-        val publishedAt = targetRelease.getString("published_at")
-        val formattedReleaseDate = formatGitHubDate(publishedAt)
-        val assets = targetRelease.getJSONArray("assets")
-
-        var apkSizeInMB = ""
-        var apkDownloadUrl = ""
-        for (j in 0 until assets.length()) {
-          val asset = assets.getJSONObject(j)
-          val assetName = asset.getString("name")
-          if (
-            assetName.endsWith(".apk", ignoreCase = true) &&
-              !assetName.lowercase().contains("debug")
-          ) {
-            val apkSizeInBytes = asset.getLong("size")
-            apkSizeInMB = String.format("%.1f", apkSizeInBytes / (1024.0 * 1024.0))
-            apkDownloadUrl = asset.getString("browser_download_url")
-            break
-          }
-        }
-
-        if (apkDownloadUrl.isNotEmpty()) {
-          withContext(Dispatchers.Main) {
-            onSuccess(
-              displayTag,
-              true,
-              changelogList,
-              apkSizeInMB,
-              formattedReleaseDate,
-              description,
-              imageUrl,
-              apkDownloadUrl
-            )
-          }
-          return@withContext
-        }
-      }
-
-      withContext(Dispatchers.Main) {
-        onSuccess(currentVersion, false, emptyList(), "", "", null, null, null)
-      }
-    } catch (e: Exception) {
-      Log.e("UpdateCheck", "Error checking for updates: ${e.message}", e)
-      withContext(Dispatchers.Main) { onError() }
-    }
-  }
+  // Disabled for Tuneify v1.0.0
+  onSuccess(BuildConfig.VERSION_NAME, false, emptyList(), "", "", null, null, null)
 }
+
+
 
 const val KEY_LAST_SEEN_CHANGELOG_VERSION = "last_seen_changelog_version"
 
@@ -809,66 +712,7 @@ private fun openTimedStream(url: String): java.io.InputStream =
  * may be a version or two behind "latest" right after installing an update) and returns its
  * changelog, mirroring the parsing [checkForUpdate] does for the newest release.
  */
-suspend fun fetchChangelogForVersion(currentVersion: String): WhatsNewInfo? =
-  withContext(Dispatchers.IO) {
-    try {
-      val cleanCurrent = currentVersion.removePrefix("b").removePrefix("v").trim()
-      val releasesJson =
-        openTimedStream("https://api.github.com/repos/EchoMusicApp/Echo-Music/releases")
-          .bufferedReader()
-          .use { it.readText() }
-      val releases = JSONArray(releasesJson)
-
-      var matchedRelease: JSONObject? = null
-      for (i in 0 until releases.length()) {
-        val release = releases.getJSONObject(i)
-        val tagClean = release.getString("tag_name").removePrefix("b").removePrefix("v").trim()
-        if (tagClean == cleanCurrent) {
-          matchedRelease = release
-          break
-        }
-      }
-      val release = matchedRelease ?: return@withContext null
-      val tag = release.getString("tag_name")
-
-      val changelogList = mutableListOf<ChangelogSection>()
-      var description: String? = null
-      try {
-        val changelogJson =
-          openTimedStream(
-              "https://github.com/EchoMusicApp/Echo-Music/releases/download/$tag/changelog.json"
-            )
-            .bufferedReader()
-            .use { it.readText() }
-        val changelogData = JSONObject(changelogJson)
-        description = changelogData.optString("description").takeIf { it.isNotEmpty() }
-        val changelogArray = changelogData.getJSONArray("changelog")
-        for (j in 0 until changelogArray.length()) {
-          val sectionObj = changelogArray.getJSONObject(j)
-          val title = sectionObj.getString("title")
-          val itemsArray = sectionObj.getJSONArray("items")
-          val itemsList = mutableListOf<String>()
-          for (k in 0 until itemsArray.length()) {
-            itemsList.add(itemsArray.getString(k))
-          }
-          changelogList.add(ChangelogSection(title, itemsList))
-        }
-      } catch (e: Exception) {
-        var body = release.optString("body", "")
-        val imageRegex = Regex("!\\[(.*?)\\]\\((.*?)\\)")
-        imageRegex.find(body)?.let { match -> body = body.replace(match.value, "").trim() }
-        val (parsedDesc, parsedSections) = parseMarkdownToSections(body)
-        description = parsedDesc ?: body.takeIf { parsedSections.isEmpty() }
-        changelogList.addAll(parsedSections)
-      }
-
-      if (changelogList.isEmpty() && description.isNullOrBlank()) return@withContext null
-      WhatsNewInfo(changelogList, description)
-    } catch (e: Exception) {
-      Log.e("WhatsNew", "Failed to fetch changelog for version $currentVersion: ${e.message}", e)
-      null
-    }
-  }
+suspend fun fetchChangelogForVersion(currentVersion: String): WhatsNewInfo? = null
 
 @Composable
 fun WhatsNewDialog(

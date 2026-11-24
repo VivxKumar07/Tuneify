@@ -311,7 +311,7 @@ private fun SaturationValuePanel(
     modifier =
       Modifier.fillMaxWidth()
         .height(180.dp)
-        .clip(RoundedCornerShape(12.dp))
+        .clip(RoundedCornerShape(8.dp))
         .pointerInput(hue) {
           detectTapGestures { offset ->
             onChange(
@@ -356,7 +356,7 @@ private fun HueSlider(
     modifier =
       Modifier.fillMaxWidth()
         .height(24.dp)
-        .clip(RoundedCornerShape(12.dp))
+        .clip(RoundedCornerShape(8.dp))
         .pointerInput(Unit) {
           detectTapGestures { offset -> onChange((offset.x / size.width).coerceIn(0f, 1f) * 360f) }
         }

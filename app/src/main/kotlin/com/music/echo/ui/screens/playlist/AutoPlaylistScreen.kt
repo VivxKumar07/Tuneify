@@ -622,7 +622,7 @@ private fun AutoPlaylistHeader(
                 if (LocalConfiguration.current.screenWidthDp > 600) Modifier.size(300.dp)
                 else Modifier.fillMaxWidth().aspectRatio(1f)
               )
-              .clip(RoundedCornerShape(8.dp)),
+              .clip(RoundedCornerShape(16.dp)),
           contentScale = androidx.compose.ui.layout.ContentScale.Crop
         )
       }

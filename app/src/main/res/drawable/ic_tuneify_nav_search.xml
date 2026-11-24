@@ -1,0 +1,20 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Modern crisp search magnifying glass matching reference image Screen 1 bottom nav -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="2.1"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M11,18 C14.866,18 18,14.866 18,11 C18,7.134 14.866,4 11,4 C7.134,4 4,7.134 4,11 C4,14.866 7.134,18 11,18 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="2.3"
+        android:strokeLineCap="round"
+        android:pathData="M16.5,16.5 L20.5,20.5" />
+</vector>

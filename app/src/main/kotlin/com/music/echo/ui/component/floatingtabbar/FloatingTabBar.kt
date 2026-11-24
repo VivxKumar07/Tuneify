@@ -40,6 +40,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -61,6 +62,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
@@ -484,6 +486,11 @@ private fun SharedTransitionScope.InlineTab(
         )
         .shadow(shape = shapes.tabBarShape, elevation = elevations.inlineElevation)
         .background(color = colors.backgroundColor, shape = shapes.tabBarShape)
+        .border(
+          TuneifyTokens.BorderHairline,
+          MaterialTheme.colorScheme.outlineVariant,
+          shapes.tabBarShape
+        )
         .clip(shapes.tabBarShape)
         .then(tabBarContentModifier)
         .combinedClickable(
@@ -539,6 +546,11 @@ private fun SharedTransitionScope.InlineStandaloneTab(
         )
         .shadow(shape = shapes.standaloneTabShape, elevation = elevations.inlineElevation)
         .background(color = colors.backgroundColor, shape = shapes.standaloneTabShape)
+        .border(
+          TuneifyTokens.BorderHairline,
+          MaterialTheme.colorScheme.outlineVariant,
+          shapes.standaloneTabShape
+        )
         .clip(shapes.standaloneTabShape)
         .then(tabBarContentModifier)
         .combinedClickable(
@@ -581,6 +593,11 @@ private fun SharedTransitionScope.InlineAccessory(
         Modifier.fillMaxSize()
           .shadow(shape = shapes.accessoryShape, elevation = elevations.inlineElevation)
           .background(color = colors.accessoryBackgroundColor, shapes.accessoryShape)
+          .border(
+            TuneifyTokens.BorderHairline,
+            MaterialTheme.colorScheme.outlineVariant,
+            shapes.accessoryShape
+          )
           .clip(shapes.accessoryShape),
         animatedVisibilityScope
       )
@@ -688,6 +705,11 @@ private fun SharedTransitionScope.ExpandedAccessory(
     accessory(
       Modifier.shadow(shape = shapes.accessoryShape, elevation = elevations.expandedElevation)
         .background(color = colors.accessoryBackgroundColor, shapes.accessoryShape)
+        .border(
+          TuneifyTokens.BorderHairline,
+          MaterialTheme.colorScheme.outlineVariant,
+          shapes.accessoryShape
+        )
         .clip(shapes.accessoryShape),
       animatedVisibilityScope
     )
@@ -747,6 +769,11 @@ private fun SharedTransitionScope.ExpandedTabs(
         )
         .shadow(shape = shapes.tabBarShape, elevation = elevations.expandedElevation)
         .background(color = colors.backgroundColor, shape = shapes.tabBarShape)
+        .border(
+          TuneifyTokens.BorderHairline,
+          MaterialTheme.colorScheme.outlineVariant,
+          shapes.tabBarShape
+        )
         .clip(shapes.tabBarShape)
         .then(tabBarContentModifier)
         .padding(sizes.tabBarContentPadding)
@@ -845,6 +872,11 @@ private fun SharedTransitionScope.ExpandedStandaloneTab(
         )
         .shadow(shape = shapes.standaloneTabShape, elevation = elevations.expandedElevation)
         .background(color = colors.backgroundColor, shape = shapes.standaloneTabShape)
+        .border(
+          TuneifyTokens.BorderHairline,
+          MaterialTheme.colorScheme.outlineVariant,
+          shapes.standaloneTabShape
+        )
         .clip(shapes.standaloneTabShape)
         .then(tabBarContentModifier)
         .combinedClickable(
@@ -1102,10 +1134,10 @@ object FloatingTabBarDefaults {
    */
   @Composable
   fun shapes(
-    tabBarShape: Shape = RoundedCornerShape(100),
-    tabShape: Shape = RoundedCornerShape(100),
-    standaloneTabShape: Shape = CircleShape,
-    accessoryShape: Shape = RoundedCornerShape(100),
+    tabBarShape: Shape = RoundedCornerShape(TuneifyTokens.RadiusSheet),
+    tabShape: Shape = RoundedCornerShape(TuneifyTokens.RadiusSmall),
+    standaloneTabShape: Shape = RoundedCornerShape(TuneifyTokens.RadiusSmall),
+    accessoryShape: Shape = RoundedCornerShape(TuneifyTokens.RadiusSheet),
   ): FloatingTabBarShapes =
     FloatingTabBarShapes(
       tabBarShape = tabBarShape,
@@ -1149,8 +1181,8 @@ object FloatingTabBarDefaults {
    */
   @Composable
   fun elevations(
-    inlineElevation: Dp = 6.dp,
-    expandedElevation: Dp = 12.dp,
+    inlineElevation: Dp = 0.dp,
+    expandedElevation: Dp = 0.dp,
   ): FloatingTabBarElevations =
     FloatingTabBarElevations(
       inlineElevation = inlineElevation,

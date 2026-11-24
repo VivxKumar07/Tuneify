@@ -21,6 +21,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -161,7 +162,7 @@ fun LibrarySongsScreen(
                   containerColor = MaterialTheme.colorScheme.surface
                 ),
               onClick = onDeselect,
-              shape = RoundedCornerShape(16.dp),
+              shape = TuneifyTokens.ShapeMedium,
               leadingIcon = {
                 Icon(painter = painterResource(R.drawable.close), contentDescription = "")
               },
@@ -211,7 +212,7 @@ fun LibrarySongsScreen(
             Text(
               text = pluralStringResource(R.plurals.n_song, filteredSongs.size, filteredSongs.size),
               style = MaterialTheme.typography.titleSmall,
-              color = MaterialTheme.colorScheme.secondary,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
           }
         }
@@ -342,7 +343,7 @@ fun LibrarySongsScreen(
           },
           colors =
             TopAppBarDefaults.topAppBarColors(
-              containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.88f)
+              containerColor = MaterialTheme.colorScheme.surface
             ),
           windowInsets = WindowInsets(0.dp)
         )

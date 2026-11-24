@@ -76,6 +76,7 @@ import echo.music.iad1tya.constants.PureBlackKey
 import echo.music.iad1tya.constants.PureBlackMiniPlayerKey
 import echo.music.iad1tya.constants.SelectedThemeColorKey
 import echo.music.iad1tya.ui.theme.DefaultThemeColor
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import echo.music.iad1tya.utils.rememberEnumPreference
 import echo.music.iad1tya.utils.rememberPreference
 
@@ -219,23 +220,24 @@ fun ThemeScreen(navController: NavController, highlightKey: String? = null) {
 
         Card(
           modifier = Modifier.fillMaxWidth(),
-          shape = RoundedCornerShape(32.dp),
+          shape = RoundedCornerShape(8.dp),
           colors =
             CardDefaults.cardColors(
-              containerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.6f)
+              containerColor = MaterialTheme.colorScheme.surfaceVariant
             ),
           elevation = CardDefaults.cardElevation(0.dp),
-          border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f))
+          border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
         ) {
           Column(
-            modifier = Modifier.fillMaxWidth().padding(24.dp),
+            modifier = Modifier.fillMaxWidth().padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
           ) {
             val isDynamic = selectedThemeColor == DefaultThemeColor
             Row(
               modifier =
                 Modifier.fillMaxWidth()
-                  .clip(RoundedCornerShape(16.dp))
+                  .clip(RoundedCornerShape(8.dp))
+                  .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
                   .clickable {
                     if (!isDynamic) {
                       handleColorSelection(DefaultThemeColor)
@@ -254,7 +256,7 @@ fun ThemeScreen(navController: NavController, highlightKey: String? = null) {
                 Box(
                   modifier =
                     Modifier.size(40.dp)
-                      .clip(RoundedCornerShape(12.dp))
+                      .clip(RoundedCornerShape(8.dp))
                       .background(MaterialTheme.colorScheme.primaryContainer),
                   contentAlignment = Alignment.Center
                 ) {
@@ -324,26 +326,14 @@ fun ThemeModeCard(
     if (isSelected) {
       MaterialTheme.colorScheme.primary
     } else {
-      MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+      MaterialTheme.colorScheme.outline
     }
 
-  val backgroundBrush =
+  val backgroundColor =
     if (isSelected) {
-      Brush.linearGradient(
-        colors =
-          listOf(
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
-            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-          )
-      )
+      MaterialTheme.colorScheme.primaryContainer
     } else {
-      Brush.linearGradient(
-        colors =
-          listOf(
-            MaterialTheme.colorScheme.surfaceContainerLow,
-            MaterialTheme.colorScheme.surfaceContainerLow
-          )
-      )
+      MaterialTheme.colorScheme.surfaceVariant
     }
 
   Box(
@@ -353,11 +343,15 @@ fun ThemeModeCard(
           scaleX = scale
           scaleY = scale
         }
-        .clip(RoundedCornerShape(24.dp))
-        .background(backgroundBrush)
-        .border(borderWidth, borderColor, RoundedCornerShape(24.dp))
+        .clip(RoundedCornerShape(8.dp))
+        .background(backgroundColor)
+        .border(
+          if (isSelected) TuneifyTokens.BorderThick else TuneifyTokens.BorderHairline,
+          borderColor,
+          RoundedCornerShape(TuneifyTokens.RadiusCard)
+        )
         .clickable(onClick = onClick)
-        .padding(vertical = 24.dp, horizontal = 12.dp),
+        .padding(vertical = 20.dp, horizontal = 12.dp),
     contentAlignment = Alignment.Center
   ) {
     Column(

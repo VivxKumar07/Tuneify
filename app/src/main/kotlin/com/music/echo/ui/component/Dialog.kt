@@ -1,6 +1,7 @@
 package echo.music.iad1tya.ui.component
 
 import androidx.compose.foundation.layout.Box
+import echo.music.iad1tya.ui.theme.neoShadow
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.FlowRow
@@ -64,11 +65,20 @@ fun DefaultDialog(
     onDismissRequest = onDismiss,
     properties = DialogProperties(usePlatformDefaultWidth = false)
   ) {
+    val dialogShape = RoundedCornerShape(echo.music.iad1tya.ui.theme.TuneifyTokens.RadiusLarge)
+
     Surface(
-      modifier = Modifier.padding(24.dp),
-      shape = AlertDialogDefaults.shape,
-      color = AlertDialogDefaults.containerColor,
-      tonalElevation = AlertDialogDefaults.TonalElevation
+      modifier =
+        Modifier.padding(24.dp)
+          .neoShadow(
+            offsetX = 4.dp,
+            offsetY = 4.dp,
+            color = androidx.compose.ui.graphics.Color.Black,
+            shape = dialogShape
+          ),
+      shape = dialogShape,
+      color = MaterialTheme.colorScheme.surfaceContainerHigh,
+      tonalElevation = 0.dp
     ) {
       Column(horizontalAlignment = horizontalAlignment, modifier = modifier.padding(24.dp)) {
         if (icon != null) {
@@ -172,11 +182,20 @@ fun ListDialog(
     onDismissRequest = onDismiss,
     properties = DialogProperties(usePlatformDefaultWidth = false),
   ) {
+    val dialogShape = RoundedCornerShape(echo.music.iad1tya.ui.theme.TuneifyTokens.RadiusLarge)
+
     Surface(
-      modifier = Modifier.padding(24.dp),
-      shape = AlertDialogDefaults.shape,
-      color = color,
-      tonalElevation = AlertDialogDefaults.TonalElevation,
+      modifier =
+        Modifier.padding(24.dp)
+          .neoShadow(
+            offsetX = 4.dp,
+            offsetY = 4.dp,
+            color = androidx.compose.ui.graphics.Color.Black,
+            shape = dialogShape
+          ),
+      shape = dialogShape,
+      color = MaterialTheme.colorScheme.surfaceContainerHigh,
+      tonalElevation = 0.dp,
     ) {
       Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -300,7 +319,7 @@ fun TextFieldDialog(
             singleLine = singleLine,
             maxLines = maxLines,
             colors = OutlinedTextFieldDefaults.colors(),
-            shape = RoundedCornerShape(24.dp),
+            shape = RoundedCornerShape(16.dp),
             keyboardOptions =
               KeyboardOptions(
                 imeAction = if (singleLine) ImeAction.Done else ImeAction.None,
@@ -329,7 +348,7 @@ fun TextFieldDialog(
           singleLine = singleLine,
           maxLines = maxLines,
           colors = OutlinedTextFieldDefaults.colors(),
-          shape = RoundedCornerShape(24.dp),
+          shape = RoundedCornerShape(16.dp),
           keyboardOptions =
             KeyboardOptions(
               imeAction = if (singleLine) ImeAction.Done else ImeAction.None,

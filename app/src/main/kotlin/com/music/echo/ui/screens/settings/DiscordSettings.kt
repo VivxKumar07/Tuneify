@@ -344,7 +344,7 @@ fun DiscordSettings(
   Scaffold(
     modifier = Modifier.fillMaxSize(),
     containerColor = MaterialTheme.colorScheme.surface,
-    contentWindowInsets = WindowInsets(0, 0, 0, 0),
+    
     snackbarHost = { SnackbarHost(snackbarHostState) },
     topBar = {
       TopAppBar(
@@ -1242,7 +1242,7 @@ fun RichPresence(
       Surface(
         color = MaterialTheme.colorScheme.surfaceContainer,
         shape = MaterialTheme.shapes.medium,
-        shadowElevation = 6.dp,
+        shadowElevation = 0.dp,
         modifier = Modifier.fillMaxWidth(),
       ) {
         Column(
@@ -1275,14 +1275,14 @@ fun RichPresence(
                 contentDescription = null,
                 modifier =
                   Modifier.size(96.dp)
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(8.dp))
                     .align(Alignment.TopStart)
                     .run {
                       if (song == null) {
                         border(
                           2.dp,
                           MaterialTheme.colorScheme.onSurface,
-                          RoundedCornerShape(12.dp),
+                          RoundedCornerShape(8.dp),
                         )
                       } else {
                         this
@@ -1342,7 +1342,7 @@ fun RichPresence(
               visiblePreviewState?.let {
                 Text(
                   text = it,
-                  color = MaterialTheme.colorScheme.secondary,
+                  color = MaterialTheme.colorScheme.onSurfaceVariant,
                   style = MaterialTheme.typography.bodyMedium,
                   maxLines = 1,
                   overflow = TextOverflow.Ellipsis,
@@ -1438,7 +1438,7 @@ fun SongProgressBar(
     Spacer(modifier = Modifier.height(8.dp))
     LinearWavyProgressIndicator(
       progress = { progress.coerceIn(0f, 1f) },
-      modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)),
+      modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(4.dp)),
     )
     Row(modifier = Modifier.fillMaxWidth()) {
       Text(
@@ -1496,11 +1496,11 @@ fun PreferenceGroup(
       scope.items.forEachIndexed { index, item ->
         val shape =
           when {
-            scope.items.size == 1 -> androidx.compose.foundation.shape.RoundedCornerShape(24.dp)
+            scope.items.size == 1 -> androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
             index == 0 ->
               androidx.compose.foundation.shape.RoundedCornerShape(
-                topStart = 24.dp,
-                topEnd = 24.dp,
+                topStart = 16.dp,
+                topEnd = 16.dp,
                 bottomStart = 4.dp,
                 bottomEnd = 4.dp
               )
@@ -1508,8 +1508,8 @@ fun PreferenceGroup(
               androidx.compose.foundation.shape.RoundedCornerShape(
                 topStart = 4.dp,
                 topEnd = 4.dp,
-                bottomStart = 24.dp,
-                bottomEnd = 24.dp
+                bottomStart = 16.dp,
+                bottomEnd = 16.dp
               )
             else -> androidx.compose.foundation.shape.RoundedCornerShape(4.dp)
           }

@@ -1,5 +1,7 @@
 package echo.music.iad1tya.ui.component
 
+import echo.music.iad1tya.ui.theme.TuneifyTokens
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -129,7 +131,7 @@ fun echomusicLyricsLine(
         this.scaleX = scale
         this.scaleY = scale
       }
-      .clip(RoundedCornerShape(16.dp))
+      .clip(TuneifyTokens.ShapeCard)
       .combinedClickable(enabled = true, onClick = onClick, onLongClick = onLongClick)
       .background(
         if (isSelected && isSelectionModeActive)

@@ -393,7 +393,7 @@ fun ChangelogScreen(
                   AsyncImage(
                     model = imageUrl,
                     contentDescription = null,
-                    modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)),
+                    modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.FillWidth
                   )
                 }
@@ -459,7 +459,7 @@ fun ChangelogScreen(
                   Spacer(Modifier.height(24.dp))
                   Surface(
                     color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.2f),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(8.dp)
                   ) {
                     Row(
                       modifier = Modifier.padding(16.dp),

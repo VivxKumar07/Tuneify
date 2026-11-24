@@ -78,6 +78,7 @@ import androidx.compose.ui.unit.sp
 import echo.music.iad1tya.R
 import echo.music.iad1tya.ui.screens.Screens
 import kotlinx.coroutines.launch
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,22 +121,22 @@ fun FloatingNavigationToolbar(
   val toolbarModifier =
     if (useGlass) {
         androidx.compose.ui.Modifier.clip(
-            androidx.compose.foundation.shape.RoundedCornerShape(percent = 50)
+            TuneifyTokens.ShapeSheet
           )
           .liquidGlass(
             config = glassConfig,
-            shape = androidx.compose.foundation.shape.RoundedCornerShape(percent = 50)
+            shape = TuneifyTokens.ShapeSheet
           )
       } else {
         androidx.compose.ui.Modifier.clip(
-            androidx.compose.foundation.shape.RoundedCornerShape(percent = 50)
+            TuneifyTokens.ShapeSheet
           )
           .background(toolbarContainerColor)
       }
       .border(
         1.dp,
         outlineColor.copy(alpha = 0.3f),
-        androidx.compose.foundation.shape.RoundedCornerShape(percent = 50)
+        TuneifyTokens.ShapeSheet
       )
 
   val hasOverflowMenu =
@@ -235,7 +236,7 @@ private fun ToolbarItemsContainer(
               .fillMaxHeight()
               .background(
                 color = floatingToolbarSelectedItemContainerColor(pureBlack),
-                shape = RoundedCornerShape(24.dp)
+                shape = RoundedCornerShape(16.dp)
               )
         )
       }
@@ -419,7 +420,7 @@ private fun FloatingNavigationToolbarItem(
   onLongClick: (() -> Unit)? = null,
   modifier: Modifier = Modifier,
 ) {
-  val shape = RoundedCornerShape(24.dp)
+  val shape = RoundedCornerShape(16.dp)
   val showLabel = selected && showSelectedLabel
   val transition = updateTransition(targetState = selected, label = "navItem_${screen.route}")
 
@@ -611,7 +612,7 @@ private fun FloatingNavigationToolbarActionItem(
     modifier =
       modifier
         .scale(pressScale)
-        .clip(RoundedCornerShape(24.dp))
+        .clip(RoundedCornerShape(16.dp))
         .clickable(
           interactionSource = interactionSource,
           indication = LocalIndication.current,

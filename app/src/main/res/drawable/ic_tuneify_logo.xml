@@ -1,0 +1,42 @@
+<!-- Tuneify brand mark — 5-capsule vertical waveform. Single-colour tintable master. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Bar 1 (Left) -->
+    <path
+        android:strokeColor="#FF000000"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round"
+        android:pathData="M 14,20 L 14,28" />
+
+    <!-- Bar 2 -->
+    <path
+        android:strokeColor="#FF000000"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round"
+        android:pathData="M 19,16 L 19,32" />
+
+    <!-- Bar 3 (Center) -->
+    <path
+        android:strokeColor="#FF000000"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round"
+        android:pathData="M 24,12 L 24,36" />
+
+    <!-- Bar 4 -->
+    <path
+        android:strokeColor="#FF000000"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round"
+        android:pathData="M 29,16 L 29,32" />
+
+    <!-- Bar 5 (Right) -->
+    <path
+        android:strokeColor="#FF000000"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round"
+        android:pathData="M 34,20 L 34,28" />
+</vector>

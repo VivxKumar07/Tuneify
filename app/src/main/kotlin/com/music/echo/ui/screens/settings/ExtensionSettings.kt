@@ -99,7 +99,7 @@ fun ExtensionSettingsScreen(
             .padding(horizontal = 16.dp)
     ) {
         Spacer(Modifier.windowInsetsPadding(echo.music.iad1tya.LocalPlayerAwareWindowInsets.current.only(WindowInsetsSides.Top)))
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(68.dp))
 
         if (addons.isNotEmpty()) {
             Material3SettingsGroup(

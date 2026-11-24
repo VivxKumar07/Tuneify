@@ -254,7 +254,7 @@ fun NewIconButton(
     modifier = modifier.clickable(enabled = enabled) { onClick() },
     colors = CardDefaults.cardColors(containerColor = animatedBackground),
     shape = CircleShape,
-    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
   ) {
     Box(modifier = Modifier.size(48.dp).padding(12.dp), contentAlignment = Alignment.Center) {
       icon()

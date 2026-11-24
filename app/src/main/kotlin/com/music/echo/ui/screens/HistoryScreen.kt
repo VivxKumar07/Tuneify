@@ -410,7 +410,7 @@ fun HistoryScreen(
   TopAppBar(
     colors =
       TopAppBarDefaults.topAppBarColors(
-        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
+        containerColor = MaterialTheme.colorScheme.surface
       ),
     title = {
       if (inSelectMode) {

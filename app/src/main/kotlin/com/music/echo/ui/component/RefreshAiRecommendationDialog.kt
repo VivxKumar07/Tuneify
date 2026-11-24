@@ -54,9 +54,9 @@ fun RefreshAiRecommendationDialog(onDismiss: () -> Unit) {
   ) {
     Surface(
       modifier = Modifier.fillMaxWidth(0.9f).wrapContentHeight(),
-      shape = RoundedCornerShape(24.dp),
+      shape = RoundedCornerShape(16.dp),
       color = MaterialTheme.colorScheme.surface,
-      tonalElevation = 6.dp
+      tonalElevation = 0.dp
     ) {
       Column(
         modifier = Modifier.padding(24.dp),

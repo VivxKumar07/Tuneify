@@ -142,6 +142,8 @@ import echo.music.iad1tya.ui.component.EmptyPlaceholder
 import echo.music.iad1tya.ui.component.ExpandableText
 import echo.music.iad1tya.ui.component.IconButton
 import echo.music.iad1tya.ui.component.LocalMenuState
+import echo.music.iad1tya.ui.component.TuneifyTriBar
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import echo.music.iad1tya.ui.component.OverlayEditButton
 import echo.music.iad1tya.ui.component.SongListItem
 import echo.music.iad1tya.ui.component.SortHeader
@@ -1055,17 +1057,19 @@ fun LocalPlaylistHeader(
       }
     }
 
-    Box(
-      modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
-      contentAlignment = Alignment.Center
+    val songCount =
+      if (playlist.songCount == 0 && (playlist.playlist.remoteSongCount ?: 0) != null) {
+        (playlist.playlist.remoteSongCount ?: 0)
+      } else {
+        playlist.songCount
+      }
+
+    Row(
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 24.dp),
+      verticalAlignment = Alignment.Top
     ) {
       Box(
-        modifier =
-          Modifier.then(
-              if (LocalConfiguration.current.screenWidthDp > 600) Modifier.size(300.dp)
-              else Modifier.fillMaxWidth().padding(horizontal = 48.dp).aspectRatio(1f)
-            )
-            .clip(RoundedCornerShape(8.dp))
+        modifier = Modifier.size(88.dp).clip(RoundedCornerShape(TuneifyTokens.RadiusCard))
       ) {
         when (playlist.thumbnails.size) {
           0 ->
@@ -1212,44 +1216,44 @@ fun LocalPlaylistHeader(
           }
         }
       }
-    }
 
-    Text(
-      text = playlist.playlist.name,
-      style = MaterialTheme.typography.headlineSmall,
-      fontWeight = FontWeight.Bold,
-      textAlign = TextAlign.Center,
-      maxLines = 2,
-      overflow = TextOverflow.Ellipsis,
-      modifier = Modifier.padding(horizontal = 32.dp)
-    )
+      Spacer(Modifier.width(14.dp))
 
-    Spacer(modifier = Modifier.height(12.dp))
+      Column(modifier = Modifier.weight(1f)) {
+        TuneifyTriBar(height = 20.dp, barWidth = 4.dp, gap = 3.dp)
 
-    val songCount =
-      if (playlist.songCount == 0 && (playlist.playlist.remoteSongCount ?: 0) != null) {
-        (playlist.playlist.remoteSongCount ?: 0)
-      } else {
-        playlist.songCount
+        Spacer(Modifier.height(10.dp))
+
+        Text(
+          text = playlist.playlist.name,
+          style = MaterialTheme.typography.headlineSmall,
+          fontWeight = FontWeight.Black,
+          maxLines = 3,
+          overflow = TextOverflow.Ellipsis
+        )
+
+        Spacer(Modifier.height(6.dp))
+
+        Text(
+          text =
+            buildString {
+              append(pluralStringResource(R.plurals.n_song, songCount, songCount))
+              if (playlistLength > 0) {
+                append(" \u00B7 ")
+                append(makeTimeString(playlistLength * 1000L))
+              }
+            },
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
       }
-    Text(
-      text =
-        buildString {
-          append(pluralStringResource(R.plurals.n_song, songCount, songCount))
-          if (playlistLength > 0) {
-            append(" • ")
-            append(makeTimeString(playlistLength * 1000L))
-          }
-        },
-      style = MaterialTheme.typography.bodyMedium,
-      color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-    )
+    }
 
     Spacer(modifier = Modifier.height(24.dp))
 
     Row(
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-      horizontalArrangement = Arrangement.spacedBy(12.dp),
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+      horizontalArrangement = Arrangement.spacedBy(8.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {
       TextButton(
@@ -1262,7 +1266,7 @@ fun LocalPlaylistHeader(
           )
         },
         modifier = Modifier.weight(1f).height(48.dp),
-        shape = CircleShape,
+        shape = TuneifyTokens.ShapePill,
         colors =
           androidx.compose.material3.ButtonDefaults.textButtonColors(
             containerColor = MaterialTheme.colorScheme.primary,
@@ -1292,11 +1296,11 @@ fun LocalPlaylistHeader(
           )
         },
         modifier = Modifier.weight(1f).height(48.dp),
-        shape = CircleShape,
+        shape = TuneifyTokens.ShapePill,
         colors =
           androidx.compose.material3.ButtonDefaults.textButtonColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            contentColor = MaterialTheme.colorScheme.onSurface
           )
       ) {
         Icon(
@@ -1386,8 +1390,8 @@ fun LocalPlaylistHeader(
             )
           }
         },
-        shape = CircleShape,
-        color = MaterialTheme.colorScheme.surfaceVariant,
+        shape = androidx.compose.foundation.shape.CircleShape,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
         modifier = Modifier.size(48.dp)
       ) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -1413,13 +1417,12 @@ fun LocalPlaylistHeader(
             }"
       }
 
-    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
+    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
       Text(
         text = stringResource(R.string.about_playlist),
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.titleSmall,
         color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.padding(bottom = 8.dp)
+        modifier = Modifier.padding(bottom = 6.dp)
       )
 
       ExpandableText(text = staticDescription, runs = null, collapsedMaxLines = 3)
@@ -1439,7 +1442,7 @@ fun LocalPlaylistHeader(
 private fun MetadataChip(icon: Int, text: String, modifier: Modifier = Modifier) {
   Surface(
     modifier = modifier,
-    shape = RoundedCornerShape(20.dp),
+    shape = RoundedCornerShape(TuneifyTokens.RadiusPill),
     color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
   ) {
     Row(

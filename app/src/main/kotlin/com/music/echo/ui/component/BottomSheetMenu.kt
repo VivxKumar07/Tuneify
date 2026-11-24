@@ -62,13 +62,20 @@ fun AnimatedBottomSheet(
   onDismissRequest: () -> Unit,
   modifier: Modifier = Modifier,
   sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false),
-  sheetMaxWidth: Dp = BottomSheetDefaults.SheetMaxWidth,
-  shape: Shape = BottomSheetDefaults.ExpandedShape,
-  containerColor: Color = BottomSheetDefaults.ContainerColor,
+  shape: Shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
+  containerColor: Color = MaterialTheme.colorScheme.surface,
   contentColor: Color = contentColorFor(containerColor),
   tonalElevation: Dp = 0.dp,
   scrimColor: Color = BottomSheetDefaults.ScrimColor,
-  dragHandle: @Composable (() -> Unit)? = { BottomSheetDefaults.DragHandle() },
+  dragHandle: @Composable (() -> Unit)? = {
+    Box(
+      modifier = Modifier
+        .padding(vertical = 10.dp)
+        .size(width = 40.dp, height = 4.dp)
+        .clip(RoundedCornerShape(4.dp))
+        .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.7f))
+    )
+  },
   contentWindowInsets: @Composable () -> WindowInsets = { BottomSheetDefaults.windowInsets },
   properties: ModalBottomSheetProperties = ModalBottomSheetDefaults.properties,
   content: @Composable ColumnScope.() -> Unit,
@@ -97,7 +104,6 @@ fun AnimatedBottomSheet(
     onDismissRequest = onDismissRequest,
     modifier = modifier,
     sheetState = sheetState,
-    sheetMaxWidth = sheetMaxWidth,
     shape = shape,
     containerColor = containerColor,
     contentColor = contentColor,
@@ -134,7 +140,7 @@ fun BottomSheetMenu(
         modifier =
           Modifier.padding(vertical = 12.dp)
             .size(width = 40.dp, height = 4.dp)
-            .clip(RoundedCornerShape(2.dp))
+            .clip(RoundedCornerShape(4.dp))
             .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
       )
     },

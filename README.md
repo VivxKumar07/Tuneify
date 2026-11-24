@@ -1,291 +1,161 @@
 <div align="center">
-  <img src="assets/banner.png" alt="Echo Music Logo"/>
+  <img src="app/src/main/res/drawable/ic_tuneify_logo.xml" alt="Tuneify Logo" width="100"/>
+  <h1>Tuneify</h1>
+  <p><b>A modern, expressive Android music streaming client crafted with Liquid Glassmorphism, Material Expressive rhythms, and zero ads.</b></p>
 
-  <p><b>A modern Android music app with ad-free streaming, synced lyrics, offline playback, and an intuitive user experience.</b></p>
+  <p>
+    <a href="https://github.com/VivxKumar07/Tuneify/releases/latest"><img src="https://img.shields.io/badge/Release-v1.0.0-c6f53d?style=for-the-badge&logo=android&logoColor=black" alt="Release v1.0.0"/></a>
+    <a href="https://github.com/VivxKumar07/Tuneify"><img src="https://img.shields.io/badge/Platform-Android%208.0%2B-122A1C?style=for-the-badge&logo=android" alt="Android 8.0+"/></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-0A1F0D?style=for-the-badge" alt="License GPL 3.0"/></a>
+    <a href="https://github.com/VivxKumar07/Tuneify/stargazers"><img src="https://img.shields.io/badge/Pure%20FOSS-Ad--Free-206D39?style=for-the-badge" alt="Ad-Free"/></a>
+  </p>
 </div>
 
 ---
 
-## Overview
+## 🎵 What is Tuneify?
 
-Echo Music delivers a seamless, premium listening experience by leveraging YouTube Music's vast library — without the ads. It adds powerful extras including offline downloads, real-time synchronized lyrics, and environment-aware music recognition.
+**Tuneify** is an expressive, privacy-first Android music application built with modern **Jetpack Compose**. It blends the vast music catalog of YouTube Music with an organic **Liquid Glassmorphism** visual identity and fluid **Material Expressive** UI rhythms.
 
-> [!IMPORTANT]
-> **In-app OTA updates have been permanently removed.** Please update manually via the website. Echo Music is completely free and ad-free; the few ads shown during a manual download help support the ongoing development of this project. Please do not open issues requesting to bring this back. Thank you for your support!
-
----
-
-- **Discord**: [Join the Echo Music Discord server](https://discord.gg/Xt5hgsJJuA)
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Screenshots](#screenshots)
-- [Features](#features)
-- [Installation & Setup](#installation--setup)
-- [Support the Project](#support-the-project)
-- [Contributors](#contributors)
-- [Special Thanks](#special-thanks)
+Designed for music lovers who appreciate clean aesthetics, rich audio fidelity, and effortless navigation:
+- 🌿 **Liquid Glass Visual Language**: Frosted translucent layers, ambient aura lighting, and organic stadium shapes.
+- 🎨 **Adaptive Artwork Palette**: Dynamic ambient color extraction that tints the entire application canvas in real time to match the playing song.
+- 📐 **YouTube Music Layout Rhythms**: Engaging visual variety featuring 4-track stack columns, compact Speed Dial tiles, square album carousels, and rich community playlist cards.
+- 👆 **Intuitive Gestures**: Swipe right-to-left across the album cover to instantly unveil word-by-word synchronized lyrics; swipe back effortlessly without colliding with system gestures.
+- ⚡ **Seamless Offline Listening**: Download your favorite tracks and full playlists directly from the player with real-time download status indicators.
+- 🛡️ **Zero Tracking, Zero Ads**: No interruptions, no analytics tracking, no commercial subscriptions. 100% Free and Open Source.
 
 ---
 
-## Screenshots
+## ✨ Features at a Glance
 
-<div align="left">
+### 🎨 Visual & Expressive Design
+- **Harmonic Dynamic Theming**: Album artwork colors are dynamically extracted and animated across backgrounds, glow orbs, bottom navigation, and media controls.
+- **Tilted Pill Hero Spotlight**: Auto-advancing Material Expressive carousel highlighting curated albums and artist essentials with subtle organic tilt animations.
+- **Organic Stadium Artwork Container**: Distinctive asymmetric rounded stadium artwork frame in the player that feels physical and tactile.
+- **Floating Liquid Bottom Navbar**: Compact pill-shaped frosted glass bar with reflective glass highlighter and balanced touch targets.
+
+### 🎧 Listening & Audio Engine
+- **Bit-Perfect Playback**: High-fidelity audio rendering with Gapless Playback, Loudness Normalization, and Direct USB Audio (DAC) support.
+- **Built-in Equalizer & DSP**: Fine-tune frequency bands or apply presets tailored to your headphones and sound setup.
+- **Audio & Video Toggle**: Seamlessly switch between audio-only streams and music videos without losing your playback position.
+- **Background & Sleep Timer**: Uninterrupted playback with the screen off or in other apps, with an customizable sleep timer.
+
+### 📖 Lyrics & Discovery
+- **Synchronized Lyrics**: Word-by-word scrolling lyrics synchronized to playback.
+- **Gesture-driven Lyrics View**: Swipe right-to-left directly over the playing artwork to reveal lyrics; swipe back with a natural flick.
+- **Fast Discovery**: Explore Top Charts, New Releases, Moods & Genres, and Community Playlists.
+- **Smart Queue & Radio**: Generate endless continuous radio queues based on any track, artist, or playlist.
+
+---
+
+## 📸 Screenshots
+
+<div align="center">
   <table style="margin: 0 auto; border-collapse: collapse;">
     <tr>
-      <td align="center" style="padding: 15px; border: none;">
-        <b>Home Screen</b><br><br>
-        <img src="Screenshots/Home.png" alt="Home Screen" width="220" style="border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);"/>
+      <td align="center" style="padding: 12px;">
+        <b>Home Screen & Hero Carousel</b><br><br>
+        <img src="Screenshots/Home.png" alt="Tuneify Home Screen" width="220" style="border-radius: 18px; box-shadow: 0 10px 24px rgba(0,0,0,0.4);"/>
       </td>
-      <td align="center" style="padding: 15px; border: none;">
-        <b>Material Player</b><br><br>
-        <img src="Screenshots/Material%20you%20music%20page.png" alt="Material Player" width="220" style="border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);"/>
+      <td align="center" style="padding: 12px;">
+        <b>Liquid Glass Player</b><br><br>
+        <img src="Screenshots/Material%20you%20music%20page.png" alt="Tuneify Media Player" width="220" style="border-radius: 18px; box-shadow: 0 10px 24px rgba(0,0,0,0.4);"/>
       </td>
-      <td align="center" style="padding: 15px; border: none;">
-        <b>Apple Style Player</b><br><br>
-        <img src="Screenshots/Apple%20inspired%20music%20page.png" alt="Apple Style Player" width="220" style="border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);"/>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" style="padding: 15px; border: none;">
+      <td align="center" style="padding: 12px;">
         <b>Synchronized Lyrics</b><br><br>
-        <img src="Screenshots/lyrics.png" alt="Synchronized Lyrics" width="220" style="border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);"/>
-      </td>
-      <td align="center" style="padding: 15px; border: none;">
-        <b>Search & Explore</b><br><br>
-        <img src="Screenshots/search%20page.png" alt="Search & Explore" width="220" style="border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);"/>
-      </td>
-      <td align="center" style="padding: 15px; border: none;">
-        <b>Music Library</b><br><br>
-        <img src="Screenshots/library.png" alt="Music Library" width="220" style="border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);"/>
+        <img src="Screenshots/lyrics.png" alt="Synchronized Lyrics" width="220" style="border-radius: 18px; box-shadow: 0 10px 24px rgba(0,0,0,0.4);"/>
       </td>
     </tr>
-  </table>
-</div>
-
----
-
-## Features
-
-### What's New
-
-> **Music DNA (New!)** — Instantly uncover the backstory of any track. Echo Music queries Genius for deep track annotations, and intelligently falls back to Wikipedia API extracts for regional or obscure tracks where crowd-sourced meanings are missing.
-
-<br>
-
-<details>
-<summary><b>Streaming & Playback</b></summary>
-<br>
-
-- **Ad-Free** — Stream without any interruptions.
-- **Data Saver Mode** — Reduce data consumption when streaming on cellular networks.
-- **Seamless Playback** — Switch effortlessly between audio-only and video modes.
-- **Background Playback** — Listen while using other apps or with the screen off.
-- **Offline Mode** — Download tracks, albums, and playlists via a dedicated download manager.
-- **Crossfade** — Smooth transitions between tracks.
-- **Canvas Animations** — Visual animations while playing music.
-
-</details>
-
-<details>
-<summary><b>Discovery & Echo Find</b></summary>
-<br>
-
-- **Echo Find** — Identify songs playing around you using advanced audio recognition.
-- **Echo Brain** — An intelligent, on-device engine that analyzes your listening momentum and auto-injects perfectly aligned tracks into your queue. Read more in the [Echo Brain Documentation](ECHO_BRAIN_DOCS.md).
-- **Smart Recommendations** — Personalized suggestions based on your listening history.
-- **Comprehensive Browsing** — Explore Charts, Podcasts, Moods, and Genres.
-
-</details>
-
-<details>
-<summary><b>Lyrics</b></summary>
-<br>
-
-- **Multiple Lyric Animations** — Choose from various lyric display styles.
-- **Word-by-Word Lyrics** — Precise per-word synchronization.
-- **Lyrics+** — New lyrics provider for improved accuracy and coverage.
-- **AI Translation** — Built-in Google Translate integration for lyrics in any language.
-
-  For AI lyrics translation, select **API Route** in the AI settings, enter your [API key](https://www.api-route.com/api-keys), and choose a model available to that key. The preset uses `https://global.api-route.com/v1/chat/completions` with `claude-fable-5-1`; you can enter another exact model ID from the authenticated `/v1/models` catalog using the custom model option. Model availability depends on your key's group and permissions. See the [quickstart](https://www.api-route.com/docs/quickstart).
-
-</details>
-
-<details>
-<summary><b>Integrations</b></summary>
-<br>
-
-- **Music Sharing via Odesli** — Share songs as Song.link for cross-platform listening.
-- **Set as Ringtone** — Directly set any song as your device ringtone.
-
-</details>
-
-<details>
-<summary><b>Smart Playback</b></summary>
-<br>
-
-- **Pause on Mute** — Auto-pause when your device is muted.
-- **Resume on Bluetooth** — Playback resumes when headphones or earbuds reconnect.
-
-</details>
-
-<details>
-<summary><b>Customization</b></summary>
-<br>
-
-- **UI Density Scale** — Adjust interface spacing to your preference.
-- **High Refresh Rate Support** — Smoother UI and animations on supported displays.
-- **Fluid UI & Animations** — Material 3 Emphasized easing and GPU-accelerated lyrics for a silky smooth, lag-free experience.
-- **Hide Player Thumbnail** — Keep the player minimal without album art.
-- **Crop Album Art** — Adjust album art display to fit your style.
-- **Hide Video Songs** — Filter out video content from your feed.
-- **Hide YouTube Shorts** — Keep Shorts out of your music browsing.
-
-</details>
-
----
-
-## Installation & Setup
-
-### Android Installation
-
-Download the latest pre-compiled APK from the [Releases Page](https://github.com/EchoMusicApp/Echo-Music/releases/latest).
-
-<details>
-<summary><b>Building from Source</b></summary>
-<br>
-
-1. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/iad1tya/Echo-Music.git
-   cd Echo-Music
-   ```
-
-2. **Configure Android SDK**
-   Create a `local.properties` file:
-
-   ```bash
-   echo "sdk.dir=/path/to/your/android/sdk" > local.properties
-   ```
-
-   _(For detailed paths on Windows/macOS/Linux, refer to [SETUP.md](SETUP.md))_
-
-3. **Firebase Configuration (Optional)**
-   Firebase is required for analytics and crash reporting. See the instructions in [SETUP.md](SETUP.md#3-configure-firebase-optional) for adding your `google-services.json`.
-
-4. **Build the Application**
-   Echo Music has two build variants: **FOSS** (without Google Play Services / Cast) and **GMS** (with Cast support).
-
-   - To build the **FOSS** Universal Debug variant:
-     ```bash
-     ./gradlew assembleUniversalFossDebug
-     ```
-   - To build the **GMS** Universal Debug variant:
-     ```bash
-     ./gradlew assembleUniversalGmsDebug
-     ```
-
-   _(For optimized ARM64 builds, release builds, or other options, refer to [SETUP.md](SETUP.md))_
-
-</details>
-
----
-
-## Support the Project
-
-If Echo Music has been useful to you, consider supporting its development.
-
-<div align="left">
-  <table style="margin: 0 auto; border-collapse: collapse; border: none;">
     <tr>
-      <td align="center" style="padding: 15px; border: none;">
-        <a href="https://buymeacoffee.com/iad1tya" style="text-decoration:none;"><img src="assets/bmac.png" alt="Buy Me A Coffee Logo" width="140" style="border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);"/></a>
+      <td align="center" style="padding: 12px;">
+        <b>Search & Quick Picks</b><br><br>
+        <img src="Screenshots/search%20page.png" alt="Search Screen" width="220" style="border-radius: 18px; box-shadow: 0 10px 24px rgba(0,0,0,0.4);"/>
       </td>
-      <td align="center" style="padding: 15px; border: none;">
-        <a href="https://intradeus.github.io/http-protocol-redirector/?r=upi://pay?pa=iad1tya@upi&pn=Aditya%20Yadav&am=&tn=Thank%20You" style="text-decoration:none;"><img src="assets/UPI.png" alt="UPI Logo" width="140" style="border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);"/></a>
+      <td align="center" style="padding: 12px;">
+        <b>Music Library & Playlists</b><br><br>
+        <img src="Screenshots/library.png" alt="Music Library" width="220" style="border-radius: 18px; box-shadow: 0 10px 24px rgba(0,0,0,0.4);"/>
       </td>
-      <td align="center" style="padding: 15px; border: none;">
-        <a href="https://www.patreon.com/cw/iad1tya" style="text-decoration:none;"><img src="assets/patreon3.webp" alt="Patreon Logo" width="140" style="border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);"/></a>
+      <td align="center" style="padding: 12px;">
+        <b>Apple Style Glass Player</b><br><br>
+        <img src="Screenshots/Apple%20inspired%20music%20page.png" alt="Alternative Player" width="220" style="border-radius: 18px; box-shadow: 0 10px 24px rgba(0,0,0,0.4);"/>
       </td>
     </tr>
   </table>
 </div>
 
-<br>
+---
 
-<details>
-<summary><b>Cryptocurrency Options</b></summary>
-<br>
+## 🚀 Installation
 
-| Network      | Address                                        |
-| :----------- | :--------------------------------------------- |
-| **Bitcoin**  | `bc1qcvyr7eekha8uytmffcvgzf4h7xy7shqzke35fy`   |
-| **Ethereum** | `0x51bc91022E2dCef9974D5db2A0e22d57B360e700`   |
-| **Solana**   | `9wjca3EQnEiqzqgy7N5iqS1JGXJiknMQv6zHgL96t94S` |
+### 1. Download Pre-built APK
+Get the official release from the [GitHub Releases](https://github.com/VivxKumar07/Tuneify/releases/latest) page:
+- **`app-universal-gms-debug.apk`** — Recommended for all standard Android devices with Google Play Services.
+- **`app-universal-foss-debug.apk`** — For de-googled devices (MicroG / GrapheneOS / CalyxOS).
 
-</details>
+### 2. Building from Source
+Ensure you have the following installed:
+- Android Studio Hedgehog (or later) / JDK 17+
+- Android SDK 35 (Android 15) & NDK (for USB audio native modules)
+
+Clone the repository and build using Gradle:
+```bash
+# Clone the repository
+git clone https://github.com/VivxKumar07/Tuneify.git
+cd Tuneify
+
+# Build Universal GMS Debug APK
+./gradlew :app:assembleUniversalGmsDebug
+
+# Or build Universal FOSS Debug APK
+./gradlew :app:assembleUniversalFossDebug
+```
+The compiled APK will be located in `app/build/outputs/apk/universalGms/debug/`.
 
 ---
 
-## Contributors
+## 🛠️ Architecture & Tech Stack
 
-Without the support of this incredible open-source community, none of this would be possible. Thank you to everyone who has contributed to Echo Music!
-
-<!-- readme: contributors -start -->
-<table>
-<tr><td align="center"><a href="https://github.com/iad1tya"><img src="https://avatars.githubusercontent.com/u/147871321?v=4" width="60" height="60" /></a></td><td align="center"><a href="https://github.com/Roshan-aa11"><img src="https://avatars.githubusercontent.com/u/192568043?v=4" width="60" height="60" /></a></td><td align="center"><a href="https://github.com/mdakashhossain1"><img src="https://avatars.githubusercontent.com/u/85729564?v=4" width="60" height="60" /></a></td><td align="center"><a href="https://github.com/VardhmanSurana"><img src="https://avatars.githubusercontent.com/u/100058534?v=4" width="60" height="60" /></a></td><td align="center"><a href="https://github.com/Rajendra0309"><img src="https://avatars.githubusercontent.com/u/103703747?v=4" width="60" height="60" /></a></td><td align="center"><a href="https://github.com/soumya-99"><img src="https://avatars.githubusercontent.com/u/59480692?v=4" width="60" height="60" /></a></td><td align="center"><a href="https://github.com/kaunkrishna"><img src="https://avatars.githubusercontent.com/u/270065466?v=4" width="60" height="60" /></a></td><td align="center"><a href="https://github.com/andrewvalletta"><img src="https://avatars.githubusercontent.com/u/137303110?v=4" width="60" height="60" /></a></td></tr>
-<tr><td align="center"><a href="https://github.com/DennyHo0917"><img src="https://avatars.githubusercontent.com/u/149746199?v=4" width="60" height="60" /></a></td><td align="center"><a href="https://github.com/Felixkw12"><img src="https://avatars.githubusercontent.com/u/151852644?v=4" width="60" height="60" /></a></td><td align="center"><a href="https://github.com/Thibaultjaigu"><img src="https://avatars.githubusercontent.com/u/84420566?v=4" width="60" height="60" /></a></td><td align="center"><a href="https://github.com/pranav6004"><img src="https://avatars.githubusercontent.com/u/156088278?v=4" width="60" height="60" /></a></td></tr>
-</table>
-<!-- readme: contributors -end -->
-
+Tuneify is engineered following modern Android architecture best practices:
+- **UI Framework**: 100% Jetpack Compose with custom hardware-accelerated RenderEffect shaders, PorterDuff blending, and Canvas rendering.
+- **Media Engine**: AndroidX Media3 (ExoPlayer) with custom audio processors, caching pipeline, and background media session service.
+- **Data & Storage**: Android Jetpack Room with SQLite for offline metadata, listening history, and local playlist management.
+- **Networking**: OkHttp 4, Kotlinx Serialization, and custom YouTube InnerTube API extractors.
+- **Image Pipeline**: Coil with customized disk & memory caching, crossfade animations, and Palette bitmap color analysis.
+- **Concurrency**: Kotlin Coroutines & Reactive Flow (`StateFlow` / `SharedFlow`).
 
 ---
 
-## Special Thanks
+## 🤝 Credits & Acknowledgements
 
-Echo Music stands on the shoulders of several excellent open-source projects. Sincere thanks to:
+Tuneify is an independent open-source client that proudly stands upon the incredible work of the FOSS community:
 
-| Project                                                                                                                   | Description                                         |
-| :------------------------------------------------------------------------------------------------------------------------ | :-------------------------------------------------- |
-| **[Metrolist](https://github.com/MetrolistGroup/Metrolist)** & **[Vivi Music](https://github.com/vivizzz007/vivi-music)** | Foundational inspiration and architecture reference |
-| **[ArchiveTune](https://github.com/koiverse/ArchiveTune)**                                                                | Material You UI inspiration                         |
-| **[Better Lyrics](https://better-lyrics.boidu.dev/)**                                                                     | Lyrics enhancement and synchronization              |
-| **[SimpMusic](https://github.com/maxrave-dev/SimpMusic)**                                                                 | Lyrics implementation reference                     |
-| **[Music Recognizer](https://github.com/aleksey-saenko/MusicRecognizer)**                                                 | Audio recognition (Echo Find)                       |
-| **[BravePipe](https://github.com/bravepipeproject/BravePipe)**                                                            | Decryption handling and backup playback engine      |
+- **[Echo Music](https://github.com/iad1tya/Echo-Music)** by **[@iad1tya](https://github.com/iad1tya)** — Heartfelt gratitude for the extraordinary foundation in YouTube Music integration, audio caching, and player architecture. Tuneify builds upon Echo Music with a bespoke Liquid Glassmorphism design system, Material Expressive layouts, and gesture workflows.
+- **[InnerTube API](https://github.com)** — The extraction logic powering reliable stream queries and high-resolution album thumbnails.
+- **[Metrolist](https://github.com/MetrolistGroup/Metrolist)** & **[Vivi Music](https://github.com/vivizzz007/vivi-music)** — Foundational references for music queuing and library management.
+- **[Better Lyrics](https://better-lyrics.boidu.dev/)** & **[SimpMusic](https://github.com/maxrave-dev/SimpMusic)** — For synchronized lyrics parsing and rendering references.
+- **[Music Recognizer](https://github.com/aleksey-saenko/MusicRecognizer)** — Audio fingerprinting and recognition components.
+- **[BravePipe](https://github.com/bravepipeproject/BravePipe)** — Decryption handling and backup playback engine.
 
 ---
 
-## Legal Disclaimer & Terms of Use
+## ⚖️ Legal Disclaimer & Terms of Use
 
-### 1. 100% Free, Open-Source & Strictly Non-Commercial
+1. **100% Free, Open-Source & Non-Commercial**:
+   Tuneify is an open-source hobby project distributed under the **GNU General Public License v3.0**. It is provided strictly for educational purposes and personal use. There are no advertisements, paid features, or in-app purchases.
 
-Echo Music is a fully open-source project (FOSS) created purely for educational purposes and personal use. We do not sell this application, nor do we monetize it in any way. There are no advertisements, no premium features, no subscriptions, and no hidden fees within the app. This project has absolutely no commercial value or financial intent.
+2. **Custom Third-Party Client**:
+   Tuneify acts strictly as a specialized client interface. It parses publicly available endpoints of YouTube and YouTube Music. The ad-free streaming experience is functionally equivalent to using a standard web browser with content filtering extensions.
 
-### 2. A Custom Browser with Content Filtering
+3. **Support Content Creators**:
+   We deeply value artists and content creators. We encourage all users who enjoy music to subscribe to [YouTube Premium](https://www.youtube.com/premium) to financially support the artists and creators you love.
 
-Echo Music acts strictly as a specialized, third-party web browser and client. It simply parses the publicly available website content and APIs of YouTube and YouTube Music, rendering them in a custom user interface. The ad-free experience it provides is fundamentally no different from using a standard web browser (like Chrome, Firefox, or Brave) equipped with a common ad-blocking extension (such as uBlock Origin).
-
-### 3. Support Content Creators
-
-We deeply respect the hard work of artists, musicians, and content creators. We strongly encourage all users to subscribe to [YouTube Premium](https://www.youtube.com/premium). Purchasing a Premium subscription is the best way to financially support the creators you listen to and ensure the continued growth of the platform. Echo Music is built as a proof-of-concept for developers and enthusiasts, not to harm creators' revenues.
-
-### 4. No Hosting of Copyrighted Material
-
-We do not host, upload, distribute, or store any audio, video, or copyrighted media files on our own servers. All content accessed through this application is stored entirely on Google's/YouTube's servers and remains the property of their respective copyright owners. The app merely acts as a conduit to stream publicly accessible links.
-
-### 5. User Responsibility & Legal Contact
-
-The software is provided "AS IS", without warranty of any kind. The developers of Echo Music do not encourage or condone piracy. Users are solely responsible for ensuring their usage of this app complies with their local copyright laws and the Terms of Service of the platforms they access.
-
-Because we do not host any media files, we cannot process DMCA takedown requests for audio or video content. However, if you represent a copyright holder or have legal concerns regarding the open-source code itself, please contact us via email at: [hello@echomusic.fun](mailto:hello@echomusic.fun)
+4. **No Hosting of Copyrighted Content**:
+   Tuneify does not host, store, or distribute any media files on its own servers. All audio streams and artwork are fetched directly from Google/YouTube content servers and remain the property of their respective copyright holders.
 
 ---
 
 <div align="center">
-  <p>Licensed under <a href="LICENSE">GPL-3.0</a></p>
+  <p>Released with ❤️ under the <a href="LICENSE">GNU General Public License v3.0</a></p>
+  <p>Tuneify — Elevating your listening experience.</p>
 </div>

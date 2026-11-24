@@ -102,7 +102,7 @@ fun GenerateScreen(
       Box(
         modifier = Modifier
           .fillMaxWidth()
-          .clip(RoundedCornerShape(24.dp))
+          .clip(RoundedCornerShape(16.dp))
           .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
           .padding(20.dp),
       ) {
@@ -132,7 +132,7 @@ fun GenerateScreen(
         Box(
           modifier = Modifier
             .weight(1f)
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
             .padding(16.dp),
         ) {
@@ -155,7 +155,7 @@ fun GenerateScreen(
         Box(
           modifier = Modifier
             .weight(1f)
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
             .padding(16.dp),
         ) {
@@ -184,7 +184,7 @@ fun GenerateScreen(
           Box(
             modifier = Modifier
               .fillMaxWidth()
-              .clip(RoundedCornerShape(24.dp))
+              .clip(RoundedCornerShape(16.dp))
               .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.15f))
               .padding(20.dp),
           ) {
@@ -220,7 +220,7 @@ fun GenerateScreen(
             modifier = Modifier
               .fillMaxWidth()
               .height(54.dp),
-            shape = RoundedCornerShape(24.dp),
+            shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(
               containerColor = MaterialTheme.colorScheme.primary,
               contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -238,7 +238,7 @@ fun GenerateScreen(
           Box(
             modifier = Modifier
               .fillMaxWidth()
-              .clip(RoundedCornerShape(24.dp))
+              .clip(RoundedCornerShape(16.dp))
               .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
               .padding(32.dp),
             contentAlignment = Alignment.Center,
@@ -260,7 +260,7 @@ fun GenerateScreen(
               Spacer(modifier = Modifier.height(24.dp))
               OutlinedButton(
                 onClick = { viewModel.cancelGeneration() },
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(16.dp),
               ) {
                 Text("Cancel")
               }
@@ -272,7 +272,7 @@ fun GenerateScreen(
           Box(
             modifier = Modifier
               .fillMaxWidth()
-              .clip(RoundedCornerShape(24.dp))
+              .clip(RoundedCornerShape(16.dp))
               .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
               .padding(28.dp),
             contentAlignment = Alignment.Center,
@@ -314,7 +314,7 @@ fun GenerateScreen(
                 modifier = Modifier
                   .fillMaxWidth()
                   .height(50.dp),
-                shape = RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(16.dp),
               ) {
                 Text(
                   text = "Open Playlist",
@@ -327,7 +327,7 @@ fun GenerateScreen(
                 modifier = Modifier
                   .fillMaxWidth()
                   .height(50.dp),
-                shape = RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(16.dp),
               ) {
                 Text("Generate Another")
               }
@@ -339,7 +339,7 @@ fun GenerateScreen(
           Box(
             modifier = Modifier
               .fillMaxWidth()
-              .clip(RoundedCornerShape(24.dp))
+              .clip(RoundedCornerShape(16.dp))
               .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
               .padding(28.dp),
             contentAlignment = Alignment.Center,
@@ -368,7 +368,7 @@ fun GenerateScreen(
               Spacer(modifier = Modifier.height(20.dp))
               Button(
                 onClick = { navController.navigate("home") },
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(16.dp),
               ) {
                 Text("Explore Music")
               }
@@ -380,7 +380,7 @@ fun GenerateScreen(
           Box(
             modifier = Modifier
               .fillMaxWidth()
-              .clip(RoundedCornerShape(24.dp))
+              .clip(RoundedCornerShape(16.dp))
               .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
               .padding(28.dp),
             contentAlignment = Alignment.Center,
@@ -414,7 +414,7 @@ fun GenerateScreen(
                     viewModel.generate()
                   }
                 },
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(16.dp),
               ) {
                 Text("Reset Exclusions & Retry")
               }
@@ -426,7 +426,7 @@ fun GenerateScreen(
           Box(
             modifier = Modifier
               .fillMaxWidth()
-              .clip(RoundedCornerShape(24.dp))
+              .clip(RoundedCornerShape(16.dp))
               .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
               .padding(28.dp),
             contentAlignment = Alignment.Center,
@@ -448,7 +448,7 @@ fun GenerateScreen(
               Spacer(modifier = Modifier.height(20.dp))
               Button(
                 onClick = { viewModel.generate() },
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(16.dp),
               ) {
                 Text("Retry")
               }

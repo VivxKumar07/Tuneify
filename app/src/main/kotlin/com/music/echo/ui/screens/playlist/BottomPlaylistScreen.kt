@@ -98,6 +98,8 @@ import echo.music.iad1tya.ui.component.IconButton
 import echo.music.iad1tya.ui.component.LocalMenuState
 import echo.music.iad1tya.ui.component.SongListItem
 import echo.music.iad1tya.ui.component.SortHeader
+import echo.music.iad1tya.ui.component.TuneifyTriBar
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import echo.music.iad1tya.ui.menu.SelectionSongMenu
 import echo.music.iad1tya.ui.menu.SongMenu
 import echo.music.iad1tya.ui.menu.TopPlaylistMenu
@@ -513,50 +515,54 @@ private fun BottomPlaylistHeader(
     modifier = modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    Spacer(Modifier.height(50.dp))
-
-    Box(
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 48.dp),
-      contentAlignment = Alignment.Center
-    ) {
-      AsyncImage(
-        model = songs[0].thumbnailUrl,
-        contentDescription = null,
-        modifier =
-          Modifier.then(
-              if (LocalConfiguration.current.screenWidthDp > 600) Modifier.size(300.dp)
-              else Modifier.fillMaxWidth().aspectRatio(1f)
-            )
-            .clip(RoundedCornerShape(8.dp)),
-        contentScale = ContentScale.Crop
-      )
-    }
-
-    Spacer(Modifier.height(32.dp))
+    Spacer(Modifier.height(40.dp))
 
     Column(
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp).padding(bottom = 16.dp),
-      horizontalAlignment = Alignment.CenterHorizontally
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 16.dp),
+      horizontalAlignment = Alignment.Start
     ) {
-      Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(
-          painter = painterResource(R.drawable.queue_music),
+      TuneifyTriBar(height = 20.dp, barWidth = 4.dp, gap = 3.dp)
+
+      Spacer(Modifier.height(12.dp))
+
+      Row(verticalAlignment = Alignment.Top) {
+        AsyncImage(
+          model = songs[0].thumbnailUrl,
           contentDescription = null,
-          modifier = Modifier.size(30.dp),
-          tint = MaterialTheme.colorScheme.onSurface
+          modifier = Modifier.size(96.dp).clip(RoundedCornerShape(TuneifyTokens.RadiusCard)),
+          contentScale = ContentScale.Crop
         )
-        Spacer(Modifier.width(8.dp))
-        Text(
-          text = name,
-          style = MaterialTheme.typography.headlineMedium,
-          fontWeight = FontWeight.Bold,
-          color = MaterialTheme.colorScheme.onSurface,
-          maxLines = 2,
-          overflow = TextOverflow.Ellipsis
-        )
+
+        Spacer(Modifier.width(14.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+          Text(
+            text = name,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Black,
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 3,
+            overflow = TextOverflow.Ellipsis
+          )
+
+          Spacer(Modifier.height(6.dp))
+
+          Text(
+            text =
+              buildString {
+                append(pluralStringResource(R.plurals.n_song, songs.size, songs.size))
+                if (likeLength > 0) {
+                  append(" \u00B7 ")
+                  append(makeTimeString(likeLength * 1000L))
+                }
+              },
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+          )
+        }
       }
 
-      Spacer(Modifier.height(24.dp))
+      Spacer(Modifier.height(20.dp))
 
       Row(
         modifier = Modifier.fillMaxWidth(),
@@ -572,11 +578,11 @@ private fun BottomPlaylistHeader(
               )
             )
           },
-          shape = ButtonDefaults.shape,
+          shape = TuneifyTokens.ShapePill,
           colors =
             ButtonDefaults.buttonColors(
               containerColor = MaterialTheme.colorScheme.surfaceVariant,
-              contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+              contentColor = MaterialTheme.colorScheme.onSurface
             ),
           contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 12.dp),
           modifier = Modifier.weight(1f)
@@ -588,12 +594,14 @@ private fun BottomPlaylistHeader(
             Icon(
               painter = painterResource(R.drawable.shuffle),
               contentDescription = null,
-              modifier = Modifier.size(20.dp)
+              modifier = Modifier.size(20.dp),
+              tint = MaterialTheme.colorScheme.onSurface
             )
             Spacer(Modifier.width(8.dp))
             Text(
               text = stringResource(R.string.shuffle),
               style = MaterialTheme.typography.labelLarge,
+              color = MaterialTheme.colorScheme.onSurface,
               maxLines = 1,
               overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
@@ -609,14 +617,13 @@ private fun BottomPlaylistHeader(
               )
             )
           },
-          shape = ButtonDefaults.shape,
+          shape = TuneifyTokens.ShapePill,
           colors =
             ButtonDefaults.buttonColors(
               containerColor = MaterialTheme.colorScheme.primary,
               contentColor = MaterialTheme.colorScheme.onPrimary
             ),
-          contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 12.dp),
-          modifier = Modifier.weight(1f)
+          contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 12.dp)
         ) {
           Row(
             horizontalArrangement = Arrangement.Center,
@@ -629,7 +636,12 @@ private fun BottomPlaylistHeader(
               tint = MaterialTheme.colorScheme.onPrimary
             )
             Spacer(Modifier.width(8.dp))
-            Text(text = stringResource(R.string.play), style = MaterialTheme.typography.labelLarge)
+            Text(
+              text = stringResource(R.string.play),
+              style = MaterialTheme.typography.labelLarge,
+              color = MaterialTheme.colorScheme.onPrimary,
+              fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+            )
           }
         }
 
@@ -673,7 +685,7 @@ private fun BottomPlaylistHeader(
               )
             }
           },
-          shape = CircleShape,
+          shape = androidx.compose.foundation.shape.CircleShape,
           color = MaterialTheme.colorScheme.surfaceVariant,
           modifier = Modifier.size(48.dp)
         ) {
@@ -690,28 +702,12 @@ private fun BottomPlaylistHeader(
 
       Spacer(Modifier.height(16.dp))
 
-      Text(
-        text =
-          buildString {
-            append(pluralStringResource(R.plurals.n_song, songs.size, songs.size))
-            if (likeLength > 0) {
-              append(" • ")
-              append(makeTimeString(likeLength * 1000L))
-            }
-          },
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant
-      )
-
-      Spacer(Modifier.height(16.dp))
-
       Column(modifier = Modifier.fillMaxWidth()) {
         Text(
           text = stringResource(R.string.about_playlist),
-          style = MaterialTheme.typography.titleMedium,
-          fontWeight = FontWeight.Bold,
+          style = MaterialTheme.typography.titleSmall,
           color = MaterialTheme.colorScheme.onSurface,
-          modifier = Modifier.padding(bottom = 8.dp)
+          modifier = Modifier.padding(bottom = 6.dp)
         )
         ExpandableText(
           text = stringResource(R.string.bottom_playlist_description, name, songs.size),

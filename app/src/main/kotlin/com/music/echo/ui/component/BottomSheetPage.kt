@@ -68,7 +68,7 @@ fun BottomSheetPage(
         modifier =
           Modifier.padding(vertical = 12.dp)
             .size(width = 32.dp, height = 4.dp)
-            .clip(RoundedCornerShape(2.dp))
+            .clip(RoundedCornerShape(4.dp))
             .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
       )
     },

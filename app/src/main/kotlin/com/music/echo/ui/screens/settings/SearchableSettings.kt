@@ -844,12 +844,6 @@ fun getAllSearchableSettings(): List<SearchableSetting> {
       "settings/appearance"
     ),
     SearchableSetting(
-      stringResource(R.string.legacy_icon),
-      stringResource(R.string.legacy_icon_desc),
-      "Appearance",
-      "settings/appearance"
-    ),
-    SearchableSetting(
       stringResource(R.string.line_by_line_dialog_title),
       stringResource(R.string.line_by_line_dialog_title_desc),
       "Romanization",

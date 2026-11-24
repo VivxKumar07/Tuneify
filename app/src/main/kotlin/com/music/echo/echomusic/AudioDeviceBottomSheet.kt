@@ -471,7 +471,7 @@ fun AudioDeviceBottomSheet(onDismiss: () -> Unit, modifier: Modifier = Modifier)
                         color =
                           if (isActive) MaterialTheme.colorScheme.primaryContainer
                           else MaterialTheme.colorScheme.surfaceVariant,
-                        tonalElevation = 2.dp,
+                        tonalElevation = 0.dp,
                         modifier = Modifier.size(72.dp)
                       ) {
                         Box(contentAlignment = Alignment.Center) {
@@ -533,11 +533,11 @@ fun AudioDeviceBottomSheet(onDismiss: () -> Unit, modifier: Modifier = Modifier)
                       val itemShape =
                         remember(index, effectiveDevices.size) {
                           when {
-                            effectiveDevices.size == 1 -> RoundedCornerShape(24.dp)
+                            effectiveDevices.size == 1 -> RoundedCornerShape(16.dp)
                             index == 0 ->
                               RoundedCornerShape(
-                                topStart = 24.dp,
-                                topEnd = 24.dp,
+                                topStart = 16.dp,
+                                topEnd = 16.dp,
                                 bottomStart = 4.dp,
                                 bottomEnd = 4.dp
                               )
@@ -545,8 +545,8 @@ fun AudioDeviceBottomSheet(onDismiss: () -> Unit, modifier: Modifier = Modifier)
                               RoundedCornerShape(
                                 topStart = 4.dp,
                                 topEnd = 4.dp,
-                                bottomStart = 24.dp,
-                                bottomEnd = 24.dp
+                                bottomStart = 16.dp,
+                                bottomEnd = 16.dp
                               )
                             else -> RoundedCornerShape(4.dp)
                           }
@@ -695,7 +695,7 @@ fun AudioDeviceBottomSheet(onDismiss: () -> Unit, modifier: Modifier = Modifier)
               Spacer(modifier = Modifier.width(1.dp))
             }
 
-            Button(onClick = onDismiss, shape = RoundedCornerShape(24.dp)) {
+            Button(onClick = onDismiss, shape = RoundedCornerShape(16.dp)) {
               Text(stringResource(R.string.done))
             }
           }
@@ -764,7 +764,7 @@ fun VolumeControlRow(
     modifier = modifier.fillMaxWidth().height(72.dp),
     shape = CircleShape,
     color = MaterialTheme.colorScheme.surfaceContainerHigh,
-    tonalElevation = 1.dp
+    tonalElevation = 0.dp
   ) {
     Box(contentAlignment = Alignment.CenterStart) {
       val animatedVolumeFraction by
@@ -1183,7 +1183,7 @@ private fun AudioDeviceRow(
       else -> Icons.Filled.Speaker
     }
 
-  Surface(modifier = modifier.clip(CircleShape), color = containerColor, tonalElevation = 2.dp) {
+  Surface(modifier = modifier.clip(CircleShape), color = containerColor, tonalElevation = 0.dp) {
     Row(
       modifier = Modifier.fillMaxWidth().padding(12.dp),
       verticalAlignment = Alignment.CenterVertically,

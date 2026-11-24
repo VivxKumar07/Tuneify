@@ -171,9 +171,9 @@ private fun EqScreenContent(
 ) {
   androidx.compose.material3.Card(
     modifier = Modifier.fillMaxWidth().heightIn(max = 600.dp).padding(24.dp),
-    shape = androidx.compose.foundation.shape.RoundedCornerShape(28.dp),
+    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
     colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-    elevation = androidx.compose.material3.CardDefaults.cardElevation(defaultElevation = 8.dp)
+    elevation = androidx.compose.material3.CardDefaults.cardElevation(defaultElevation = 0.dp)
   ) {
     Column {
       Row(
@@ -225,7 +225,7 @@ private fun EqScreenContent(
       ) {
         item {
           androidx.compose.material3.Card(
-            shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp),
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
             colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
             elevation = androidx.compose.material3.CardDefaults.cardElevation(defaultElevation = 0.dp),
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
@@ -242,7 +242,7 @@ private fun EqScreenContent(
         if (customProfiles.isNotEmpty()) {
           items(customProfiles) { profile ->
             androidx.compose.material3.Card(
-              shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp),
+              shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
               colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
               elevation = androidx.compose.material3.CardDefaults.cardElevation(defaultElevation = 0.dp),
               modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)

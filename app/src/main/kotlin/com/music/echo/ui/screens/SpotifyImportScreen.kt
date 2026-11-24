@@ -326,7 +326,7 @@ private fun SpotifyLoginSheet(
     modifier = Modifier.fillMaxHeight(),
     onDismissRequest = onDismiss,
     sheetState = sheetState,
-    shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
     containerColor = MaterialTheme.colorScheme.surface,
   ) {
     Column(
@@ -670,7 +670,7 @@ private fun SpotifySourcePickerSheet(
     modifier = Modifier.fillMaxHeight(),
     onDismissRequest = onDismiss,
     sheetState = sheetState,
-    shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
     containerColor = MaterialTheme.colorScheme.surface,
   ) {
     Column(

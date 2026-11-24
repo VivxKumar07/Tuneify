@@ -461,7 +461,7 @@ private fun SavePresetDialog(onDismiss: () -> Unit, onSave: (String) -> Unit) {
       modifier = Modifier.padding(horizontal = 24.dp).widthIn(max = 320.dp),
       shape = cardShape,
       color = MaterialTheme.colorScheme.surfaceContainerHigh,
-      tonalElevation = 8.dp,
+      tonalElevation = 0.dp,
     ) {
       Column(
         modifier = Modifier.padding(18.dp),
@@ -647,7 +647,7 @@ private fun ManagePresetsDialog(
       modifier = Modifier.padding(horizontal = 24.dp).widthIn(max = 320.dp),
       shape = cardShape,
       color = MaterialTheme.colorScheme.surfaceContainerHigh,
-      tonalElevation = 8.dp,
+      tonalElevation = 0.dp,
     ) {
       Column(
         modifier = Modifier.padding(18.dp),

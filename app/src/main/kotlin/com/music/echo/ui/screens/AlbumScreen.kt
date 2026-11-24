@@ -26,7 +26,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -98,6 +100,7 @@ import echo.music.iad1tya.ui.component.IconButton
 import echo.music.iad1tya.ui.component.LinkSegment
 import echo.music.iad1tya.ui.component.LocalMenuState
 import echo.music.iad1tya.ui.component.NavigationTitle
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import echo.music.iad1tya.ui.component.SongListItem
 import echo.music.iad1tya.ui.component.YouTubeGridItem
 import echo.music.iad1tya.ui.menu.AlbumMenu
@@ -443,7 +446,8 @@ fun AlbumScreen(
               ) {
                 Surface(
                   onClick = { database.query { update(albumWithSongs.album.toggleLike()) } },
-                  shape = CircleShape,
+                  shape = TuneifyTokens.ShapeMedium,
+                  border = BorderStroke(TuneifyTokens.BorderHairline, MaterialTheme.colorScheme.outlineVariant),
                   color = MaterialTheme.colorScheme.surfaceVariant,
                   modifier = Modifier.size(48.dp)
                 ) {
@@ -466,7 +470,8 @@ fun AlbumScreen(
                       playerConnection.playQueue(LocalAlbumRadio(albumWithSongs))
                     }
                   },
-                  shape = CircleShape,
+                  shape = TuneifyTokens.ShapeMedium,
+                  border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                   colors =
                     androidx.compose.material3.ButtonDefaults.buttonColors(
                       containerColor = MaterialTheme.colorScheme.primary,
@@ -476,8 +481,7 @@ fun AlbumScreen(
                     androidx.compose.foundation.layout.PaddingValues(
                       vertical = 12.dp,
                       horizontal = 16.dp
-                    ),
-                  modifier = Modifier.height(48.dp).weight(1.5f)
+                    )
                 ) {
                   Row(
                     horizontalArrangement = Arrangement.Center,
@@ -502,6 +506,7 @@ fun AlbumScreen(
                         else stringResource(R.string.play),
                       style = MaterialTheme.typography.labelLarge,
                       fontWeight = FontWeight.Bold,
+                      color = MaterialTheme.colorScheme.onPrimary,
                       maxLines = 1,
                       overflow = TextOverflow.Ellipsis
                     )
@@ -515,7 +520,8 @@ fun AlbumScreen(
                       LocalAlbumRadio(albumWithSongs.copy(songs = albumWithSongs.songs.shuffled())),
                     )
                   },
-                  shape = CircleShape,
+                  shape = TuneifyTokens.ShapeMedium,
+                  border = BorderStroke(TuneifyTokens.BorderHairline, MaterialTheme.colorScheme.outlineVariant),
                   color = MaterialTheme.colorScheme.surfaceVariant,
                   modifier = Modifier.size(48.dp)
                 ) {

@@ -612,7 +612,7 @@ private fun OnlinePlaylistHeader(
                 if (LocalConfiguration.current.screenWidthDp > 600) Modifier.size(300.dp)
                 else Modifier.fillMaxWidth().aspectRatio(1f)
               )
-              .clip(RoundedCornerShape(8.dp)),
+              .clip(RoundedCornerShape(24.dp)),
           contentScale = ContentScale.Crop
         )
       }
@@ -650,7 +650,7 @@ private fun OnlinePlaylistHeader(
 
       if (hasExplicitContent) {
         Surface(
-          shape = RoundedCornerShape(6.dp),
+          shape = RoundedCornerShape(100.dp),
           color = MaterialTheme.colorScheme.surfaceVariant
         ) {
           Row(
@@ -677,7 +677,7 @@ private fun OnlinePlaylistHeader(
 
       val totalDuration = songs.sumOf { it.duration ?: 0 }
       Surface(
-        shape = RoundedCornerShape(6.dp),
+        shape = RoundedCornerShape(100.dp),
         color = MaterialTheme.colorScheme.surfaceVariant,
         modifier = Modifier.padding(horizontal = 32.dp)
       ) {
@@ -752,11 +752,11 @@ private fun OnlinePlaylistHeader(
               }
             }
           },
-          shape = ButtonDefaults.shape,
+          shape = CircleShape,
           colors =
             ButtonDefaults.buttonColors(
-              containerColor = MaterialTheme.colorScheme.surfaceVariant,
-              contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+              containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+              contentColor = MaterialTheme.colorScheme.onSurface
             ),
           contentPadding = PaddingValues(vertical = 12.dp),
           modifier = Modifier.weight(1f)
@@ -788,7 +788,7 @@ private fun OnlinePlaylistHeader(
               )
             }
           },
-          shape = ButtonDefaults.shape,
+          shape = CircleShape,
           colors =
             ButtonDefaults.buttonColors(
               containerColor = MaterialTheme.colorScheme.primary,

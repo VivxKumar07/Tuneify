@@ -42,9 +42,9 @@ fun AiModifyPlaylistDialog(
   ) {
     Surface(
       modifier = Modifier.fillMaxWidth(0.9f).wrapContentHeight(),
-      shape = RoundedCornerShape(24.dp),
+      shape = RoundedCornerShape(16.dp),
       color = MaterialTheme.colorScheme.surface,
-      tonalElevation = 6.dp
+      tonalElevation = 0.dp
     ) {
       Column(
         modifier = Modifier.padding(24.dp),
@@ -63,7 +63,7 @@ fun AiModifyPlaylistDialog(
             label = { Text(stringResource(R.string.modify_with_ai_desc)) },
             placeholder = { Text(stringResource(R.string.ai_modify_prompt_hint)) },
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(8.dp),
             enabled = true,
             minLines = 3
           )

@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -106,6 +105,7 @@ import echo.music.iad1tya.extensions.toMediaItem
 import echo.music.iad1tya.models.MediaMetadata
 import echo.music.iad1tya.playback.queues.LocalAlbumRadio
 import echo.music.iad1tya.ui.utils.resize
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 import echo.music.iad1tya.utils.joinByBullet
 import echo.music.iad1tya.utils.makeTimeString
 import echo.music.iad1tya.utils.rememberEnumPreference
@@ -140,9 +140,12 @@ inline fun ListItem(
   shape: Shape = RectangleShape,
   drawHighlight: Boolean = true,
   horizontalPadding: Dp = 16.dp,
-  color: Color = MaterialTheme.colorScheme.surfaceContainer,
+  color: Color = Color.Transparent,
   verticalPadding: Dp = 2.dp,
 ) {
+  // Captured outside `drawBehind` — the draw lambda is not a composable scope.
+  val accent = MaterialTheme.colorScheme.primary
+
   Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier =
@@ -152,9 +155,10 @@ inline fun ListItem(
         .background(
           color =
             when {
-              isActive -> MaterialTheme.colorScheme.secondaryContainer
-              isSelected == true && drawHighlight ->
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
+              // Flat accent tint, not a filled container: the row still reads as part of the
+              // list instead of a floating card.
+              isActive -> accent.copy(alpha = 0.16f)
+              isSelected == true && drawHighlight -> accent.copy(alpha = 0.22f)
               else -> color
             }
         )
@@ -191,8 +195,7 @@ inline fun ListItem(
     Column(modifier = Modifier.weight(1f).padding(horizontal = 6.dp)) {
       Text(
         text = title,
-        style = MaterialTheme.typography.bodyMedium,
-        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.titleSmall,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
       )
@@ -219,7 +222,7 @@ fun ListItem(
   shape: Shape = RectangleShape,
   drawHighlight: Boolean = true,
   horizontalPadding: Dp = 16.dp,
-  color: Color = MaterialTheme.colorScheme.surfaceContainer,
+  color: Color = Color.Transparent,
   verticalPadding: Dp = 2.dp,
 ) =
   ListItem(
@@ -229,8 +232,8 @@ fun ListItem(
       if (subtitle != null) {
         Text(
           text = subtitle,
-          style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.secondary,
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
           maxLines = 1,
           overflow = TextOverflow.Ellipsis
         )
@@ -260,7 +263,7 @@ fun ListItem(
   shape: Shape = RectangleShape,
   drawHighlight: Boolean = true,
   horizontalPadding: Dp = 16.dp,
-  color: Color = MaterialTheme.colorScheme.surfaceContainer,
+  color: Color = Color.Transparent,
   verticalPadding: Dp = 2.dp,
 ) =
   ListItem(
@@ -271,7 +274,7 @@ fun ListItem(
       if (!subtitle.isNullOrEmpty()) {
         Text(
           text = subtitle,
-          color = MaterialTheme.colorScheme.secondary,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
           style = MaterialTheme.typography.bodySmall,
           maxLines = 1,
           overflow = TextOverflow.Ellipsis
@@ -304,9 +307,9 @@ fun GridItem(
   Column(
     modifier =
       if (fillMaxWidth) {
-        modifier.padding(12.dp).fillMaxWidth()
+        modifier.padding(8.dp).fillMaxWidth()
       } else {
-        modifier.padding(12.dp).width(gridHeight * thumbnailRatio)
+        modifier.padding(8.dp).width(gridHeight * thumbnailRatio)
       }
   ) {
     BoxWithConstraints(
@@ -322,7 +325,7 @@ fun GridItem(
       thumbnailContent()
     }
 
-    Spacer(modifier = Modifier.height(6.dp))
+    Spacer(modifier = Modifier.height(8.dp))
 
     title()
 
@@ -350,8 +353,7 @@ fun GridItem(
     title = {
       Text(
         text = title,
-        style = MaterialTheme.typography.bodyLarge,
-        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.titleSmall,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         textAlign = TextAlign.Start,
@@ -361,8 +363,8 @@ fun GridItem(
     subtitle = {
       Text(
         text = subtitle,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.secondary,
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
       )
@@ -481,8 +483,7 @@ fun SongGridItem(
     title = {
       Text(
         text = song.song.title,
-        style = MaterialTheme.typography.bodyLarge,
-        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.titleSmall,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.basicMarquee().fillMaxWidth()
@@ -495,8 +496,8 @@ fun SongGridItem(
             song.artists.joinToString { it.name },
             makeTimeString(song.song.duration * 1000L)
           ),
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.secondary,
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
       )
@@ -713,8 +714,7 @@ fun AlbumGridItem(
     title = {
       Text(
         text = album.album.title,
-        style = MaterialTheme.typography.bodyLarge,
-        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.titleSmall,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.basicMarquee().fillMaxWidth()
@@ -723,8 +723,8 @@ fun AlbumGridItem(
     subtitle = {
       Text(
         text = album.artists.joinToString { it.name },
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.secondary,
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis
       )
@@ -899,8 +899,7 @@ fun PlaylistGridItem(
     title = {
       Text(
         text = playlist.playlist.name,
-        style = MaterialTheme.typography.bodyLarge,
-        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.titleSmall,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.basicMarquee().fillMaxWidth()
@@ -920,8 +919,8 @@ fun PlaylistGridItem(
         }
       Text(
         text = subtitle,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.secondary,
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis
       )
@@ -1162,7 +1161,7 @@ fun YouTubeGridItem(
         Text(
           text = subtitle,
           style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.secondary,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
           maxLines = 2,
           overflow = TextOverflow.Ellipsis,
         )
@@ -1323,7 +1322,11 @@ fun ItemThumbnail(
 
   Box(
     contentAlignment = Alignment.Center,
-    modifier = modifier.fillMaxSize().aspectRatio(thumbnailRatio).clip(shape)
+    modifier =
+      modifier
+        .fillMaxSize()
+        .aspectRatio(thumbnailRatio)
+        .clip(shape)
   ) {
     if (albumIndex == null) {
       AsyncImage(
@@ -1392,7 +1395,10 @@ fun LocalThumbnail(
 
   Box(
     contentAlignment = Alignment.Center,
-    modifier = modifier.aspectRatio(thumbnailRatio).clip(shape)
+    modifier =
+      modifier
+        .aspectRatio(thumbnailRatio)
+        .clip(shape)
   ) {
     AsyncImage(
       model =
@@ -1434,12 +1440,15 @@ fun LocalThumbnail(
         Box(
           contentAlignment = Alignment.Center,
           modifier =
-            Modifier.size(36.dp).clip(CircleShape).background(Color.Black.copy(alpha = 0.6f))
+            Modifier.size(40.dp)
+              .clip(androidx.compose.foundation.shape.CircleShape)
+              .background(TuneifyTokens.Lime)
         ) {
           Icon(
             painter = painterResource(R.drawable.play),
             contentDescription = null,
-            tint = Color.White
+            tint = TuneifyTokens.OnLime,
+            modifier = Modifier.size(22.dp)
           )
         }
       }
@@ -1455,14 +1464,15 @@ fun LocalThumbnail(
         Box(
           contentAlignment = Alignment.Center,
           modifier =
-            Modifier.size(36.dp)
-              .clip(CircleShape)
-              .background(Color.Black.copy(alpha = ActiveBoxAlpha))
+            Modifier.size(38.dp)
+              .clip(androidx.compose.foundation.shape.CircleShape)
+              .background(TuneifyTokens.Lime)
         ) {
           Icon(
             painter = painterResource(R.drawable.play),
             contentDescription = null,
-            tint = Color.White
+            tint = TuneifyTokens.OnLime,
+            modifier = Modifier.size(20.dp)
           )
         }
       }
@@ -1540,12 +1550,14 @@ fun BoxScope.OverlayPlayButton(visible: Boolean) {
     Box(
       contentAlignment = Alignment.Center,
       modifier =
-        Modifier.size(36.dp).clip(CircleShape).background(Color.Black.copy(alpha = ActiveBoxAlpha))
+        Modifier.size(38.dp)
+          .clip(androidx.compose.foundation.shape.CircleShape)
+          .background(TuneifyTokens.Lime)
     ) {
       Icon(
         painter = painterResource(R.drawable.play),
         contentDescription = null,
-        tint = Color.White,
+        tint = TuneifyTokens.OnLime,
         modifier = Modifier.size(20.dp)
       )
     }
@@ -1569,17 +1581,17 @@ fun BoxScope.OverlayEditButton(
     Box(
       contentAlignment = Alignment.Center,
       modifier =
-        Modifier.size(36.dp)
-          .clip(CircleShape)
-          .background(Color.Black.copy(alpha = ActiveBoxAlpha))
+        Modifier.size(34.dp)
+          .clip(androidx.compose.foundation.shape.CircleShape)
+          .background(MaterialTheme.colorScheme.surfaceContainerHighest)
           .padding(0.dp)
           .clickable(onClick = onClick)
     ) {
       Icon(
         painter = painterResource(R.drawable.edit),
         contentDescription = null,
-        tint = Color.White,
-        modifier = Modifier.size(20.dp)
+        tint = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.size(18.dp)
       )
     }
   }
@@ -1599,15 +1611,16 @@ fun BoxScope.AlbumPlayButton(
     Box(
       contentAlignment = Alignment.Center,
       modifier =
-        Modifier.size(36.dp)
-          .clip(CircleShape)
-          .background(Color.Black.copy(alpha = ActiveBoxAlpha))
+        Modifier.size(38.dp)
+          .clip(androidx.compose.foundation.shape.CircleShape)
+          .background(TuneifyTokens.Lime)
           .clickable(onClick = onClick)
     ) {
       Icon(
         painter = painterResource(R.drawable.play),
         contentDescription = null,
-        tint = Color.White
+        tint = TuneifyTokens.OnLime,
+        modifier = Modifier.size(20.dp)
       )
     }
   }

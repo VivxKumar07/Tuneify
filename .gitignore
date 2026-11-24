@@ -34,3 +34,8 @@ lastfm-empty/build/
 
 # Logs
 *.log
+
+# Binaries & intermediate build outputs
+bin/
+*/bin/
+

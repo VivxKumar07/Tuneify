@@ -1,6 +1,5 @@
 package echo.music.iad1tya.ui.component
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,9 +15,9 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,7 +28,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import echo.music.iad1tya.R
+import echo.music.iad1tya.ui.theme.TuneifyTokens
 
+/**
+ * The universal screen / section header.
+ *
+ * Material 3 Expressive: a large editorial title carries the screen; an optional eyebrow sits above
+ * it. No decorative motif — the type itself is the identity. The trailing action is a tonal pill.
+ */
 @Composable
 fun NavigationTitle(
   title: String,
@@ -47,42 +53,43 @@ fun NavigationTitle(
         .fillMaxWidth()
         .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
         .clickable(enabled = onClick != null) { onClick?.invoke() }
-        .padding(horizontal = 12.dp, vertical = 12.dp)
+        .padding(start = TuneifyTokens.Space.Gutter, end = 8.dp, top = 20.dp, bottom = 8.dp)
   ) {
     thumbnail?.invoke()
 
     Column(verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1f)) {
       label?.let { label ->
         Text(
-          text = label,
-          style = MaterialTheme.typography.labelLarge,
+          text = label.uppercase(),
+          style = MaterialTheme.typography.labelSmall,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
           overflow = TextOverflow.Ellipsis,
         )
       }
 
       Text(
-        text = title.uppercase(),
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        text = title,
+        style = MaterialTheme.typography.headlineSmall,
+        fontWeight = FontWeight.ExtraBold,
+        color = MaterialTheme.colorScheme.onSurface,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
       )
     }
 
     onPlayAllClick?.let { playAllClick ->
-      OutlinedButton(
+      FilledTonalButton(
         onClick = playAllClick,
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)),
+        shape = RoundedCornerShape(TuneifyTokens.RadiusPill),
         colors =
-          ButtonDefaults.outlinedButtonColors(
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+          ButtonDefaults.filledTonalButtonColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            contentColor = MaterialTheme.colorScheme.onSurface,
           ),
-        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 2.dp),
-        modifier = Modifier.height(24.dp)
+        contentPadding = PaddingValues(horizontal = 18.dp, vertical = 0.dp),
+        modifier = Modifier.height(36.dp)
       ) {
-        Text(text = stringResource(R.string.play_all), style = MaterialTheme.typography.labelSmall)
+        Text(text = stringResource(R.string.play_all), style = MaterialTheme.typography.labelMedium)
       }
     }
 
@@ -90,7 +97,8 @@ fun NavigationTitle(
       Icon(
         painter = painterResource(R.drawable.arrow_forward),
         contentDescription = null,
-        tint = MaterialTheme.colorScheme.onSurfaceVariant
+        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(end = 8.dp)
       )
     }
   }

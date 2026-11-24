@@ -66,7 +66,7 @@ fun SuggestionRegionSheet(
       LazyColumn(
         state = listState,
         modifier =
-          Modifier.fillMaxWidth().padding(horizontal = 16.dp).clip(RoundedCornerShape(24.dp))
+          Modifier.fillMaxWidth().padding(horizontal = 16.dp).clip(RoundedCornerShape(16.dp))
       ) {
         item {
           Text(

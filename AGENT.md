@@ -66,21 +66,29 @@ the agent full context without re-scanning the whole codebase every session.
 
 > **Build & Installation rule:** During development, if you are asked to assemble or install the app, or if you are doing so autonomously for testing, **always use the Universal GMS variant** (e.g., `./gradlew assembleUniversalGmsDebug` or `./gradlew installUniversalGmsDebug`).
 
-### UI rule: Nothing OS 5.0 Design (over Material You)
+### UI Design System: Organic Glassmorphism + Material Expressive + Dynamic Artwork (Tuneify Specification)
 
-All UI work — new screens, new components, and edits to existing ones —
-**must** follow the **Nothing OS 5.0 design** language (clean and minimal) rather than blindly
-applying standard Material Design 3 guidelines or Material You.
+All UI work in Tuneify follows the **Organic Glassmorphism + Material Expressive + Dynamic Artwork** design specification:
 
-We maintain a dedicated **[DESIGN.md](DESIGN.md)** file which serves as the central
-hub for all design decisions, component usage, and style choices in the Echo Music codebase.
+**Visual Characteristics & Color System:**
+- **Canvas / Background:** Deep forest green / near-black (`#07120C` / `#0A1810`). Never flat plain black except in explicit OLED pure-black mode.
+- **Primary Accent:** Volt Lime (`#C6F53D`) — vibrant lime-green acting as a focused light source for active states, primary actions, and live player controls.
+- **Secondary Accent:** Muted Sage Green (`#9DB4A3`) for subtle labels, unselected icons, and secondary metadata.
+- **Text:** Off-white primary text (`#E9F3E6` / `#FFFFFF`), translucent muted white secondary text (`#9DB4A3` / `#A0B4A6`).
+- **Glass Surfaces:** Translucent layered frosted surfaces (`#3D152C1E` / `#2D122418`) with subtle frosted 1dp highlight borders (`#2EFFFFFF` / `#33C6F53D`), gentle elevations, and ambient orbs.
+- **Organic Fluid Shapes:** Asymmetric organic wave shapes (`OrganicWaveShape`) using cubic Bézier paths for centerpiece artwork frames, hero cards, and fluid backgrounds.
+- **Dynamic Artwork Accent Extraction:** Palette extraction from the playing track's artwork (`gradientColors` / `PlayerColorExtractor`) dynamically tunes aura glows and active waveforms while maintaining legible off-white contrast.
 
-**Key Requirements:**
-- **Clean and Minimal:** Emphasize the Nothing OS 5.0 aesthetic. Focus on high-contrast, typography-driven layouts, monochrome or minimal color palettes, and distinct geometry.
-- **Avoid standard M3 containers:** Do not use standard M3 containers or generic Material You bouncy/rounded components. Replace them with stark, clean Nothing-style UI.
-- **Do not refactor to strict M3:** Do not replace existing minimal components with `LargeTopAppBar` or standard M3 cards.
-
-If a new feature needs a UI pattern not covered in `DESIGN.md`, create a minimal, Nothing-OS-inspired pattern rather than pulling from the official Material 3 guidelines.
+**Reusable Component Library (`echo.music.iad1tya.ui.component.glass`):**
+- `TuneifyGlassTokens`: Core color, alpha, radius, and shape tokens.
+- `Modifier.glassSurface(...)`: Universal glassmorphic modifier with shape clipping, translucent gradient, border highlight, and soft elevation.
+- `OrganicWaveShape` & `OrganicArtworkContainer`: Asymmetric fluid wavy frame with radiant glowing aura for Now Playing album artwork.
+- `AudioWaveformVisualizer`: Audio-reactive interactive waveform scrubber responding to song progress and touch seeks.
+- `TuneifyWaveformLogo`: Distinctive 5-capsule waveform brand mark in Volt Lime with bold wordmark.
+- `GlassCard`, `GlassPill`, `GlassButton`, `GlassSongRow`, `GlassArtworkCard`: Frosted interactive components with spring press feedback.
+- `DynamicArtworkBackground`: Ambient gradient aura container that dynamically illuminates the background.
+- `HeroArtistCard`: Large organic-shaped hero glass card with real artist promotional artwork and carousel indicators.
+- `ExpressiveBottomNavBar`: Floating translucent glass navigation bar with Volt Lime rounded capsule indicator.
 
 ### Conventions worth following
 
@@ -207,21 +215,22 @@ widget/         Home-screen widget
 
 ## UI / design system notes
 
-- **Nothing OS 5.0 / Glassmorphism Aesthetic:**
-  - When designing components that require a translucent or frosted glass effect (like bottom navbars or mini-players), use the custom `Modifier.liquidGlass(config = ...)` rather than standard alpha background colors.
-  - To achieve a **dense, clean blur** (without a muddy grey tint), use a high `blurRadius` (e.g., `64f`) and explicitly set the `surfaceTintColor` to `MaterialTheme.colorScheme.surface` or `Color.Black` (if pureBlack), while keeping the `surfaceOpacity` moderate (e.g., `0.5f`).
-  - **Flat Integration:** In floating toolbars or navbars, integrate action buttons (like FABs or overflow menus) directly as flat `FloatingNavigationToolbarActionItem`s or `StandardFloatingActionButton`s with `elevation = 0.dp`. Do NOT use `VibrantFloatingActionButton` or elements with default drop shadows, as they render a detached, ugly shadow beneath the translucent glass.
-
-- Material 3 with **dynamic color**: on Android 12+, uses system dynamic
-  color by default; otherwise generates a scheme from `DefaultThemeColor`
-  (`0xFFED5564`) via `materialKolor`'s `rememberDynamicColorScheme`
-  (spec `SPEC_2025`, style `TonalSpot`). See `ui/theme/Theme.kt`.
-  A custom "pure black" dark mode variant is supported.
-  Users can override the seed color from settings.
-- Adaptive layouts (`androidx.compose.material3.adaptive`) are used —
-  design new screens to work across phone/tablet/foldable widths.
-  A "floating tab bar" custom component exists at
-  `ui/component/floatingtabbar/` — prefer reusing it over building new nav UI.
+- **Swiss-Bauhaus is the only design system.** Full spec in [DESIGN.md](DESIGN.md). Tokens live in
+  `ui/theme/TuneifyDesignTokens.kt` (`TuneifyTokens`, `TuneifyMotion`, `Space`, `LocalTuneifyColors`);
+  the signature motif and shared modifiers live in `ui/component/TuneifySignature.kt`.
+- **Theme:** fixed palette, no wallpaper dynamic color. `Theme.kt` builds the Material 3
+  `ColorScheme` from `TuneifyTokens` and re-tones **`primary` only** if the user picks a custom
+  accent. Surfaces never follow the accent.
+- **Typography:** Outfit is the brand face for display/headline/title by default; the user's font
+  preference overrides both display and body. Tight negative tracking on display sizes, wide
+  tracking only on 11sp uppercase eyebrows.
+- **No blur.** `Modifier.liquidGlass` in `ui/component/GlassEffect.kt` is retained as a compile shim
+  that paints a flat translucent surface. `GlassEffectConfig.globalEnabled` is forced `false` in
+  `MainActivity`. Do not add new `RenderEffect`-backed surfaces.
+- **Shadows:** only `Modifier.tuneifyHeroShadow` / `neoShadow`, and only on now-playing artwork, the
+  main play button, and the active nav indicator.
+- Adaptive layouts (`androidx.compose.material3.adaptive`) are used — design new screens to work
+  across phone/tablet/foldable widths.
 - Icons: partly Material Symbols/Icons Extended
   (`androidx.compose.material.material-icons-extended`), plus custom SVG
   drawables generated via `scripts/compose_svg_drawable.py` and

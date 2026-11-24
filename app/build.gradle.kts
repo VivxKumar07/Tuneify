@@ -27,14 +27,14 @@ if (hasGoogleServicesConfig) {
 android {
   namespace = "echo.music.iad1tya"
   compileSdk = 37
-  ndkVersion = "28.2.13676358"
+  ndkVersion = "25.2.9519653"
 
   defaultConfig {
-    applicationId = "echo.music.iad1tya"
+    applicationId = "com.tuneify.app"
     minSdk = 26
     targetSdk = 36
-    versionCode = 164
-    versionName = "1.4.3"
+    versionCode = 1
+    versionName = "1.0.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
@@ -255,7 +255,6 @@ dependencies {
   // GMS Location Services for high-accuracy weather AI context
   "gmsImplementation"(libs.play.services.location)
 
-  implementation(libs.haze)
   implementation(libs.guava)
   implementation(libs.coroutines.guava)
   implementation(libs.concurrent.futures)

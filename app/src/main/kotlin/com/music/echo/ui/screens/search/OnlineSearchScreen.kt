@@ -4,6 +4,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -14,12 +18,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import echo.music.iad1tya.ui.theme.TuneifyTokens
+import androidx.compose.material3.Surface
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -131,13 +141,33 @@ fun OnlineSearchScreen(
   ) {
     if (viewState.history.isNotEmpty()) {
       item(key = "history_header") {
-        Text(
-          text = stringResource(R.string.search_history),
-          style = MaterialTheme.typography.titleMedium,
-          fontWeight = FontWeight.Bold,
-          color = MaterialTheme.colorScheme.primary,
-          modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp).animateItem()
-        )
+        Row(
+          modifier =
+            Modifier.fillMaxWidth()
+              .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
+              .animateItem(),
+          horizontalArrangement = Arrangement.SpaceBetween,
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Text(
+            text = "Recent Searches",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface,
+          )
+          Text(
+            text = "Clear all",
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.primary,
+            modifier =
+              Modifier.clickable {
+                coroutineScope.launch(Dispatchers.IO) {
+                  database.query { viewState.history.forEach { delete(it) } }
+                }
+              },
+          )
+        }
       }
     }
 
@@ -343,6 +373,120 @@ fun OnlineSearchScreen(
             )
             .background(if (pureBlack) Color.Black else MaterialTheme.colorScheme.surface)
             .animateItem()
+      )
+    }
+
+    if (query.isEmpty()) {
+      item(key = "browse_all_header") {
+        Text(
+          text = "Browse all",
+          style = MaterialTheme.typography.titleMedium,
+          fontWeight = FontWeight.Bold,
+          color = MaterialTheme.colorScheme.onSurface,
+          modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 12.dp).animateItem(),
+        )
+      }
+      item(key = "browse_all_grid") {
+        val isDark = isSystemInDarkTheme()
+        Column(
+          modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).animateItem(),
+          verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+          Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+          ) {
+            BrowseCategoryTile(
+              title = "Songs",
+              icon = R.drawable.music_note,
+              accentColor = MaterialTheme.colorScheme.primary,
+              modifier = Modifier.weight(1f),
+              onClick = {
+                onSearch("Top Songs")
+                onDismiss()
+              },
+            )
+            BrowseCategoryTile(
+              title = "Albums",
+              icon = R.drawable.album,
+              accentColor = MaterialTheme.colorScheme.secondary,
+              modifier = Modifier.weight(1f),
+              onClick = {
+                navController.navigate("new_release")
+                onDismiss()
+              },
+            )
+          }
+          Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+          ) {
+            BrowseCategoryTile(
+              title = "Artists",
+              icon = R.drawable.artist,
+              accentColor = MaterialTheme.colorScheme.tertiary,
+              modifier = Modifier.weight(1f),
+              onClick = {
+                onSearch("Popular Artists")
+                onDismiss()
+              },
+            )
+            BrowseCategoryTile(
+              title = "Playlists",
+              icon = R.drawable.queue_music,
+              accentColor = MaterialTheme.colorScheme.primary,
+              modifier = Modifier.weight(1f),
+              onClick = {
+                navController.navigate("mood_and_genres")
+                onDismiss()
+              },
+            )
+          }
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun BrowseCategoryTile(
+  title: String,
+  icon: Int,
+  accentColor: Color,
+  modifier: Modifier = Modifier,
+  onClick: () -> Unit,
+) {
+  Surface(
+    shape = TuneifyTokens.ShapeMedium,
+    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+    modifier = modifier.clickable(onClick = onClick)
+  ) {
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(12.dp),
+      modifier = Modifier.padding(horizontal = 14.dp, vertical = 16.dp),
+    ) {
+      Box(
+        modifier =
+          Modifier.size(36.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(accentColor.copy(alpha = 0.16f)),
+        contentAlignment = Alignment.Center,
+      ) {
+        Icon(
+          painter = painterResource(icon),
+          contentDescription = null,
+          tint = accentColor,
+          modifier = Modifier.size(20.dp),
+        )
+      }
+      Text(
+        text = title,
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onSurface,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
       )
     }
   }

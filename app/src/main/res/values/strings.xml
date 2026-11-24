@@ -9,6 +9,7 @@
 <resources>
     <!-- Bottom navigation -->
     <string name="home">Home</string>
+    <string name="explore">Explore</string>
     <string name="music">Music</string>
     <string name="songs">Songs</string>
     <string name="artists">Artists</string>
@@ -46,6 +47,7 @@
 
     <!-- Search -->
     <string name="search">Search</string>
+    <string name="home_search_hint">Search songs, artists, albums…</string>
     <string name="search_yt_music">Search YouTube Music…</string>
     <string name="search_library">Search library…</string>
     <string name="filter_library">Library</string>
@@ -71,6 +73,13 @@
 
     <!-- Artist screen -->
     <string name="from_your_library">From your library</string>
+    <string name="your_library">Your Library</string>
+    <string name="settings_tagline">Music, your way.</string>
+    <string name="settings_group_account">Account</string>
+    <string name="settings_group_appearance">Appearance</string>
+    <string name="settings_group_playback">Playback</string>
+    <string name="settings_group_library">Library &amp; data</string>
+    <string name="settings_group_other">Other</string>
 
     <!-- Album screen -->
     <string name="other_versions">Other versions</string>
@@ -432,7 +441,7 @@
     <string name="restore_failed">Failed to restore backup</string>
 
     <string name="discord_integration">Discord Integration</string>
-    <string name="discord_information">echomusic uses the KizzyRPC library to set your Discord account\'s status. This involves using the Discord Gateway connection, which may be considered a violation of Discord\'s TOS. However, there are no known cases of user accounts being suspended for this reason. Use at your own risk.\n\echomusic will only extract your token, and everything else is stored locally.</string>
+    <string name="discord_information">Tuneify uses the KizzyRPC library to set your Discord account\'s status. This involves using the Discord Gateway connection, which may be considered a violation of Discord\'s TOS. However, there are no known cases of user accounts being suspended for this reason. Use at your own risk.\n\Tuneify will only extract your token, and everything else is stored locally.</string>
     <string name="dismiss">Dismiss</string>
     <string name="options">Options</string>
     <string name="preview">Preview</string>
@@ -460,7 +469,7 @@
     <string name="listen_together_smart_resync">Smart Network Resync</string>
     <string name="listen_together_smart_resync_desc">Automatically catch up with the host after a connection drop</string>
     <string name="spotify_import_title">Import From Spotify</string>
-    <string name="spotify_import_desc">Connect Spotify, choose playlists, and mirror them into local Echo Music playlists.</string>
+    <string name="spotify_import_desc">Connect Spotify, choose playlists, and mirror them into local Tuneify playlists.</string>
     <string name="spotify_connect">Connect Spotify</string>
     <string name="spotify_refresh">Refresh Spotify library</string>
     <string name="spotify_select_sources">Select Spotify playlists</string>
@@ -505,7 +514,7 @@
     <string name="recognition_notification_processing">Identifying…</string>
     <string name="recognition_notification_no_match">No match found</string>
     <string name="recognition_notification_failed">Recognition failed</string>
-    <string name="listen_on_echo_music">Listen on Echo Music</string>
+    <string name="listen_on_echo_music">Listen on Tuneify</string>
     <string name="qs_tile_music_recognizer">Recognize music</string>
     <string name="listenbrainz_scrobbling">ListenBrainz scrobbling</string>
     <string name="listenbrainz_scrobbling_description">Automatically submit your listened tracks to ListenBrainz</string>
