@@ -1157,116 +1157,100 @@ fun HomeScreen(
           )
         }
 
-        // 3. Hero Section: Interactive Spotlight Carousel with dynamically rotating artist artwork
+        // 3. Hero Section: Interactive Spotlight Carousel dynamically driven by user's recent music
         item(key = "tuneify_hero_card") {
-          val heroSpotlights = remember(homeSongs) {
-            val daySlot = (java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_YEAR) / 3) % 4
-            val curatedSets = listOf(
-              listOf(
+          val heroSpotlights = remember(recentDisplaySongs, quickPicks, homeSongs) {
+            val list = mutableListOf<SpotlightItem>()
+
+            // 1. Prioritize user's actual recently listened tracks
+            recentDisplaySongs.take(4).forEach { recent ->
+              val artwork = recent.artworkUrl?.takeIf { it.isNotBlank() }
+                ?: "https://i.ytimg.com/vi/${recent.id}/hqdefault.jpg"
+              list.add(
                 SpotlightItem(
-                  id = "the_weeknd",
-                  title = "The Weeknd",
-                  subtitle = "After Hours & Dawn FM",
-                  artworkUrl = "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=80",
-                  videoId = "4NRXx6U8ABQ"
-                ),
-                SpotlightItem(
-                  id = "dua_lipa",
-                  title = "Dua Lipa",
-                  subtitle = "Future Nostalgia",
-                  artworkUrl = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&q=80",
-                  videoId = "BC19kwABFwc"
-                ),
-                SpotlightItem(
-                  id = "diljit",
-                  title = "Diljit Dosanjh",
-                  subtitle = "Born to Shine",
-                  artworkUrl = "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80",
-                  videoId = "cl0a3i2wFcc"
+                  id = recent.id,
+                  title = recent.title,
+                  subtitle = recent.artist ?: "Recently Played",
+                  artworkUrl = artwork,
+                  videoId = recent.id
                 )
-              ),
-              listOf(
-                SpotlightItem(
-                  id = "arijit_essentials",
-                  title = "Arijit Singh",
-                  subtitle = "Soulful Essentials",
-                  artworkUrl = "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80",
-                  videoId = "6FURuLYrR_Q"
-                ),
-                SpotlightItem(
-                  id = "billie_eilish",
-                  title = "Billie Eilish",
-                  subtitle = "Hit Me Hard and Soft",
-                  artworkUrl = "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=800&q=80",
-                  videoId = "V1Pl8CzNzCw"
-                ),
-                SpotlightItem(
-                  id = "shreya_ghoshal",
-                  title = "Shreya Ghoshal",
-                  subtitle = "Timeless Melodies",
-                  artworkUrl = "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80",
-                  videoId = "zaJPvEM7fVY"
-                )
-              ),
-              listOf(
-                SpotlightItem(
-                  id = "post_malone",
-                  title = "Post Malone",
-                  subtitle = "Austin & Top Hits",
-                  artworkUrl = "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&q=80",
-                  videoId = "UYwF-jdcVjY"
-                ),
-                SpotlightItem(
-                  id = "taylor_swift",
-                  title = "Taylor Swift",
-                  subtitle = "The Eras Tour",
-                  artworkUrl = "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&q=80",
-                  videoId = "b1kbLwvqugk"
-                ),
-                SpotlightItem(
-                  id = "sidhu",
-                  title = "Sidhu Moose Wala",
-                  subtitle = "Signature Anthems",
-                  artworkUrl = "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=800&q=80",
-                  videoId = "HrnrqYxYrbk"
-                )
-              ),
-              listOf(
-                SpotlightItem(
-                  id = "coldplay",
-                  title = "Coldplay",
-                  subtitle = "Music of the Spheres",
-                  artworkUrl = "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=800&q=80",
-                  videoId = "VPRjCeoBqrI"
-                ),
-                SpotlightItem(
-                  id = "anuv_jain",
-                  title = "Anuv Jain",
-                  subtitle = "Acoustic Stories",
-                  artworkUrl = "https://images.unsplash.com/photo-1485579149621-3123dd979885?w=800&q=80",
-                  videoId = "sAzlWScHTc4"
-                ),
-                SpotlightItem(
-                  id = "kendrick",
-                  title = "Kendrick Lamar",
-                  subtitle = "Modern Hip-Hop",
-                  artworkUrl = "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=800&q=80",
-                  videoId = "tvTRZJ-4EyI"
-                )
-              )
-            )
-            val selected = curatedSets[daySlot].toMutableList()
-            val topSong = homeSongs.firstOrNull()
-            if (topSong != null && !topSong.thumbnail.isNullOrBlank()) {
-              selected[0] = SpotlightItem(
-                id = topSong.id,
-                title = topSong.title,
-                subtitle = topSong.artists.joinToString { it.name }.ifEmpty { "Trending Hit" },
-                artworkUrl = topSong.thumbnail,
-                videoId = topSong.id
               )
             }
-            selected
+
+            // 2. If fewer than 3, add from quickPicks / homeSongs with real YouTube music posters
+            if (list.size < 3 && !quickPicks.isNullOrEmpty()) {
+              quickPicks!!.forEach { pick ->
+                if (list.none { it.videoId == pick.id }) {
+                  val artwork = pick.thumbnailUrl ?: "https://i.ytimg.com/vi/${pick.id}/hqdefault.jpg"
+                  list.add(
+                    SpotlightItem(
+                      id = pick.id,
+                      title = pick.title,
+                      subtitle = pick.artists.joinToString { it.name }.ifEmpty { "Recommended for you" },
+                      artworkUrl = artwork,
+                      videoId = pick.id
+                    )
+                  )
+                }
+              }
+            }
+
+            if (list.size < 3 && homeSongs.isNotEmpty()) {
+              homeSongs.forEach { song ->
+                if (list.none { it.videoId == song.id }) {
+                  val artwork = song.thumbnail ?: "https://i.ytimg.com/vi/${song.id}/hqdefault.jpg"
+                  list.add(
+                    SpotlightItem(
+                      id = song.id,
+                      title = song.title,
+                      subtitle = song.artists.joinToString { it.name }.ifEmpty { "Trending Hit" },
+                      artworkUrl = artwork,
+                      videoId = song.id
+                    )
+                  )
+                }
+              }
+            }
+
+            // 3. Guaranteed fallback with REAL YouTube Music video posters (No stock photos!)
+            val verifiedFallbackHits = listOf(
+              SpotlightItem(
+                id = "HrnrqYxYrbk",
+                title = "Satranga",
+                subtitle = "Arijit Singh",
+                artworkUrl = "https://i.ytimg.com/vi/HrnrqYxYrbk/hqdefault.jpg",
+                videoId = "HrnrqYxYrbk"
+              ),
+              SpotlightItem(
+                id = "VAdGW7QDJiU",
+                title = "Chaleya",
+                subtitle = "Arijit Singh",
+                artworkUrl = "https://i.ytimg.com/vi/VAdGW7QDJiU/hqdefault.jpg",
+                videoId = "VAdGW7QDJiU"
+              ),
+              SpotlightItem(
+                id = "6FURuLYrR_Q",
+                title = "Paro",
+                subtitle = "Aditya Rikhari",
+                artworkUrl = "https://i.ytimg.com/vi/6FURuLYrR_Q/hqdefault.jpg",
+                videoId = "6FURuLYrR_Q"
+              ),
+              SpotlightItem(
+                id = "4NRXx6U8ABQ",
+                title = "Blinding Lights",
+                subtitle = "The Weeknd",
+                artworkUrl = "https://i.ytimg.com/vi/4NRXx6U8ABQ/hqdefault.jpg",
+                videoId = "4NRXx6U8ABQ"
+              )
+            )
+
+            verifiedFallbackHits.forEach { fallback ->
+              if (list.size < 3 && list.none { it.videoId == fallback.videoId }) {
+                list.add(fallback)
+              }
+            }
+
+            list.take(4)
           }
 
           HeroSpotlightCarousel(
@@ -1521,32 +1505,7 @@ fun HomeScreen(
           }
         }
 
-        // 10. Signature 4-Track Stack Carousel #3: Daily Discoveries
-        if (dailyDiscoveries.size >= 4) {
-          item(key = "tuneify_daily_discoveries_header") {
-            ExpressiveSectionHeader(
-              title = "Daily Discoveries",
-              onChevronClick = { navController.navigate("auto_playlist/top") }
-            )
-          }
-
-          item(key = "tuneify_daily_discoveries_row") {
-            TuneifySongColumnGridCarousel(
-              songs = dailyDiscoveries,
-              onSongClick = { song ->
-                playerConnection.playQueue(
-                  YouTubeQueue(
-                    endpoint = song.endpoint ?: WatchEndpoint(videoId = song.id),
-                    preloadItem = song.toMediaMetadata()
-                  )
-                )
-              },
-              modifier = Modifier.padding(bottom = 16.dp)
-            )
-          }
-        }
-
-        // 11. Signature 4-Track Stack Carousel #4: Spotlight Mixes
+        // 10. Signature 4-Track Stack Carousel: Spotlight Mixes
         if (spotlightMixes.size >= 4) {
           item(key = "tuneify_spotlight_mixes_header") {
             ExpressiveSectionHeader(

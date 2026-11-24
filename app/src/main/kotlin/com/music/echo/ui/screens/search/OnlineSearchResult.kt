@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import echo.music.iad1tya.ui.component.glass.DynamicArtworkBackground
+import echo.music.iad1tya.ui.component.glass.LocalDynamicAccentColor
 import echo.music.iad1tya.ui.component.glass.TuneifyGlassTokens
 import echo.music.iad1tya.ui.theme.TuneifyTokens
 import androidx.compose.foundation.layout.Box
@@ -254,7 +255,7 @@ fun OnlineSearchResult(
           .border(
             width = 1.dp,
             brush = Brush.linearGradient(
-              if (isItemActive) listOf(TuneifyGlassTokens.VoltLime.copy(0.7f), Color(0x20FFFFFF))
+              if (isItemActive) listOf(LocalDynamicAccentColor.current.copy(0.7f), Color(0x20FFFFFF))
               else listOf(Color(0x50FFFFFF), Color(0x10FFFFFF))
             ),
             shape = cardShape
@@ -347,7 +348,9 @@ fun OnlineSearchResult(
       }
     }
 
-  DynamicArtworkBackground(accentColor = TuneifyGlassTokens.VoltLime) {
+  val dynamicAccent = LocalDynamicAccentColor.current
+
+  DynamicArtworkBackground(accentColor = dynamicAccent) {
     Column(
       modifier =
         Modifier.fillMaxSize()
@@ -369,7 +372,7 @@ fun OnlineSearchResult(
             Icon(
               painter = painterResource(R.drawable.arrow_back),
               contentDescription = stringResource(R.string.dismiss),
-              tint = TuneifyGlassTokens.VoltLime
+              tint = dynamicAccent
             )
           }
         },

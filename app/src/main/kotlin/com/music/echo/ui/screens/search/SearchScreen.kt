@@ -29,6 +29,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import echo.music.iad1tya.ui.theme.TuneifyTokens
 import echo.music.iad1tya.ui.component.glass.DynamicArtworkBackground
+import echo.music.iad1tya.ui.component.glass.LocalDynamicAccentColor
 import echo.music.iad1tya.ui.component.glass.TuneifyGlassTokens
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -223,7 +224,7 @@ fun SearchScreen(navController: NavController, pureBlack: Boolean) {
                     }
                   ),
                 textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
-                cursorBrush = SolidColor(TuneifyGlassTokens.VoltLime),
+                cursorBrush = SolidColor(LocalDynamicAccentColor.current),
                 decorationBox = { innerTextField ->
                   Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -246,7 +247,7 @@ fun SearchScreen(navController: NavController, pureBlack: Boolean) {
                           ),
                         contentDescription =
                           if (searchActive) stringResource(R.string.dismiss) else null,
-                        tint = TuneifyGlassTokens.VoltLime
+                        tint = LocalDynamicAccentColor.current
                       )
                     }
                     Box(modifier = Modifier.weight(1f).padding(horizontal = 4.dp)) {

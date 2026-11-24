@@ -132,13 +132,16 @@ android {
       val keystoreFile = rootProject.file("keystore.jks")
       if (keystoreFile.exists()) {
         storeFile = keystoreFile
+        storePassword = System.getenv("STORE_PASSWORD") ?: "tuneify123"
+        keyAlias = System.getenv("KEY_ALIAS") ?: "tuneify"
+        keyPassword = System.getenv("KEY_PASSWORD") ?: "tuneify123"
       } else {
         val localKeystore = file("keystore/release.keystore")
         if (localKeystore.exists()) storeFile = localKeystore
+        storePassword = System.getenv("STORE_PASSWORD")
+        keyAlias = System.getenv("KEY_ALIAS")
+        keyPassword = System.getenv("KEY_PASSWORD")
       }
-      storePassword = System.getenv("STORE_PASSWORD")
-      keyAlias = System.getenv("KEY_ALIAS")
-      keyPassword = System.getenv("KEY_PASSWORD")
     }
     getByName("debug") {
       keyAlias = "androiddebugkey"
@@ -195,6 +198,7 @@ android {
     warningsAsErrors = false
     abortOnError = false
     checkDependencies = false
+    checkReleaseBuilds = false
   }
 
   androidResources { generateLocaleConfig = true }

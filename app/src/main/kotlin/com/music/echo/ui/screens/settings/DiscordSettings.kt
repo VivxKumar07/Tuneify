@@ -273,7 +273,7 @@ fun DiscordSettings(
   val (button2Label) =
     rememberPreference(
       key = DiscordActivityButton2LabelKey,
-      defaultValue = "Go to Echo Music",
+      defaultValue = "Go to Tuneify",
     )
   val (button2Enabled) =
     rememberPreference(
@@ -298,7 +298,7 @@ fun DiscordSettings(
   val (button2CustomUrl) =
     rememberPreference(
       key = DiscordActivityButton2CustomUrlKey,
-      defaultValue = "https://github.com/EchoMusicApp/Echo-Music",
+      defaultValue = "https://github.com/VivxKumar07/Tuneify",
     )
 
   val (activityType, onActivityTypeChange) =
@@ -914,25 +914,26 @@ private fun DiscordAccountGroupCard(
             modifier =
               Modifier.fillMaxWidth()
                 .heightIn(min = 56.dp)
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(start = 12.dp, end = 8.dp, top = 6.dp, bottom = 6.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
           ) {
             Row(
+              modifier = Modifier.weight(1f, fill = false),
               verticalAlignment = Alignment.CenterVertically,
-              horizontalArrangement = Arrangement.spacedBy(12.dp)
+              horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
               Surface(
                 shape = MaterialTheme.shapes.medium,
                 color = MaterialTheme.colorScheme.surface,
-                modifier = Modifier.size(36.dp)
+                modifier = Modifier.size(32.dp)
               ) {
                 Box(contentAlignment = Alignment.Center) {
                   Icon(
                     painter = painterResource(R.drawable.info),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(16.dp)
                   )
                 }
               }
@@ -941,8 +942,11 @@ private fun DiscordAccountGroupCard(
                 text = "RPC",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
               )
             }
+
+            Spacer(modifier = Modifier.width(6.dp))
 
             Switch(
               checked = discordRpcEnabled,
@@ -1173,10 +1177,10 @@ fun RichPresence(
   button1Enabled: Boolean = true,
   button1UrlSource: String = "songurl",
   button1CustomUrl: String = "",
-  button2Label: String = "Go to Echo Music",
+  button2Label: String = "Go to Tuneify",
   button2Enabled: Boolean = true,
   button2UrlSource: String = "custom",
-  button2CustomUrl: String = "https://github.com/EchoMusicApp/Echo-Music",
+  button2CustomUrl: String = "https://github.com/VivxKumar07/Tuneify",
   isPlaying: Boolean = false,
 ) {
   val context = LocalContext.current
