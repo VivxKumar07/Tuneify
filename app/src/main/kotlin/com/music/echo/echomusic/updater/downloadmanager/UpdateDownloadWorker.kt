@@ -9,14 +9,17 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import echo.music.iad1tya.R
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
+import java.util.concurrent.TimeUnit
 import java.util.zip.ZipInputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
 class UpdateDownloadWorker(private val context: Context, workerParams: WorkerParameters) :
   CoroutineWorker(context, workerParams) {
@@ -44,26 +47,35 @@ class UpdateDownloadWorker(private val context: Context, workerParams: WorkerPar
       } catch (e: Exception) {}
 
       try {
-        val url = URL(apkUrl)
-        val connection = url.openConnection() as HttpURLConnection
-        connection.requestMethod = "GET"
-        connection.connectTimeout = 15000
-        connection.readTimeout = 15000
-        connection.connect()
+        val client = OkHttpClient.Builder()
+          .followRedirects(true)
+          .followSslRedirects(true)
+          .connectTimeout(20, TimeUnit.SECONDS)
+          .readTimeout(60, TimeUnit.SECONDS)
+          .build()
 
-        if (connection.responseCode != HttpURLConnection.HTTP_OK) {
+        val request = Request.Builder()
+          .url(apkUrl)
+          .header("User-Agent", "Tuneify-App")
+          .build()
+
+        val response = client.newCall(request).execute()
+        if (!response.isSuccessful) {
+          val code = response.code
+          response.close()
           DownloadNotificationManager.showDownloadFailed(
             version,
-            context.getString(R.string.server_error, connection.responseCode)
+            context.getString(R.string.server_error, code)
           )
-          if (connection.responseCode >= 500) {
+          if (code >= 500) {
             return@withContext Result.retry()
           }
           return@withContext Result.failure()
         }
 
-        val fileLength = connection.contentLength
-        val inputStream = connection.inputStream
+        val body = response.body ?: return@withContext Result.failure()
+        val fileLength = body.contentLength()
+        val inputStream = BufferedInputStream(body.byteStream(), 256 * 1024)
 
         val downloadDir =
           File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "echo_updates")
@@ -74,9 +86,9 @@ class UpdateDownloadWorker(private val context: Context, workerParams: WorkerPar
         val isZip = apkUrl.contains("nightly.link") || apkUrl.endsWith(".zip")
         val downloadFile =
           if (isZip) File(downloadDir, "echo_temp.zip") else File(downloadDir, "echomusic.apk")
-        val outputStream = FileOutputStream(downloadFile)
+        val outputStream = BufferedOutputStream(FileOutputStream(downloadFile), 256 * 1024)
 
-        val buffer = ByteArray(8192)
+        val buffer = ByteArray(131072)
         var bytesRead: Int
         var totalBytesRead: Long = 0
         var lastProgress = -1
@@ -86,7 +98,7 @@ class UpdateDownloadWorker(private val context: Context, workerParams: WorkerPar
           if (isStopped) {
             outputStream.close()
             inputStream.close()
-            connection.disconnect()
+            response.close()
             if (downloadFile.exists()) {
               downloadFile.delete()
             }
@@ -100,7 +112,7 @@ class UpdateDownloadWorker(private val context: Context, workerParams: WorkerPar
             val progress = (totalBytesRead.toFloat() / fileLength.toFloat() * 100).toInt()
             val currentTime = System.currentTimeMillis()
 
-            if (progress > lastProgress && currentTime - lastNotificationTime >= 1000) {
+            if (progress > lastProgress && currentTime - lastNotificationTime >= 500) {
               lastProgress = progress
               lastNotificationTime = currentTime
 
@@ -122,7 +134,7 @@ class UpdateDownloadWorker(private val context: Context, workerParams: WorkerPar
         outputStream.flush()
         outputStream.close()
         inputStream.close()
-        connection.disconnect()
+        response.close()
 
         val finalFile =
           if (isZip) {

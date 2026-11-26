@@ -1065,65 +1065,65 @@ fun HomeScreen(
       var selectedMusicCategory by rememberSaveable { mutableStateOf("Music") }
 
       val homeSongs = remember(homePage) {
-        homePage?.sections?.flatMap { it.items }?.filterIsInstance<SongItem>()?.distinctBy { it.id } ?: emptyList()
+        homePage?.sections
+          ?.flatMap { it.items }
+          ?.filterIsInstance<SongItem>()
+          ?.filter { !it.thumbnail.isNullOrBlank() }
+          ?.distinctBy { it.id }
+          ?: emptyList()
       }
 
-      val defaultHits = remember {
-        listOf(
-          SongItem(id = "HrnrqYxYrbk", title = "Satranga", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/HrnrqYxYrbk/hqdefault.jpg"),
-          SongItem(id = "VAdGW7QDJiU", title = "Chaleya", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/VAdGW7QDJiU/hqdefault.jpg"),
-          SongItem(id = "ElZfdU54Cp8", title = "Apna Bana Le", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/ElZfdU54Cp8/hqdefault.jpg"),
-          SongItem(id = "BddP6PYo2gs", title = "Kesariya", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg"),
-          SongItem(id = "RLzC55ai0eo", title = "Heeriye", artists = listOf(com.music.innertube.models.Artist("Jasleen Royal", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/RLzC55ai0eo/hqdefault.jpg"),
-          SongItem(id = "SlPhMPnQ58k", title = "Tum Hi Ho", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/SlPhMPnQ58k/hqdefault.jpg"),
-          SongItem(id = "xRb8hxwN5zc", title = "Agar Tum Saath Ho", artists = listOf(com.music.innertube.models.Artist("Arijit Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/xRb8hxwN5zc/hqdefault.jpg"),
-          SongItem(id = "K-pX4qwtAxA", title = "Chaiyya Chaiyya", artists = listOf(com.music.innertube.models.Artist("Sukhwinder Singh", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/K-pX4qwtAxA/hqdefault.jpg"),
-          SongItem(id = "6FURuLYrR_Q", title = "Paro", artists = listOf(com.music.innertube.models.Artist("Aditya Rikhari", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/6FURuLYrR_Q/hqdefault.jpg"),
-          SongItem(id = "sAzlWScHTc4", title = "Jaana Samjho Na", artists = listOf(com.music.innertube.models.Artist("Aditya Rikhari", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/sAzlWScHTc4/hqdefault.jpg"),
-          SongItem(id = "9-7mQ6lV-yI", title = "Sajna Ve", artists = listOf(com.music.innertube.models.Artist("Aditya Rikhari", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/9-7mQ6lV-yI/hqdefault.jpg"),
-          SongItem(id = "2Vv-BfVoq4g", title = "Perfect", artists = listOf(com.music.innertube.models.Artist("Ed Sheeran", null)), album = null, duration = null, thumbnail = "https://i.ytimg.com/vi/2Vv-BfVoq4g/hqdefault.jpg")
-        )
-      }
-
-      val songsForCarousel = remember(quickPicks, homeSongs, defaultHits) {
+      val songsForCarousel = remember(quickPicks, homeSongs) {
         val list = mutableListOf<SongItem>()
         if (!quickPicks.isNullOrEmpty()) {
-          list.addAll(quickPicks!!.map { pick ->
+          list.addAll(
+            quickPicks!!
+              .filter { !it.thumbnailUrl.isNullOrBlank() }
+              .map { pick ->
+                SongItem(
+                  id = pick.id,
+                  title = pick.title,
+                  artists = pick.artists.map { com.music.innertube.models.Artist(name = it.name, id = it.id) },
+                  album = null,
+                  duration = null,
+                  thumbnail = pick.thumbnailUrl!!,
+                  endpoint = WatchEndpoint(videoId = pick.id)
+                )
+              }
+          )
+        }
+        list.addAll(homeSongs)
+        list.distinctBy { it.id }.take(16)
+      }
+
+      val trendingSongs = remember(homeSongs, songsForCarousel) {
+        val list = if (homeSongs.size > 4) homeSongs.drop(4) else songsForCarousel.drop(4)
+        list.distinctBy { it.id }.take(12)
+      }
+
+      val spotlightMixes = remember(homeSongs, songsForCarousel) {
+        val list = if (homeSongs.size > 8) homeSongs.drop(8) else songsForCarousel.reversed()
+        list.distinctBy { it.id }.take(8)
+      }
+
+      val madeForYouAlbums = remember(explorePage) {
+        explorePage?.newReleaseAlbums?.filter { it.thumbnail.isNotBlank() }?.take(6).orEmpty()
+      }
+      val madeForYouFallbackSongs = remember(homeSongs, quickPicks) {
+        val list = homeSongs.ifEmpty {
+          quickPicks.orEmpty().filter { !it.thumbnailUrl.isNullOrBlank() }.map { pick ->
             SongItem(
               id = pick.id,
               title = pick.title,
               artists = pick.artists.map { com.music.innertube.models.Artist(name = it.name, id = it.id) },
               album = null,
               duration = null,
-              thumbnail = pick.thumbnailUrl ?: "https://i.ytimg.com/vi/${pick.id}/hqdefault.jpg",
+              thumbnail = pick.thumbnailUrl!!,
               endpoint = WatchEndpoint(videoId = pick.id)
             )
-          })
+          }
         }
-        list.addAll(homeSongs)
-        list.addAll(defaultHits)
-        list.distinctBy { it.id }.take(16)
-      }
-
-      val trendingSongs = remember(homeSongs, defaultHits) {
-        val list = mutableListOf<SongItem>()
-        if (homeSongs.size > 4) list.addAll(homeSongs.drop(4))
-        list.addAll(defaultHits.reversed())
-        list.distinctBy { it.id }.take(12)
-      }
-
-      val dailyDiscoveries = remember(homeSongs, defaultHits, songsForCarousel) {
-        val list = mutableListOf<SongItem>()
-        if (homeSongs.size > 8) list.addAll(homeSongs.drop(8))
-        list.addAll(defaultHits.shuffled())
-        list.distinctBy { it.id }.take(12)
-      }
-
-      val spotlightMixes = remember(defaultHits, homeSongs) {
-        val list = mutableListOf<SongItem>()
-        list.addAll(defaultHits.takeLast(8))
-        list.addAll(homeSongs)
-        list.distinctBy { it.id }.take(8)
+        list.filter { !it.thumbnail.isNullOrBlank() }.take(6)
       }
 
       LazyColumn(
@@ -1157,96 +1157,64 @@ fun HomeScreen(
           )
         }
 
-        // 3. Hero Section: Interactive Spotlight Carousel dynamically driven by user's recent music
+        // 3. Hero Section: Interactive Spotlight Carousel dynamically driven by real user/Echo Music data
         item(key = "tuneify_hero_card") {
-          val heroSpotlights = remember(recentDisplaySongs, quickPicks, homeSongs) {
+          val heroSpotlights = remember(recentDisplaySongs, quickPicks, homeSongs, explorePage) {
             val list = mutableListOf<SpotlightItem>()
 
-            // 1. Prioritize user's actual recently listened tracks
-            recentDisplaySongs.take(4).forEach { recent ->
-              val artwork = recent.artworkUrl?.takeIf { it.isNotBlank() }
-                ?: "https://i.ytimg.com/vi/${recent.id}/hqdefault.jpg"
-              list.add(
-                SpotlightItem(
-                  id = recent.id,
-                  title = recent.title,
-                  subtitle = recent.artist ?: "Recently Played",
-                  artworkUrl = artwork,
-                  videoId = recent.id
-                )
-              )
-            }
-
-            // 2. If fewer than 3, add from quickPicks / homeSongs with real YouTube music posters
-            if (list.size < 3 && !quickPicks.isNullOrEmpty()) {
-              quickPicks!!.forEach { pick ->
-                if (list.none { it.videoId == pick.id }) {
-                  val artwork = pick.thumbnailUrl ?: "https://i.ytimg.com/vi/${pick.id}/hqdefault.jpg"
-                  list.add(
-                    SpotlightItem(
-                      id = pick.id,
-                      title = pick.title,
-                      subtitle = pick.artists.joinToString { it.name }.ifEmpty { "Recommended for you" },
-                      artworkUrl = artwork,
-                      videoId = pick.id
-                    )
+            // 1. Prioritize user's actual recently listened tracks with real artwork
+            recentDisplaySongs
+              .filter { !it.artworkUrl.isNullOrBlank() }
+              .take(4)
+              .forEach { recent ->
+                list.add(
+                  SpotlightItem(
+                    id = recent.id,
+                    title = recent.title,
+                    subtitle = recent.artist?.takeIf { it.isNotBlank() } ?: "Recently Played",
+                    artworkUrl = recent.artworkUrl!!,
+                    videoId = recent.id,
+                    artistId = recent.song?.artists?.firstOrNull()?.id
                   )
-                }
+                )
               }
+
+            // 2. Top up from quickPicks with real thumbnails
+            if (list.size < 4 && !quickPicks.isNullOrEmpty()) {
+              quickPicks!!
+                .filter { !it.thumbnailUrl.isNullOrBlank() }
+                .forEach { pick ->
+                  if (list.size < 4 && list.none { it.videoId == pick.id }) {
+                    list.add(
+                      SpotlightItem(
+                        id = pick.id,
+                        title = pick.title,
+                        subtitle = pick.artists.joinToString { it.name }.ifEmpty { "Recommended for you" },
+                        artworkUrl = pick.thumbnailUrl!!,
+                        videoId = pick.id,
+                        artistId = pick.artists.firstOrNull()?.id
+                      )
+                    )
+                  }
+                }
             }
 
-            if (list.size < 3 && homeSongs.isNotEmpty()) {
+            // 3. Top up from homeSongs (real Echo Music InnerTube feed)
+            if (list.size < 4 && homeSongs.isNotEmpty()) {
               homeSongs.forEach { song ->
-                if (list.none { it.videoId == song.id }) {
-                  val artwork = song.thumbnail ?: "https://i.ytimg.com/vi/${song.id}/hqdefault.jpg"
+                val thumb = song.thumbnail
+                if (list.size < 4 && !thumb.isNullOrBlank() && list.none { it.videoId == song.id }) {
                   list.add(
                     SpotlightItem(
                       id = song.id,
                       title = song.title,
-                      subtitle = song.artists.joinToString { it.name }.ifEmpty { "Trending Hit" },
-                      artworkUrl = artwork,
-                      videoId = song.id
+                      subtitle = song.artists.joinToString { it.name }.ifEmpty { "Featured" },
+                      artworkUrl = thumb,
+                      videoId = song.id,
+                      artistId = song.artists.firstOrNull()?.id
                     )
                   )
                 }
-              }
-            }
-
-            // 3. Guaranteed fallback with REAL YouTube Music video posters (No stock photos!)
-            val verifiedFallbackHits = listOf(
-              SpotlightItem(
-                id = "HrnrqYxYrbk",
-                title = "Satranga",
-                subtitle = "Arijit Singh",
-                artworkUrl = "https://i.ytimg.com/vi/HrnrqYxYrbk/hqdefault.jpg",
-                videoId = "HrnrqYxYrbk"
-              ),
-              SpotlightItem(
-                id = "VAdGW7QDJiU",
-                title = "Chaleya",
-                subtitle = "Arijit Singh",
-                artworkUrl = "https://i.ytimg.com/vi/VAdGW7QDJiU/hqdefault.jpg",
-                videoId = "VAdGW7QDJiU"
-              ),
-              SpotlightItem(
-                id = "6FURuLYrR_Q",
-                title = "Paro",
-                subtitle = "Aditya Rikhari",
-                artworkUrl = "https://i.ytimg.com/vi/6FURuLYrR_Q/hqdefault.jpg",
-                videoId = "6FURuLYrR_Q"
-              ),
-              SpotlightItem(
-                id = "4NRXx6U8ABQ",
-                title = "Blinding Lights",
-                subtitle = "The Weeknd",
-                artworkUrl = "https://i.ytimg.com/vi/4NRXx6U8ABQ/hqdefault.jpg",
-                videoId = "4NRXx6U8ABQ"
-              )
-            )
-
-            verifiedFallbackHits.forEach { fallback ->
-              if (list.size < 3 && list.none { it.videoId == fallback.videoId }) {
-                list.add(fallback)
               }
             }
 
@@ -1261,9 +1229,8 @@ fun HomeScreen(
               )
             },
             onClick = { spotlight ->
-              val targetArtistId = homeSongs.firstOrNull()?.artists?.firstOrNull()?.id
-              if (targetArtistId != null) {
-                navController.navigate("artist/$targetArtistId")
+              if (spotlight.artistId != null) {
+                navController.navigate("artist/${spotlight.artistId}")
               } else {
                 playerConnection.playQueue(
                   YouTubeQueue(endpoint = WatchEndpoint(videoId = spotlight.videoId))
@@ -1378,35 +1345,41 @@ fun HomeScreen(
           }
         }
 
-        // 6. Signature 4-Track Stack Carousel #1: Song Mixes (reverted & guaranteed full columns)
-        item(key = "tuneify_quick_picks_header") {
-          ExpressiveSectionHeader(
-            title = "Song Mixes",
-            onChevronClick = { navController.navigate("auto_playlist/top") }
-          )
-        }
+        // 6. Signature 4-Track Stack Carousel #1: Song Mixes
+        if (songsForCarousel.size >= 4) {
+          item(key = "tuneify_quick_picks_header") {
+            ExpressiveSectionHeader(
+              title = "Song Mixes",
+              onChevronClick = { navController.navigate("auto_playlist/top") }
+            )
+          }
 
-        item(key = "tuneify_quick_picks_row") {
-          TuneifySongColumnGridCarousel(
-            songs = songsForCarousel,
-            onSongClick = { song ->
-              playerConnection.playQueue(
-                YouTubeQueue(
-                  endpoint = song.endpoint ?: WatchEndpoint(videoId = song.id),
-                  preloadItem = song.toMediaMetadata()
+          item(key = "tuneify_quick_picks_row") {
+            TuneifySongColumnGridCarousel(
+              songs = songsForCarousel,
+              onSongClick = { song ->
+                playerConnection.playQueue(
+                  YouTubeQueue(
+                    endpoint = song.endpoint ?: WatchEndpoint(videoId = song.id),
+                    preloadItem = song.toMediaMetadata()
+                  )
                 )
-              )
-            },
-            modifier = Modifier.padding(bottom = 14.dp)
-          )
+              },
+              modifier = Modifier.padding(bottom = 14.dp)
+            )
+          }
         }
 
         // 7. Discover Trending Charts & Essentials (Banner)
         item(key = "tuneify_promo_banner") {
+          val bannerArtwork = remember(songsForCarousel, explorePage, homePage) {
+            songsForCarousel.firstOrNull()?.thumbnail
+              ?: explorePage?.newReleaseAlbums?.firstOrNull { it.thumbnail.isNotBlank() }?.thumbnail
+              ?: homePage?.sections?.flatMap { it.items }?.firstOrNull { !it.thumbnail.isNullOrBlank() }?.thumbnail
+          }
           TuneifyPromoBannerCard(
             title = "Discover Trending Charts & Essentials",
-            artworkUrl = songsForCarousel.firstOrNull()?.thumbnail
-              ?: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80",
+            artworkUrl = bannerArtwork,
             onClick = { navController.navigate("charts_screen") },
             modifier = Modifier.padding(bottom = 16.dp)
           )
@@ -1437,70 +1410,51 @@ fun HomeScreen(
           }
         }
 
-        // 9. Made For You Section (Standard cute 150.dp glass rounded square cards)
-        item(key = "tuneify_made_for_you_header") {
-          ExpressiveSectionHeader(
-            title = "Made For You",
-            onChevronClick = { navController.navigate("explore") }
-          )
-        }
+        // 9. Made For You Section (Standard cute 150.dp glass rounded square cards using real Echo Music items)
+        if (madeForYouAlbums.isNotEmpty() || madeForYouFallbackSongs.isNotEmpty()) {
+          item(key = "tuneify_made_for_you_header") {
+            ExpressiveSectionHeader(
+              title = "Made For You",
+              onChevronClick = { navController.navigate("explore") }
+            )
+          }
 
-        item(key = "tuneify_made_for_you_row") {
-          LazyRow(
-            contentPadding = PaddingValues(horizontal = 20.dp),
-            horizontalArrangement = Arrangement.spacedBy(14.dp),
-            modifier = Modifier.padding(bottom = 16.dp)
-          ) {
-            item {
-              GlassArtworkCard(
-                title = "Daily Mix 1",
-                subtitle = "Made for you",
-                thumbnailUrl = "https://i.ytimg.com/vi/6FURuLYrR_Q/hqdefault.jpg",
-                onClick = { navController.navigate("auto_playlist/top") },
-                onPlayClick = {
-                  val playTarget = homeSongs.firstOrNull()?.toMediaMetadata()
-                    ?: quickPicks?.firstOrNull()?.toMediaMetadata()
-                  if (playTarget != null) {
-                    playerConnection.playQueue(YouTubeQueue.radio(playTarget))
-                  } else {
-                    playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = "6FURuLYrR_Q")))
-                  }
+          item(key = "tuneify_made_for_you_row") {
+            LazyRow(
+              contentPadding = PaddingValues(horizontal = 20.dp),
+              horizontalArrangement = Arrangement.spacedBy(14.dp),
+              modifier = Modifier.padding(bottom = 16.dp)
+            ) {
+              if (madeForYouAlbums.isNotEmpty()) {
+                items(madeForYouAlbums, key = { "mfy_album_${it.id}" }) { album ->
+                  GlassArtworkCard(
+                    title = album.title,
+                    subtitle = album.artists?.joinToString { it.name }.orEmpty().ifEmpty { "Album" },
+                    thumbnailUrl = album.thumbnail,
+                    onClick = { navController.navigate("album/${album.id}") },
+                    onPlayClick = { navController.navigate("album/${album.id}") }
+                  )
                 }
-              )
-            }
-            item {
-              GlassArtworkCard(
-                title = "Chill Beats",
-                subtitle = "Relax & Focus",
-                thumbnailUrl = "https://i.ytimg.com/vi/sAzlWScHTc4/hqdefault.jpg",
-                onClick = { navController.navigate("mood_and_genres") },
-                onPlayClick = {
-                  val playTarget = homeSongs.drop(1).firstOrNull()?.toMediaMetadata()
-                    ?: quickPicks?.drop(1)?.firstOrNull()?.toMediaMetadata()
-                  if (playTarget != null) {
-                    playerConnection.playQueue(YouTubeQueue.radio(playTarget))
-                  } else {
-                    playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = "sAzlWScHTc4")))
-                  }
+              } else {
+                items(madeForYouFallbackSongs, key = { "mfy_song_${it.id}" }) { song ->
+                  GlassArtworkCard(
+                    title = song.title,
+                    subtitle = song.artists.joinToString { it.name }.ifEmpty { "Made for you" },
+                    thumbnailUrl = song.thumbnail,
+                    onClick = {
+                      playerConnection.playQueue(
+                        YouTubeQueue(
+                          endpoint = song.endpoint ?: WatchEndpoint(videoId = song.id),
+                          preloadItem = song.toMediaMetadata()
+                        )
+                      )
+                    },
+                    onPlayClick = {
+                      playerConnection.playQueue(YouTubeQueue.radio(song.toMediaMetadata()))
+                    }
+                  )
                 }
-              )
-            }
-            item {
-              GlassArtworkCard(
-                title = "Discover Weekly",
-                subtitle = "Fresh discoveries",
-                thumbnailUrl = "https://i.ytimg.com/vi/RLzC55ai0eo/hqdefault.jpg",
-                onClick = { navController.navigate("new_release") },
-                onPlayClick = {
-                  val playTarget = homeSongs.drop(2).firstOrNull()?.toMediaMetadata()
-                    ?: quickPicks?.drop(2)?.firstOrNull()?.toMediaMetadata()
-                  if (playTarget != null) {
-                    playerConnection.playQueue(YouTubeQueue.radio(playTarget))
-                  } else {
-                    playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = "RLzC55ai0eo")))
-                  }
-                }
-              )
+              }
             }
           }
         }

@@ -735,7 +735,7 @@ suspend fun checkForUpdate(
         }
 
         if (apkDownloadUrl.isEmpty()) {
-          apkDownloadUrl = "https://github.com/VivxKumar07/Tuneify/releases/download/$targetTagName/app-universal-gms-debug.apk"
+          apkDownloadUrl = "https://github.com/VivxKumar07/Tuneify/releases/download/$targetTagName/Tuneify_${targetTagName}_release.apk"
         }
 
         withContext(Dispatchers.Main) {
